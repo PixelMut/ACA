@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button>Revenir à la liste</ion-back-button>
+    </ion-buttons>
+    <ion-title>&nbsp;</ion-title>
+    <!-- <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" src="../../assets/checkmark-filled.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true" slot="fixed" >
+   <div class="card">
+      <div class="header">
+        <div class="avatar">
+          <img src="../../../assets/images/player104.png" alt="">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="user-meta ion-text-center">
+          <h3 class="name"> {{ (contact | async)?.nom_user }} {{ (contact | async)?.prenom_user }}</h3>
+          <h5 class="localisation">{{ getLocalisation((contact | async)?.id_localisation) }}</h5>
+          <!-- <h5 class="localisation">{{ (contact | async)?.id_localisation }}</h5> -->
+          <h6 class="ranking"><ion-chip>
+              <ion-label>{{ (contact | async)?.poste }}</ion-label>
+            </ion-chip>
+          </h6>
+        </div>
+ 
+        <ion-button expand="full" color="primary">{{ (contact | async)?.adresse_mail }}</ion-button>
+        <!-- <ion-button expand="full" color="secondary">@RogerFederer on Twitter</ion-button>
+        <ion-button expand="full" color="secondary">View profile at ATP</ion-button>  -->
+
+         <!-- <div *ngFor="let item of contact | async | keyvalue">
+            {{ item.key }} : {{ item.value |json }}
+          </div> -->
+
+      </div>
+    </div>
+</ion-content>

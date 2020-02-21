@@ -1,0 +1,77 @@
+<!-- <ion-header>
+  <ion-toolbar >
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content padding class="background">
+ <form class="form" [formGroup]="validations_form"  (ngSubmit)="loginUser(validations_form.value)">
+   <ion-grid style="height: 100%">
+     <ion-row>  
+       <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">  
+          <ion-item>
+            <ion-label  position="floating" color="primary">E-mail</ion-label>
+            <ion-input type="text" formControlName="email"></ion-input>
+          </ion-item>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validation_messages.email">
+              <div class="error-message" *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
+                {{ validation.message }}
+              </div>
+            </ng-container>
+          </div>
+       </ion-col>
+     </ion-row>
+
+     <ion-row>
+       <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <ion-item>
+            <ion-label  position="floating" color="primary">Mot de passe</ion-label>
+            <ion-input type="password" formControlName="password" class="form-controll" required></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.password">
+            <div class="error-message" *ngIf="validations_form.get('password').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)">
+              {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="text-align: right">
+        <ion-col>
+          <ion-button  class="submit-btn" type="submit"  [disabled]="!validations_form.valid">Se connecter</ion-button>
+          
+        </ion-col>
+      </ion-row>
+       <ion-row >
+        <ion-col>
+          <label class="error-message">{{errorMessage}}</label>
+        </ion-col>
+      </ion-row>
+
+
+    </ion-grid>
+  </form>
+
+  
+  <!-- <ion-button routerLink="/tabs/tab1">
+    Go to activies
+  </ion-button>   -->
+ 
+
+</ion-content>
+
+<!-- Footer without a border -->
+<ion-footer >
+  <ion-toolbar>
+    <p>Pas encore inscrit? <a (click)="goToRegisterPage()">Créer un compte.</a></p>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- <ion-footer>
+  <p class="go-to-register footer">
+    Pas encore inscrit? <a (click)="goToRegisterPage()">Créer un compte.</a>
+  </p>
+</ion-footer> -->

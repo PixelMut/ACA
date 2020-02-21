@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ ( publication?.title_publication ) }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+   <ion-card >
+      <ion-item>
+        <ion-avatar slot="start">
+          <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+        </ion-avatar>
+        <ion-label>
+          <h3> {{ (userDetails | async)?.nom_user }} {{ (userDetails | async)?.prenom_user }}</h3>
+          <p>{{ publication?.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p>
+        </ion-label>
+      </ion-item>
+
+      <img src="https://resize-elle.ladmedia.fr/rcrop/638,,forcex/img/var/plain_site/storage/images/loisirs/evasion/les-plus-belles-plages-du-monde/53585158-6-fre-FR/Ou-sont-les-plus-belles-plages-du-monde.jpg" alt="ion">
+      <ion-card-header>
+        <ion-card-title>{{ publication?.title_publication }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        {{ publication?.description_publication }}
+
+         <!-- liste des commentaires -->
+        <ion-list *ngFor="let com of comments " >
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+            </ion-avatar>
+            <ion-label>
+              <h3> {{ (com.user_name | async)?.nom_user }} {{ (com.user_name | async)?.prenom_user }} </h3>
+              <!-- <p>{{ publication?.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p> -->
+            </ion-label>
+          </ion-item>
+
+          <ion-item >{{com?.commentcontent}}</ion-item>
+        </ion-list>
+
+      </ion-card-content>
+
+
+      
+    </ion-card>  
+
+
+   
+</ion-content>

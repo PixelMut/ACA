@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nouvelle Publication</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="createPubForm" (submit)="createPublication()">
+    <ion-item>
+      <!-- <ion-label stacked>Title publication</ion-label> -->
+      <ion-input
+        formControlName="title_publication"
+        type="text"
+        placeholder="Titre de la publication"
+      >
+      </ion-input>
+    </ion-item>
+
+    <!-- <ion-item>
+       <ion-label stacked>Artist Name</ion-label> 
+      <ion-input
+        formControlName="publication_photo_1"
+        type="text"
+        placeholder="Who sings this song?"
+      >
+      </ion-input>
+    </ion-item> -->
+
+    <!-- <ion-item>
+       <ion-label stacked>Album Name</ion-label> 
+      <ion-input
+        formControlName="description_publication"
+        type="text"
+        placeholder="What's the album's name?"
+      >
+      </ion-input>
+    </ion-item> -->
+
+    <ion-item>
+      <!-- <ion-label stacked>Song Description</ion-label> -->
+      <ion-textarea
+        formControlName="description_publication"
+        type="text"
+        placeholder="Description de la publication"
+      >
+      </ion-textarea>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="!createPubForm.valid">
+      Add Publication
+    </ion-button>
+  </form>
+</ion-content>
