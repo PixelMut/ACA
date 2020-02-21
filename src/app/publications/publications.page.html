@@ -12,25 +12,28 @@
 <ion-content [fullscreen]="true">
 
     <ion-card *ngFor="let pub of publicationsList | async "
-      routerLink="/tabs/publications/{{pub.id_publication}}">
-      <ion-item>
+      >
+<!-- routerLink="/tabs/publications/{{pub.id_publication}}" -->
+      <ion-item routerLink="/tabs/contacts/{{pub.users[0].id_user}}">
+        <!-- <a routerLink="/tabs/contacts/{{pub.users[0].id_user}}"> -->
         <ion-avatar slot="start">
           <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
         </ion-avatar>
-        <ion-label>
+        <ion-label routerLink="/tabs/contacts/{{pub.users[0].id_user}}">
           <h3> {{ pub.users[0].nom_user }} {{ pub.users[0].prenom_user }}</h3>
           <p>{{ pub.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p>
         </ion-label>
+        <!-- </a> -->
       </ion-item>
-
-      <img src="https://resize-elle.ladmedia.fr/rcrop/638,,forcex/img/var/plain_site/storage/images/loisirs/evasion/les-plus-belles-plages-du-monde/53585158-6-fre-FR/Ou-sont-les-plus-belles-plages-du-monde.jpg" alt="ion">
-      <ion-card-header>
-        <ion-card-title>{{ pub.title_publication }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        {{ pub.description_publication }}
-      </ion-card-content>
-
+      <div routerLink="/tabs/publications/{{pub.id_publication}}">
+        <img src="https://resize-elle.ladmedia.fr/rcrop/638,,forcex/img/var/plain_site/storage/images/loisirs/evasion/les-plus-belles-plages-du-monde/53585158-6-fre-FR/Ou-sont-les-plus-belles-plages-du-monde.jpg" alt="ion">
+        <ion-card-header >
+          <ion-card-title>{{ pub.title_publication }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ pub.description_publication }}
+        </ion-card-content>
+      </div>
       <ion-footer>
         <ion-row style="text-align: center">
           <ion-col center text-center>
