@@ -8,10 +8,13 @@
 </ion-header>
 
 <ion-content padding>
+  <div *ngIf="publication?.id_user === curentUserId" style="text-align: center">
+    <ion-button (click)="modifPublication(publication?.id_publication, publication?.id_user)">Modifier la publication</ion-button>
+  </div>
    <ion-card >
       <ion-item>
         <ion-avatar slot="start">
-          <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+          <img [src]="(userDetails | async)?.photo_user">
         </ion-avatar>
         <ion-label>
           <h3> {{ (userDetails | async)?.nom_user }} {{ (userDetails | async)?.prenom_user }}</h3>

@@ -1,9 +1,46 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>modif-publication</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <!-- <ion-title>Modifier</ion-title> -->
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content fullscreen="true" slot="fixed">
+  <div class="card-body">
+    <form class="form" [formGroup]="modifPubForm" (submit)="modifPublication()">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="floating" color="primary">Titre</ion-label>
+              <ion-input formControlName="title_publication" type="text" [ngModel]="publication?.title_publication"> </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="floating" color="primary">Description</ion-label>
+              <ion-textarea
+                formControlName="description_publication"
+                type="text"
+                [ngModel]="publication?.description_publication"
+              >
+              </ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row style="text-align: right">
+          <ion-col>
+            <ion-button  class="submit-btn" type="submit" [disabled]="!modifPubForm.valid">
+              Modifier
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
 </ion-content>

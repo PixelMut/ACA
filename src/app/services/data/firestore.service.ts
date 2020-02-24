@@ -109,6 +109,8 @@ export class FirestoreService {
   //savedContacts;
   constructor(public firestore: AngularFirestore) { }
 
+
+
   // creation d'une publication, depuis new-publication page
   createPublication(title_publication: string, description_publication: string): Promise<void> {
     const id_publication = this.firestore.createId();
@@ -128,6 +130,25 @@ export class FirestoreService {
       publication_active,
       description_publication
     });
+  }
+
+  modifyPublication(idpub, title_pub, desc_pub){
+    const pubDoc = this.firestore.doc<any>('publications/' + idpub);
+    const nvDateModif = new Date()
+    return new Promise<any>((resolve, reject) => {
+      pubDoc.update({
+      title_publication: title_pub,
+      description_publication: desc_pub,
+      date_modif_publication : nvDateModif
+      // Other info you want to add here
+    })
+      .then(
+        res => {
+          resolve(res)
+        },
+        err => reject(err))
+    });
+
   }
 
   // recuperer la liste des publications, depuis publications page
@@ -164,6 +185,42 @@ export class FirestoreService {
     return this.firestore.collection('users').doc(contactId);
   }
 
+  modifyProfil(iduser, value){
+    const userDoc = this.firestore.doc<any>('users/' + iduser);
+    return new Promise<any>((resolve, reject) => {
+      userDoc.update({
+      nom_user: value.nom_user,
+      prenom_user: value.prenom_user,
+      adresse_user_code_postal : value.adresse_user_code_postal,
+      adresse_user_localite : value.adresse_user_localite,
+      adresse_user_rue : value.adresse_user_rue,
+      poste : value.poste
+      // Other info you want to add here
+    })
+      .then(
+        res => {
+          resolve(res)
+        },
+        err => reject(err))
+    });
 
+  }
+
+  updateUserImage(iduser, urlImage){
+    console.log('url image:');
+    console.log(urlImage);
+    const userDoc = this.firestore.doc<any>('users/' + iduser);
+    return new Promise<any>((resolve, reject) => {
+      userDoc.update({
+      photo_user: urlImage
+      // Other info you want to add here
+    })
+      .then(
+        res => {
+          resolve(res)
+        },
+        err => reject(err))
+    });
+  }
 
 }

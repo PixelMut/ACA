@@ -1,0 +1,21 @@
+.card-body {
+   
+    padding: 30px;
+    height: calc(100vh - (200px + 56px));
+    overflow: hidden;
+
+  
+}
+
+ion-content {
+    
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    ion-button {
+        margin-top: 1em;
+        margin-bottom: 1em
+    }
+}
+

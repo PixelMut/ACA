@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen="true" slot="fixed">
+
+   <div class="card">
+    <div class="header">
+      <div class="avatar">
+        <img [src]="userDetails?.photo_user" alt="">
+      </div>
+    </div>
+    
+<div class="card-body">
+  <form class="form" [formGroup]="change_userinfo_form"  (ngSubmit)="tryModify(change_userinfo_form.value)">
+    <ion-grid>
+      <ion-row> 
+        <ion-col>
+          <ion-item>
+            <input (change)="uploadImage($event)" type="file" class="image-upload" accept="image/*">
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row> 
+        <ion-col>
+          <ion-item>
+            <ion-label  position="floating" color="primary">Nom</ion-label>
+            <ion-input type="text" formControlName="nom_user" [ngModel]="userDetails?.nom_user"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row> 
+        <ion-col>
+          <ion-item>
+            <ion-label  position="floating" color="primary">Prenom</ion-label>
+            <ion-input type="text" formControlName="prenom_user" [ngModel]="userDetails?.prenom_user"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row> 
+        <ion-col>
+          <ion-item>
+            <ion-label  position="floating" color="primary">Adresse</ion-label>
+            <ion-input type="text" formControlName="adresse_user_rue" [ngModel]="userDetails?.adresse_user_rue"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row> 
+        <ion-col>
+          <ion-item>
+            <ion-label  position="floating" color="primary">Code Postal</ion-label>
+            <ion-input type="text" formControlName="adresse_user_code_postal" [ngModel]="userDetails?.adresse_user_code_postal"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row> 
+        <ion-col>
+          <ion-item>
+            <ion-label  position="floating" color="primary">Localité</ion-label>
+            <ion-input type="text" formControlName="adresse_user_localite" [ngModel]="userDetails?.adresse_user_localite"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row> 
+        <ion-col>
+          <ion-item>
+            <ion-label  position="floating" color="primary">Poste</ion-label>
+            <ion-input type="text" formControlName="poste" [ngModel]="userDetails?.poste"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      
+
+
+      <ion-row style="text-align: right"> 
+        <ion-col>
+          <ion-button  class="submit-btn" type="submit"  [disabled]="!change_userinfo_form.valid">Valider</ion-button>
+        </ion-col>
+      </ion-row>
+      <!-- <ion-row> 
+        <ion-col>
+          <label class="error-message">{{errorMessage}}</label>
+          <label class="success-message">{{successMessage}}</label>
+        </ion-col>
+      </ion-row> -->
+    </ion-grid>
+  </form>
+  </div>
+</div>
+</ion-content>

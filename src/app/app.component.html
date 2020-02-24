@@ -8,7 +8,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content id="main-content">
-        <ion-menu-toggle auto-hide="false" >
+        <ion-menu-toggle auto-hide="true"  >
            <ion-item  >
              <ion-button fill="clear" class="itemBtns" (click)="logout()"><ion-icon slot="start" name="log-out"></ion-icon>
             <ion-label>
@@ -18,7 +18,7 @@
           </ion-menu-toggle>
 
         <ion-list>
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of pages">
+          <ion-menu-toggle autoHide="true" *ngFor="let p of pages">
            <ion-item  >
              <ion-button fill="clear" class="itemBtns" (click)="goToPage(p)"><ion-icon slot="start" [name]="p.icon"></ion-icon>
             <ion-label>

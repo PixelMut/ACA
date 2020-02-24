@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { AuthenticationService } from './services/authentication.service';
+import { FirestoreService } from './services/data/firestore.service';
 
 @Component({
   selector: 'app-root',
@@ -13,15 +14,14 @@ import { AuthenticationService } from './services/authentication.service';
 })
 export class AppComponent {
   pages = [
-   
     {
       title: 'Contact',
-      url: '/tabs/tab3',
+      url: '/tabs/contacts',
       icon: 'person'
     },
     {
-      title: 'About',
-      url: '/tabs/about',
+      title: 'Profil',
+      url: '/tabs/contacts/modif',
       icon: 'information-circle'
     }
   ];
@@ -47,7 +47,7 @@ export class AppComponent {
   }
 
   isMenuDisplayed(){
-    this.router.events.subscribe((event:RouterEvent) => {
+    this.router.events.subscribe((event: RouterEvent) => {
             if (  (event instanceof NavigationEnd && ( event.url === '/login' || event.url === '/register' )) || (!event.url) ) {
               this.menuCtrl.enable(false);
              // console.log('disable menu')
@@ -60,10 +60,19 @@ export class AppComponent {
 
 
   goToPage(page) {
-    this.router.navigate([page.url]);
+    if (page.title === 'Profil') {
+      this.authService.getCurrentUserId().then(res => {
+        this.router.navigate([page.url + '/' + res.uid]);
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    } else {
+       this.router.navigate([page.url]);
+    }
   }
 
-  logout(){
+  logout() {
     this.authService.logoutUser()
     .then(res => {
       console.log(res);

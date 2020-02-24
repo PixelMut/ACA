@@ -15,6 +15,12 @@ export class AuthenticationService {
     }
   }
 
+    // get ID of user
+  async getCurrentUserId(){
+    return firebase.auth().currentUser;
+  }
+
+
   // creation nouvel user
   // - creation dans la partie authentification de Firebase
   // - creation automatique depuis les "functions" firebase, de l'utilisateur dans la table users

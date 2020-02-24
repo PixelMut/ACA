@@ -54,7 +54,13 @@ const routes: Routes = [
             path: ':id',
             loadChildren: () =>
               import('../contacts/detail-contact/detail-contact.module').then(m => m.DetailContactPageModule)
+          },
+          {
+            path: 'modif/:id',
+            loadChildren: () =>
+              import('../contacts/modif-contact/modif-contact.module').then(m => m.ModifContactPageModule)
           }
+          
         ]
       },
       {
