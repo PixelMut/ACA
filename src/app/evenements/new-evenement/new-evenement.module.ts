@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { EvenementsPageRoutingModule } from './evenements-routing.module';
-
-import { EvenementsPage } from './evenements.page';
+import { NewEvenementPageRoutingModule } from './new-evenement-routing.module';
+import { NewEvenementPage } from './new-evenement.page';
 
 @NgModule({
   imports: [
@@ -14,8 +11,8 @@ import { EvenementsPage } from './evenements.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    EvenementsPageRoutingModule
+    NewEvenementPageRoutingModule
   ],
-  declarations: [EvenementsPage]
+  declarations: [NewEvenementPage]
 })
-export class EvenementsPageModule {}
+export class NewEvenementPageModule {}

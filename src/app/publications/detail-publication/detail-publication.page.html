@@ -22,7 +22,7 @@
         </ion-label>
       </ion-item>
 
-      <img src="https://resize-elle.ladmedia.fr/rcrop/638,,forcex/img/var/plain_site/storage/images/loisirs/evasion/les-plus-belles-plages-du-monde/53585158-6-fre-FR/Ou-sont-les-plus-belles-plages-du-monde.jpg" alt="ion">
+      <img [src]="publication?.photo_publication" alt="ion">
       <ion-card-header>
         <ion-card-title>{{ publication?.title_publication }}</ion-card-title>
       </ion-card-header>
@@ -33,7 +33,7 @@
         <ion-list *ngFor="let com of comments " >
           <ion-item>
             <ion-avatar slot="start">
-              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+              <img [src]="(com.user_name | async)?.photo_user">
             </ion-avatar>
             <ion-label>
               <h3> {{ (com.user_name | async)?.nom_user }} {{ (com.user_name | async)?.prenom_user }} </h3>

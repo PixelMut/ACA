@@ -14,7 +14,7 @@
         
         <ion-item *ngFor="let contact of contactsList | async"  routerLink="/tabs/contacts/{{contact.id_user}}">
           <ion-avatar slot="start">
-            <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+            <img [src]="contact.photo_user">
           </ion-avatar>
           <ion-label>
             <h2>{{contact.nom_user}} {{contact.prenom_user}}</h2>

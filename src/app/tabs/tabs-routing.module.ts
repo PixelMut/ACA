@@ -33,12 +33,27 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'tab2',
+        path: 'evenements',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+              import('../evenements/evenements.module').then(m => m.EvenementsPageModule)
+          },
+          {
+            path: 'new',
+            loadChildren: () =>
+              import('../evenements/new-evenement/new-evenement.module').then(m => m.NewEvenementPageModule)
+          },
+          {
+            path: ':id',
+            loadChildren: () =>
+              import('../evenements/detail-evenement/detail-evenement.module').then(m => m.DetailEvenementPageModule)
+          },
+          {
+            path: 'modif/:id',
+            loadChildren: () =>
+              import('../evenements/modif-evenement/modif-evenement.module').then(m => m.ModifEvenementPageModule)
           }
         ]
       },

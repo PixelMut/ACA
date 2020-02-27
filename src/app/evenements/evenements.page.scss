@@ -1,0 +1,19 @@
+ion-thumbnail{
+	width: 22%;
+
+	& img{
+		border-radius: 15px 15px 15px 15px;
+		-moz-border-radius: 15px 15px 15px 15px;
+		-webkit-border-radius: 15px 15px 15px 15px;
+		border: 0px solid #000000;
+	}
+	
+}
+
+h4{
+	color:red;
+}
+
+h2{
+	font-weight: bold;
+}

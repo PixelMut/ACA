@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { EvenementsPageRoutingModule } from './evenements-routing.module';
+import { DetailEvenementPageRoutingModule } from './detail-evenement-routing.module';
 
-import { EvenementsPage } from './evenements.page';
+import { DetailEvenementPage } from './detail-evenement.page';
 
 @NgModule({
   imports: [
@@ -14,8 +14,8 @@ import { EvenementsPage } from './evenements.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    EvenementsPageRoutingModule
+    DetailEvenementPageRoutingModule
   ],
-  declarations: [EvenementsPage]
+  declarations: [DetailEvenementPage]
 })
-export class EvenementsPageModule {}
+export class DetailEvenementPageModule {}

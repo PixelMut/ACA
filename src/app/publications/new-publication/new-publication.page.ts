@@ -3,6 +3,9 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { FirestoreService } from '../../services/data/firestore.service';
 import { Router } from '@angular/router';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { Image } from '../../models/image.interface'
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-new-publication',
@@ -11,13 +14,22 @@ import { Router } from '@angular/router';
 })
 export class NewPublicationPage implements OnInit {
   public createPubForm: FormGroup;
+  loading: boolean = false;
+  url: any;
+  fileraw: any;
+
+  newImage: Image = {
+    id: this.afs.createId(), image: ''
+  }
 
   constructor(
+    private afs: AngularFirestore,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public firestoreService: FirestoreService,
-    formBuilder: FormBuilder,
-    private router: Router) {
+    public formBuilder: FormBuilder,
+    private router: Router,
+    private storage: AngularFireStorage) {
       this.createPubForm = formBuilder.group({
         title_publication: ['', Validators.required],
         description_publication: ['', Validators.required]
@@ -39,7 +51,7 @@ export class NewPublicationPage implements OnInit {
      const publicationDesc = this.createPubForm.value.description_publication;
 
      this.firestoreService
-    .createPublication(publicationName, publicationDesc)
+    .createPublication(publicationName, publicationDesc, this.newImage.id, this.fileraw)
     .then(
       () => {
         loading.dismiss().then(() => {
@@ -54,4 +66,21 @@ export class NewPublicationPage implements OnInit {
      return await loading.present();
   }
 
+   // lors du choix de l'image depuis le champ "upload"
+  uploadImage(event) {
+    this.loading = true;
+    if (event.target.files && event.target.files[0]) {
+      const reader = new FileReader();
+
+      reader.readAsDataURL(event.target.files[0]);
+      // For Preview Of Image
+      reader.onload = (e:any) => { // called once readAsDataURL is completed
+        this.url = e.target.result;
+        // For Uploading Image To Firebase
+        this.fileraw = event.target.files[0];
+      }
+    }
+  }
+
+ 
 }

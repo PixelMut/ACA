@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nouvel Evenement</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+
+  
+ 
+  <!-- <ion-button (click)="GoTo()" >Go To Selected Location</ion-button> -->
+
+
+  <div class="card-body">
+    <form [formGroup]="createEvntForm" (submit)="createEvenement()">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item >
+              <ion-thumbnail slot="start" class="apercu_photo">
+                <ion-img [src]="url"></ion-img>
+              </ion-thumbnail>
+            </ion-item>
+            <ion-item>
+              <input (change)="uploadImage($event)" type="file" class="image-upload" accept="image/*">
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-icon name="calendar-outline"></ion-icon>
+              <!-- <ion-label>D MMM YYYY H:mm</ion-label> -->
+              <ion-datetime placeholder="Date" formControlName="datetime_evnt" displayFormat="D MMM YYYY H:mm" min="2020" max="2050" ></ion-datetime>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row>
+          <ion-col>
+              <ion-item>
+              <!-- <ion-label stacked>Title publication</ion-label> -->
+              <ion-input
+                formControlName="title_evnt"
+                type="text"
+                placeholder="Titre de l'evenement'"
+              >
+              </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <!-- <ion-label stacked>Song Description</ion-label> -->
+              <ion-textarea
+                formControlName="description_evnt"
+                type="text"
+                placeholder="Description de l'evenement'"
+              >
+              </ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row> 
+        
+        <ion-row>
+          <ion-col>
+             <ion-searchbar [ngModelOptions]="{standalone: true}" [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
+            <ion-list [hidden]="autocompleteItems.length == 0">
+              <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+                {{ item.description }}
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row> 
+
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              {{location?.description}}
+            </ion-item>
+          </ion-col>
+        </ion-row> 
+
+ 
+
+
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" type="submit" [disabled]="!createEvntForm.valid">
+              Add Evenement
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+</ion-content>

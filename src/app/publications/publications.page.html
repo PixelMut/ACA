@@ -9,25 +9,27 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content >
+   <!-- <div *ngFor="let item of testValues | async | keyvalue">
+    {{ item.key }} : {{ item.value |json }}
+  </div> -->
 
-    <ion-card *ngFor="let pub of publicationsList | async "
-      >
-<!-- routerLink="/tabs/publications/{{pub.id_publication}}" -->
-      <ion-item routerLink="/tabs/contacts/{{pub.users[0].id_user}}">
-        <!-- <a routerLink="/tabs/contacts/{{pub.users[0].id_user}}"> -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+    <ion-card *ngFor="let pub of publicationsList">
+      <ion-item *ngIf="pub.id_user !== null" routerLink="/tabs/contacts/{{pub.id_user}}">
         <ion-avatar slot="start">
-          <!-- <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"> -->
-          <img [src]="pub.users[0].photo_user">
+          <img [src]="pub.id_user ? getUserPhoto(pub.id_user) : ''">
         </ion-avatar>
-        <ion-label routerLink="/tabs/contacts/{{pub.users[0].id_user}}">
-          <h3> {{ pub.users[0].nom_user }} {{ pub.users[0].prenom_user }}</h3>
-          <p>{{ pub.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p>
+        <ion-label routerLink="/tabs/contacts/{{pub.id_user}}">
+          <h3> {{ pub.id_user ? getName(pub.id_user) : '' }} {{ pub.id_user ? getLastName(pub.id_user) : '' }}</h3>
+          <!-- <p>{{ pub.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p> -->
+          <p>{{ pub.date_publication.seconds * 1000 | dateAgo }}</p>
         </ion-label>
-        <!-- </a> -->
-      </ion-item>
+      </ion-item> 
       <div routerLink="/tabs/publications/{{pub.id_publication}}">
-        <img src="https://resize-elle.ladmedia.fr/rcrop/638,,forcex/img/var/plain_site/storage/images/loisirs/evasion/les-plus-belles-plages-du-monde/53585158-6-fre-FR/Ou-sont-les-plus-belles-plages-du-monde.jpg" alt="ion">
+        <img [src]="pub.photo_publication" alt="ion">
         <ion-card-header >
           <ion-card-title>{{ pub.title_publication }}</ion-card-title>
         </ion-card-header>
@@ -59,14 +61,12 @@
       </ion-footer>
     </ion-card> 
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    
+   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button routerLink="/tabs/publications/new"> 
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-  
-    <!-- <div *ngFor="let item of publicationsList | async | keyvalue">
-    {{ item.key }} : {{ item.value |json }}
-  </div> -->
+   
 
 </ion-content>

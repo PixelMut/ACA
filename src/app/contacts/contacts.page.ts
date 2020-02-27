@@ -39,7 +39,8 @@ export class ContactsPage implements OnInit {
 
   ngOnInit() {
     console.log('start getting contacts')
-    this.contactsList = this.firestoreService.getContactList().valueChanges();
+    this.contactsList = this.firestoreService.getContactList();
+    console.log(this.contactsList)
     //this.firestoreService.setContacts(this.contactsList);
 
   }

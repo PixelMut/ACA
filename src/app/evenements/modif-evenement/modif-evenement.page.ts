@@ -8,49 +8,49 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { Image } from '../../models/image.interface'
+
+export interface Image {
+  id: string;
+  image: string;
+}
 
 @Component({
-  selector: 'app-modif-publication',
-  templateUrl: './modif-publication.page.html',
-  styleUrls: ['./modif-publication.page.scss'],
+  selector: 'app-modif-evenement',
+  templateUrl: './modif-evenement.page.html',
+  styleUrls: ['./modif-evenement.page.scss'],
 })
-export class ModifPublicationPage implements OnInit {
-  public publication //: Publication;
+export class ModifEvenementPage implements OnInit {
+  public evenement //: Publication;
   public userDetails: Observable<Contact>;
   public comments = [];
-  public modifPubForm: FormGroup;
-  public publicationId;
+  public modifEvntForm: FormGroup;
+  public evenementId;
   loading: boolean = false;
   url: any;
   newImage: Image = {
     id: this.afs.createId(), image: ''
   }
-
-
-  constructor(
-    private afs: AngularFirestore,
+  constructor(private afs: AngularFirestore,
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
     private firestoreService: FirestoreService,
     private formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
-    private router: Router) {
-     }
+    private router: Router) { }
 
   ngOnInit() {
-    this.modifPubForm = this.formBuilder.group({
-      title_publication: ['', Validators.required],
-      description_publication: ['', Validators.required]
+    this.modifEvntForm = this.formBuilder.group({
+      title_evnt: ['', Validators.required],
+      description_evnt: ['', Validators.required]
     });
 
-    this.publicationId = this.route.snapshot.paramMap.get('id');
-    console.log(this.publicationId);
-    this.firestoreService.getPublicationDetail(this.publicationId).get().subscribe(
+    this.evenementId = this.route.snapshot.paramMap.get('id');
+    console.log(this.evenementId);
+    this.firestoreService.getEvenementDetail(this.evenementId).get().subscribe(
       res => {
-        this.publication = res.data()
-        console.log(this.publication)
+        this.evenement = res.data()
+        console.log(this.evenement)
         //this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges()
       }
     )
@@ -73,20 +73,20 @@ export class ModifPublicationPage implements OnInit {
         console.log(fileraw)
         // const filePath = '/Image/' + this.newImage.id + '/' + 'Image' + (Math.floor(1000 + Math.random() * 9000) + 1);
 
-        const filePath = '/Image/' + 'Post_' + this.publicationId + '/' + this.newImage.id ;
+        const filePath = '/Image/' + 'Evnt_' + this.evenementId + '/' + this.newImage.id ;
         const result = this.SaveImageRef(filePath, fileraw);
         const ref = result.ref;
         result.task.then(a => {
           ref.getDownloadURL().subscribe(a => {
 
-            this.firestoreService.updatePubImage(this.publicationId, a); // save de l'url dans la table user
-           this.publication.photo_publication = a;
+            this.firestoreService.updateEvntImage(this.evenementId, a); // save de l'url dans la table user
+           this.evenement.photo_evnt = a;
             this.newImage.image = a;
             this.loading = false;
           });
 
           // this.afs.collection('Image').doc(this.newImage.id).set(this.newImage);
-          this.afs.collection('Image').doc('Post_'+ this.publicationId).set(this.newImage);
+          this.afs.collection('Image').doc('Evnt_'+ this.evenementId).set(this.newImage);
         });
       }
     }
@@ -100,17 +100,17 @@ export class ModifPublicationPage implements OnInit {
   }
 
 
-    async modifPublication() {
-     const loading = await this.loadingCtrl.create();
-     const publicationName = this.modifPubForm.value.title_publication;
-     const publicationDesc = this.modifPubForm.value.description_publication;
+  async modifEvenement() {
+    const loading = await this.loadingCtrl.create();
+    const evenementName = this.modifEvntForm.value.title_evnt;
+    const evenementDesc = this.modifEvntForm.value.description_evnt;
 
-     this.firestoreService
-    .modifyPublication(this.publicationId, publicationName, publicationDesc)
+    this.firestoreService
+    .modifyEvenement(this.evenementId, evenementName, evenementDesc)
     .then(
       () => {
         loading.dismiss().then(() => {
-          this.router.navigateByUrl('/tabs/publications');
+          this.router.navigateByUrl('/tabs/evenements');
         });
       },
       error => {
@@ -118,8 +118,9 @@ export class ModifPublicationPage implements OnInit {
       }
     );
 
-     return await loading.present();
-  }
+    return await loading.present();
+}
+
 
 
 }

@@ -47,7 +47,7 @@ export class AuthenticationService {
           resolve(res),
           // une fois logged, on recupere son token pour les prochaines connexions
           firebase.auth().currentUser.getIdToken(true).then( res2 => {
-            console.log(res2)
+            //console.log(res2)
           }).catch(error => {
             // Handle error
           });

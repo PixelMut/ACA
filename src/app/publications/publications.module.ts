@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { PublicationsPage } from './publications.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
+import { DateAgoPipe } from '../pipes/date-ago.pipe';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
     ExploreContainerComponentModule,
     RouterModule.forChild([{ path: '', component: PublicationsPage }])
   ],
-  declarations: [PublicationsPage]
+  declarations: [PublicationsPage, DateAgoPipe]
 })
 export class PublicationsPageModule {}

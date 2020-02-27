@@ -25,7 +25,7 @@
           </h6>
         </div>
  
-        <ion-button expand="full" color="primary">{{ (contact | async)?.adresse_mail }}</ion-button>
+        <ion-button (click)="sendMail()" expand="full" color="primary">{{ (contact | async)?.adresse_mail }}</ion-button>
         <!-- <ion-button expand="full" color="secondary">@RogerFederer on Twitter</ion-button>
         <ion-button expand="full" color="secondary">View profile at ATP</ion-button>  -->
 

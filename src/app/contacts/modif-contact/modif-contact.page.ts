@@ -12,8 +12,6 @@ export interface Image {
   id: string;
   image: string;
 }
-
-
 @Component({
   selector: 'app-modif-contact',
   templateUrl: './modif-contact.page.html',

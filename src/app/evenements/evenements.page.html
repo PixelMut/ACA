@@ -1,9 +1,78 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>evenements</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Evenements
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
+
+  <ion-item *ngFor="let evnt of evntList | async " routerLink="/tabs/evenements/{{evnt.id_evnt}}">
+          <ion-thumbnail slot="start">
+            <img [src]="evnt.photo_evnt">
+          </ion-thumbnail>
+          <ion-label>
+            <!-- <h2>{{ evnt.date_evnt.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</h2> -->
+            <h4>DANS {{ getRemainingTime(evnt.date_evnt) | uppercase }}</h4>
+            <h2 class="ion-text-capitalize">{{ evnt.title_evnt }}</h2>
+            <p class="ion-text-capitalize">{{ evnt.description_evnt }}</p>
+          </ion-label>
+  </ion-item>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button routerLink="/tabs/evenements/new"> 
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  <!-- old view -->
+    <!-- <ion-card *ngFor="let evnt of evntList | async ">
+      <ion-item *ngIf="evnt.users[0].id_user !== null" routerLink="/tabs/contacts/{{evnt.users[0].id_user}}">
+        <ion-avatar slot="start">
+          <img [src]="evnt.users[0].photo_user">
+        </ion-avatar>
+        <ion-label routerLink="/tabs/contacts/{{evnt.users[0].id_user}}">
+          <h3> {{ evnt.users[0].nom_user }} {{ evnt.users[0].prenom_user }}</h3>
+          <p>{{ evnt.date_publication_evnt.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p>
+        </ion-label>
+      </ion-item>
+      <div routerLink="/tabs/evenements/{{evnt.id_evenement}}">
+        <img [src]="evnt.photo_evnt" alt="ion">
+        <ion-card-header >
+          <ion-card-title>{{ evnt.title_evnt }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ evnt.description_evnt }}
+        </ion-card-content>
+      </div>
+      <ion-footer>
+        <ion-row style="text-align: center">
+          <ion-col center text-center>
+            <button class="footer-button-card">
+              <ion-icon name="thumbs-up"></ion-icon>
+              <div>1.5k Likes</div>
+            </button>
+          </ion-col>
+          <ion-col center text-center>
+            <button class="footer-button-card">
+              <ion-icon name="text"></ion-icon>
+              <div>4 Comments</div>
+            </button>
+          </ion-col>
+          <ion-col center text-center>
+            <button class="footer-button-card">
+              <ion-icon name="time"></ion-icon>
+                <div>11h ago</div>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-footer>
+    </ion-card> 
+
+ -->
+
 
 </ion-content>

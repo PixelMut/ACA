@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
     .then(res => {
       console.log(res);
       this.errorMessage = '';
-      this.navCtrl.navigateForward('/tabs/publications');
+      this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
     }, err => {
       this.errorMessage = err.message;
     })

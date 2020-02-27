@@ -17,6 +17,7 @@ import { environment } from 'src/environments/environment';
 import { AuthenticationService } from './services/authentication.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { DateAgoPipe } from './pipes/date-ago.pipe';
 
 // export const firebaseConfig = {
 //      apiKey: 'AIzaSyB9jHU1jM_t0CsW33wkbhNbeAUlcxRjCVg',

@@ -8,29 +8,56 @@
 </ion-header>
 
 <ion-content padding>
-  <form [formGroup]="createPubForm" (submit)="createPublication()">
-    <ion-item>
-      <!-- <ion-label stacked>Title publication</ion-label> -->
-      <ion-input
-        formControlName="title_publication"
-        type="text"
-        placeholder="Titre de la publication"
-      >
-      </ion-input>
-    </ion-item>
-
-    <ion-item>
-      <!-- <ion-label stacked>Song Description</ion-label> -->
-      <ion-textarea
-        formControlName="description_publication"
-        type="text"
-        placeholder="Description de la publication"
-      >
-      </ion-textarea>
-    </ion-item>
-
-    <ion-button expand="block" type="submit" [disabled]="!createPubForm.valid">
-      Add Publication
-    </ion-button>
-  </form>
+  <div class="card-body">
+    <form [formGroup]="createPubForm" (submit)="createPublication()">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-item >
+                <ion-thumbnail slot="start" class="apercu_photo">
+                  <ion-img [src]="url"></ion-img>
+                </ion-thumbnail>
+              </ion-item>
+              <ion-item>
+                <input (change)="uploadImage($event)" type="file" class="image-upload" accept="image/*">
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <!-- <ion-label stacked>Title publication</ion-label> -->
+                <ion-input
+                  formControlName="title_publication"
+                  type="text"
+                  placeholder="Titre de la publication"
+                >
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <!-- <ion-label stacked>Song Description</ion-label> -->
+                <ion-textarea
+                  formControlName="description_publication"
+                  type="text"
+                  placeholder="Description de la publication"
+                >
+                </ion-textarea>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button expand="block" type="submit" [disabled]="!createPubForm.valid">
+                Add Publication
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+  </div>
+  
 </ion-content>
