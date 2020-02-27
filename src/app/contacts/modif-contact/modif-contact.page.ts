@@ -6,7 +6,7 @@ import { MiscDataService } from 'src/app/services/data/misc-data.service';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-
+import { Router } from '@angular/router';
 
 export interface Image {
   id: string;
@@ -35,7 +35,8 @@ export class ModifContactPage implements OnInit {
     private route: ActivatedRoute,
     private miscData: MiscDataService,
     private navCtrl: NavController,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
     this.typesLocalisation = this.miscData.list_localisations; // Permet de connaître le type selon un id
   }
@@ -49,18 +50,10 @@ export class ModifContactPage implements OnInit {
       prenom_user : new FormControl('', Validators.compose([
         Validators.required
       ])),
-      adresse_user_code_postal : new FormControl('', Validators.compose([
-        Validators.required
-      ])),
-      adresse_user_localite : new FormControl('', Validators.compose([
-        Validators.required
-      ])),
-      adresse_user_rue : new FormControl('', Validators.compose([
-        Validators.required
-      ])),
-      poste : new FormControl('', Validators.compose([
-        Validators.required
-      ]))
+      adresse_user_code_postal : new FormControl('', Validators.compose([])),
+      adresse_user_localite : new FormControl('', Validators.compose([])),
+      adresse_user_rue : new FormControl('', Validators.compose([])),
+      poste : new FormControl('', Validators.compose([]))
     })
 
     // recuperation des données user grace a son id
@@ -68,7 +61,6 @@ export class ModifContactPage implements OnInit {
     this.firestoreService.getContactDetail(this.userId).get().subscribe(
       res => {
         this.userDetails =  res.data(); // données qui remplissent le HTML
-        //console.log(this.userDetails)
       }
     )
   }
@@ -115,7 +107,7 @@ export class ModifContactPage implements OnInit {
     };
   }
 
-  // affiche la localisation en fonction de l'id
+  // affiche la localisation en fonction de l'id  
   getLocalisation(idlocalisation) {
     if (idlocalisation) {
        return this.typesLocalisation.filter(loc => loc.id === idlocalisation)[0].name
@@ -127,7 +119,8 @@ export class ModifContactPage implements OnInit {
     this.firestoreService.modifyProfil(this.userId, value)
       .then(res => {
         // console.log('saved with success')
-        this.navCtrl.navigateBack('');
+        this.router.navigate(['tabs/publications'])
+        //this.navCtrl.navigateRoot('');
       },
       err => {
         console.log('error saving')

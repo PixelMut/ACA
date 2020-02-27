@@ -45,19 +45,25 @@ export class DetailContactPage implements OnInit{
   }
 
   sendMail(email){
-    this.emailComposer.isAvailable().then((available: boolean) =>{
-    if(available) {
-      let mail = {
-        to: email,
-        subject: 'Contact - Acensi Community App',
-        body: '',
-        isHtml: true
-      }
+    email.subscribe(
+      res => {
+        this.emailComposer.isAvailable().then((available: boolean) =>{
+          if(available) {
+            let mail = {
+              to: res.adresse_mail,
+              subject: 'Contact - Acensi Community App',
+              body: '',
+              isHtml: true
+            }
 
-      // Send a text message using default options
-      this.emailComposer.open(mail);
-    }
-    });
+            // Send a text message using default options
+            this.emailComposer.open(mail);
+          }
+        });
+      }
+    )
+
+
   }
 
 }

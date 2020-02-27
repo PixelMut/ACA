@@ -11,6 +11,7 @@ import { shareReplay } from 'rxjs/operators';
 })
 export class ContactsPage implements OnInit {
   public contactsList;
+  public fullContactList;
   testc;
 
   constructor(
@@ -38,11 +39,21 @@ export class ContactsPage implements OnInit {
    }
 
   ngOnInit() {
-    console.log('start getting contacts')
-    this.contactsList = this.firestoreService.getContactList();
-    console.log(this.contactsList)
-    //this.firestoreService.setContacts(this.contactsList);
+    this.firestoreService.getContactList().subscribe(elt=>{
+      this.fullContactList =  elt
+      this.contactsList = this.fullContactList
+    })
+  }
 
+  onSearchTerm(event){
+    this.contactsList = this.fullContactList
+    const val = event.detail.value;
+
+    if (val && val.trim() !== '') {
+      this.contactsList = this.contactsList.filter(term => {
+        return ( term.nom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 || term.prenom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 )
+      });
+    }
   }
 
 }

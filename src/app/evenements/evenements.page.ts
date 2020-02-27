@@ -12,22 +12,41 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class EvenementsPage implements OnInit {
   public evntList;
+  public outdated_evntList;
 
   constructor(
     private afs: AngularFirestore,
     private firestoreService: FirestoreService,
     private router: Router,
     private authsrv: AuthenticationService) {
-    this.evntList = this.afs
-      .collection('evenements')
-      .valueChanges()
-      .pipe(
-        innerJoin(afs,'id_user', 'users'),
-        shareReplay(1)
-      );
+
+      this.getListEvent();
+    // this.evntList = this.afs
+    //   .collection('evenements')
+    //   .valueChanges()
+    //   .pipe(
+    //     innerJoin(afs,'id_user', 'users'),
+    //     shareReplay(1)
+    //   );
    }
 
   ngOnInit() {
+  }
+
+  getListEvent(){
+    let ajd = new Date()
+    this.firestoreService.getEvntList().subscribe(
+      res => {
+       this.evntList = res
+      }
+    )
+
+    this.firestoreService. getPassedEvntList().subscribe(
+      res => {
+       this.outdated_evntList = res
+      }
+    )
+   
   }
 
   getRemainingTime(dateEvent){

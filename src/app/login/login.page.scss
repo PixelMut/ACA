@@ -1,6 +1,9 @@
-.form{
+.container_elt{
   padding-top: 50%;
-  padding-bottom: 50%
+  //padding-bottom: 50%
+ 
+
+
 }
 
 .go-to-register{
@@ -17,4 +20,9 @@ ion-content.background{
 
 ion-footer{
   text-align: center
+}
+
+.mdp-oubli{
+  color: white;
+  margin-left: 5px;
 }

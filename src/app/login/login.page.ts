@@ -13,7 +13,7 @@ export class LoginPage implements OnInit {
 
   validations_form: FormGroup;
   errorMessage: string = '';
-
+  showForgottenPswd = false; // afficher / cacher la partie mdp oublié
   validation_messages = {
     'email': [
       { type: 'required', message: 'Adresse mail obligatoire.' },
@@ -55,10 +55,38 @@ export class LoginPage implements OnInit {
       this.errorMessage = err.message;
     })
   }
- 
+
+
+  recover_mail(){
+    this.showForgottenPswd = true;
+    
+  }
+
+  sendMail(elt){
+    if(elt !== ''){
+       this.authService.recoverMail(elt)
+        .then(res => {
+          console.log(res);
+          this.showForgottenPswd = false;
+
+        }, err => {
+          console.log(err);
+        })
+    }
+  }
+
+  cancelPwdMail(){
+      this.showForgottenPswd = false;
+  }
+
   goToRegisterPage(){
     this.navCtrl.navigateForward('/register');
   }
+
+  // password reset
+//   this.firebaseAuthentication.sendPasswordResetEmail()
+// .then((res: any) => console.log(res))
+// .catch((error: any) => console.error(error));
 
 
   

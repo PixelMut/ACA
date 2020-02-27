@@ -31,6 +31,7 @@ export class AuthenticationService {
       firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
       .then(
         res => {
+          this.sendVerificationMail()
           resolve(res)
         },
         err => reject(err))
@@ -54,6 +55,29 @@ export class AuthenticationService {
 
 
 
+        },
+        err => reject(err))
+    })
+  }
+
+  recoverMail(email) {
+      return new Promise<any>((resolve, reject) => {
+        firebase.auth().sendPasswordResetEmail(email)
+          .then(
+            res => {
+              resolve(res)
+            },
+        err => reject(err))
+    })
+  }
+
+  sendVerificationMail(){
+    return new Promise<any>((resolve, reject) => {
+
+      firebase.auth().currentUser.sendEmailVerification()
+      .then(
+        res => {
+          resolve(res)
         },
         err => reject(err))
     })

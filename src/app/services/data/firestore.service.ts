@@ -290,7 +290,16 @@ export class FirestoreService {
       return this.firestore.collection('comments', ref => ref.where('id_elt', '==', pubId))
     }
 
-    
+    getEvntList(){ //: AngularFirestoreCollection<Publication> {
+    // return this.firestore.collection('publications');
+    // arrive a trier par date avec :
+      return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'asc').where('date_evnt','>=',new Date())).valueChanges();
+    }
+
+    getPassedEvntList(){
+      return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'desc').where('date_evnt','<',new Date())).valueChanges();
+    }
+
     modifyEvenement(idevnt, title_evnt, desc_evnt){
       const evntDoc = this.firestore.doc<any>('evenements/' + idevnt);
       const nvDateModif = new Date()

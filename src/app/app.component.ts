@@ -20,7 +20,7 @@ export class AppComponent {
       icon: 'person'
     },
     {
-      title: 'Profil',
+      title: 'Mon profil',
       url: '/tabs/contacts/modif',
       icon: 'information-circle'
     }
@@ -60,7 +60,7 @@ export class AppComponent {
 
 
   goToPage(page) {
-    if (page.title === 'Profil') {
+    if (page.title === 'Mon profil') {
       this.authService.getCurrentUserId().then(res => {
         this.router.navigate([page.url + '/' + res.uid]);
       })

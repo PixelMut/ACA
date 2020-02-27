@@ -10,9 +10,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-searchbar (ionChange)="onSearchTerm($event)" ></ion-searchbar>
   <ion-list>
         
-        <ion-item *ngFor="let contact of contactsList | async"  routerLink="/tabs/contacts/{{contact.id_user}}">
+        <ion-item *ngFor="let contact of contactsList"  routerLink="/tabs/contacts/{{contact.id_user}}">
           <ion-avatar slot="start">
             <img [src]="contact.photo_user">
           </ion-avatar>

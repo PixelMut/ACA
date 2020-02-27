@@ -11,17 +11,35 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-item *ngFor="let evnt of evntList | async " routerLink="/tabs/evenements/{{evnt.id_evnt}}">
-          <ion-thumbnail slot="start">
+  <ion-item *ngFor="let evnt of evntList " routerLink="/tabs/evenements/{{evnt.id_evnt}}">
+          <ion-thumbnail slot="start" >
             <img [src]="evnt.photo_evnt">
           </ion-thumbnail>
           <ion-label>
             <!-- <h2>{{ evnt.date_evnt.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</h2> -->
             <h4>DANS {{ getRemainingTime(evnt.date_evnt) | uppercase }}</h4>
             <h2 class="ion-text-capitalize">{{ evnt.title_evnt }}</h2>
-            <p class="ion-text-capitalize">{{ evnt.description_evnt }}</p>
+            <p class="ion-text-capitalize">{{ evnt.lieu_evnt }}</p>
+          </ion-label> 
+  </ion-item>
+
+  <ion-item-divider *ngIf="outdated_evntList?.length > 0">
+    <ion-label>Evènements passés</ion-label>
+  </ion-item-divider>
+
+  <ion-item *ngFor="let evnt of outdated_evntList " routerLink="/tabs/evenements/{{evnt.id_evnt}}">
+          <ion-thumbnail slot="start">
+            <img [src]="evnt.photo_evnt">
+          </ion-thumbnail>
+          <ion-label>
+            
+            <h4>{{ evnt.date_evnt.seconds * 1000 | date }}</h4>
+            <h2 class="ion-text-capitalize">{{ evnt.title_evnt }}</h2>
+            <p class="ion-text-capitalize">{{ evnt.lieu_evnt }}</p>
           </ion-label>
   </ion-item>
+
+
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button routerLink="/tabs/evenements/new"> 
         <ion-icon name="add"></ion-icon>
