@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { NavController } from '@ionic/angular';
 import { AuthenticationService } from '../services/authentication.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-
+import * as firebase from 'firebase/app';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -25,24 +25,34 @@ export class LoginPage implements OnInit {
     ]
   };
 
+  
+
   constructor(public afDB: AngularFireDatabase,
               private navCtrl: NavController,
               private authService: AuthenticationService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder) {
+
+              this.validations_form = this.formBuilder.group({
+                email : new FormControl('',Validators.compose([
+                  Validators.required,
+                  Validators.pattern('^[a-zA-Z0-9_.+-]+@acensi+.[a-zA-Z0-9-.]+$')
+                ])),
+                password: new FormControl('', Validators.compose([
+                  Validators.minLength(5),
+                  Validators.required
+                ])),
+              });
+
+              }
 
   ngOnInit() {
-    this.validations_form = this.formBuilder.group({
-      email: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@acensi+.[a-zA-Z0-9-.]+$')
-      ])),
-      password: new FormControl('', Validators.compose([
-        Validators.minLength(5),
-        Validators.required
-      ])),
-    });
-
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+       this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
+      }
+    })
   }
+
 
   // Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
   loginUser(value){
@@ -55,7 +65,6 @@ export class LoginPage implements OnInit {
       this.errorMessage = err.message;
     })
   }
-
 
   recover_mail(){
     this.showForgottenPswd = true;

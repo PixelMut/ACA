@@ -152,7 +152,45 @@ export class FirestoreService {
       })
     }
 
+    deletePub(id_publication: string) : Promise<void> {
+      console.log('entre deletePub')
+      return new Promise<any>((resolve, reject) => {
+        this.getPublicationComments(id_publication).subscribe(
+            res => {
+              if(res.length > 0){ // présence de commentaires
+                this.deleteCommentaires(id_publication);
+                this.firestore.doc(`publications/${id_publication}`).delete();
+                resolve(res)
+              }else{
+                this.firestore.doc(`publications/${id_publication}`).delete();
+                resolve(res)
+              }
+            }
+        )
+      });
 
+/*      this.getPublicationComments(id_publication).subscribe(
+          res => {
+            if(res.length > 0){ // présence de commentaires
+              this.deleteCommentairesPublication(id_publication);
+              return this.firestore.doc(`publications/${id_publication}`).delete();
+            }else{
+              return this.firestore.doc(`publications/${id_publication}`).delete();
+            }
+          }
+      );*/
+    }
+
+    // fonction utilisée pour les commentaires des publications et des evenements
+    deleteCommentaires(id_elt){
+    console.log('entre deleteCommentaires')
+      let delete_comms = this.firestore.collection('comments', ref => ref.where('id_elt', '==', id_elt));
+      delete_comms.get().subscribe(delItems => {
+        delItems.forEach(doc => {
+          doc.ref.delete();
+        });
+      });
+    }
 
     SaveImageRef(filePath, file) {
     return {
@@ -199,7 +237,7 @@ export class FirestoreService {
     }
 
     getPublicationComments(pubId: string){
-      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', pubId))
+      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', pubId).orderBy('date_comment','asc')).valueChanges();
     }
 
 
@@ -220,6 +258,48 @@ export class FirestoreService {
       });
     }
 
+    addComment(comment_content, id_elt: string, id_user : string){
+    console.log(id_user)
+      const id_comment = this.firestore.createId();
+      // const filePath = '/Image/' + 'Post_' + id_publication + '/' + imageId ;
+      // const result = this.SaveImageRef(filePath, fileRaw);
+      // const ref = result.ref;
+      const date_comment = new Date();
+      // const date_modif_publication = date_publication;
+      const comment_active = true;
+      
+      return new Promise<any>((resolve, reject) => {
+        this.firestore.doc(`comments/${id_comment}`).set({
+          id_comment,
+          comment_content,
+          id_elt,
+          id_user,
+          comment_active,
+          date_comment
+        })
+        .then(
+          res => {
+            resolve(res)
+          },
+          err => reject(err))
+      });
+
+
+      // return this.firestore.doc(`comments/${id_comment}`).set({
+      //   id_comment,
+      //   comment_content : content,
+      //   id_elt = elementId,
+      //   id_user = userId,
+      //   publication_active,
+      //   description_publication,
+      //   id_user,
+      //   'photo_publication':a
+      // });
+
+
+
+
+    }
   // FIN PARTIE PUBLICATIONS
 
   // PARTIE CONTACT / USER
@@ -286,8 +366,9 @@ export class FirestoreService {
       return this.firestore.collection('evenements').doc(evntId);
     }
 
-    getEvenementComments(pubId: string){
-      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', pubId))
+    getEvenementComments(evntId: string){
+      console.log('entre getEvenementsComments')
+      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', evntId).orderBy('date_comment','asc')).valueChanges();
     }
 
     getEvntList(){ //: AngularFirestoreCollection<Publication> {
@@ -318,6 +399,25 @@ export class FirestoreService {
       });
 
     }
+
+    deleteEvnt(id_evnt: string) : Promise<void> {
+      console.log('entre deleteEvnt')
+      return new Promise<any>((resolve, reject) => {
+        this.getEvenementComments(id_evnt).subscribe(
+            res => {
+              console.log(res)
+              if(res.length > 0){ // présence de commentaires
+                this.deleteCommentaires(id_evnt);
+                this.firestore.doc(`evenements/${id_evnt}`).delete();
+                resolve(res)
+              }else{
+                this.firestore.doc(`evenements/${id_evnt}`).delete();
+                resolve(res)
+              }
+            })
+      });
+    }
+
 
     updateEvntImage(idevnt, urlImage){
       console.log('url image:');

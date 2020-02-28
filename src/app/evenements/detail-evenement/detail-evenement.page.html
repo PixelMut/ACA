@@ -10,9 +10,23 @@
 
 
 <ion-content no-padding>
-  <div *ngIf="evenement?.id_user === currentUserId" style="text-align: center">
+  <ion-fab horizontal="end" vertical="top" slot="fixed" *ngIf="evenement?.id_user === currentUserId">
+    <ion-fab-button>
+      <ion-icon name="arrow-down-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list>
+      <ion-fab-button color="secondary" (click)="modifEvenement(evenement?.id_evnt, evenement?.id_user)">
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="danger" (click)="presentAlertConfirm(evenement?.id_evnt)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+<!--  <div *ngIf="evenement?.id_user === currentUserId" style="text-align: center">
     <ion-button (click)="modifEvenement(evenement?.id_evenement, evenement?.id_user)">Modifier l'evenement</ion-button>
-  </div>
+  </div>-->
    <ion-card >
      <img [src]="evenement?.photo_evnt" alt="ion">
       <ion-card-header>
@@ -46,44 +60,28 @@
         <ion-item>
           {{ evenement?.description_evnt }}
         </ion-item>
-
-
-         <!-- liste des commentaires -->
-        <ion-list *ngFor="let com of comments " >
-          <ion-item>
-            <ion-avatar slot="start">
-              <img [src]="(com.user_name | async)?.photo_user">
-            </ion-avatar>
-            <ion-label>
-              <h3> {{ (com.user_name | async)?.nom_user }} {{ (com.user_name | async)?.prenom_user }} </h3>
-              <!-- <p>{{ publication?.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p> -->
-            </ion-label>
-          </ion-item>
-
-          <ion-item >{{com?.commentcontent}}</ion-item>
-        </ion-list>
-
       </ion-card-content>
+   </ion-card>
 
+  <!-- liste des commentaires -->
+  <ion-card class="comment_card" *ngFor="let com of comments ">
+    <ion-item >
+      <ion-avatar slot="start" class="ion-align-items-center">
+        <img [src]="(com.user_name | async)?.photo_user">
+      </ion-avatar>
+      <ion-label>
+        <h3> {{ (com.user_name | async)?.nom_user }} {{ (com.user_name | async)?.prenom_user }} </h3>
+        <p>{{ com?.commentDate.seconds * 1000 | date:'yyyy-MM-dd HH:mm' }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item class="comment_text" lines="none">{{com?.commentcontent}}</ion-item>
+  </ion-card>
 
+  <ion-card class="add_comment_card" >
+    <ion-item class="add_comment_text" lines="none">
+      <ion-input placeholder="Nouveau commentaire..." [(ngModel)]="new_comment"></ion-input>
+      <ion-button *ngIf="new_comment.length > 0" (click)="add_comment()">Ajouter</ion-button>
+    </ion-item>
+  </ion-card>
 
-      <!-- <ion-item>
-        <ion-avatar slot="start">
-          <img [src]="(userDetails | async)?.photo_user">
-        </ion-avatar>
-        <ion-label>
-          <h3> {{ (userDetails | async)?.nom_user }} {{ (userDetails | async)?.prenom_user }}</h3>
-          <p>{{ evenement?.date_publication_evnt.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p>
-        </ion-label>
-      </ion-item> -->
-
-      
-      
-
-
-      
-    </ion-card>  
-
-
-   
 </ion-content>

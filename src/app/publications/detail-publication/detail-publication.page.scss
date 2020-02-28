@@ -1,0 +1,32 @@
+.comment_card{
+	
+
+	& ion-item {
+		//height : 41px;
+		//background-color: red;
+
+		
+
+		& ion-avatar{
+		text-align: center;
+
+			& img{
+				width:70%;
+				height:70%;
+				//margin:auto;
+				margin-top: 5px;
+			}
+		}
+	
+
+		& ion-label{
+			margin:0;
+		}
+
+	}
+
+	& .comment_text{
+		font-size: inherit;
+	}
+	
+}

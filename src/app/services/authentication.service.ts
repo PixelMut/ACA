@@ -20,6 +20,21 @@ export class AuthenticationService {
     return firebase.auth().currentUser;
   }
 
+  async checkToken(){
+   
+    return firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user)
+        console.log('connected')
+        return true
+      } else {
+        console.log(user)
+        console.log('NOT connected')
+        return false
+      }
+    })
+  }
+
 
   // creation nouvel user
   // - creation dans la partie authentification de Firebase

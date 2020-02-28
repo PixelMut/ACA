@@ -5,6 +5,7 @@ import { FirestoreService } from 'src/app/services/data/firestore.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Contact } from 'src/app/models/contact.interface';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import {AlertController} from "@ionic/angular";
 
 @Component({
   selector: 'app-detail-evenement',
@@ -16,14 +17,17 @@ export class DetailEvenementPage implements OnInit {
   public userDetails: Observable<Contact>;
   public comments = [];
   public currentUserId;
+  public new_comment ='';
+  private evntId;
 
   constructor(
      private firestoreService: FirestoreService,
      private route: ActivatedRoute,
      private router: Router,
-     private authSrv: AuthenticationService
+     private authSrv: AuthenticationService,
+     public alertController: AlertController
   ) {
-    this.authSrv.getCurrentUserId().then(res => {
+     this.authSrv.getCurrentUserId().then(res => {
         this.currentUserId = res.uid;
       })
       .catch(error => {
@@ -32,25 +36,26 @@ export class DetailEvenementPage implements OnInit {
   }
 
   ngOnInit() {
-    const evntId: string = this.route.snapshot.paramMap.get('id');
-    this.firestoreService.getEvenementDetail(evntId).get().subscribe(
+    this.evntId = this.route.snapshot.paramMap.get('id');
+    this.firestoreService.getEvenementDetail(this.evntId).get().subscribe(
       res => {
         this.evenement = res.data();
         this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges()
-        this.startGettingComments(evntId)
+        this.startGettingComments(this.evntId)
       }
     )
   }
 
    startGettingComments(evenementId){
-    this.firestoreService.getEvenementComments(evenementId).get().subscribe(
+    this.firestoreService.getEvenementComments(evenementId).subscribe(
       res => {
-        res.docs.forEach(elt => {
+        this.comments = [];
+        res.forEach((elt:any) => {
           // this.comments.push(elt.data()) // compose la liste des commentaires
           this.comments.push({
-            user_name : this.firestoreService.getContactDetail(elt.data().id_user).valueChanges(),
-            user_photo : 'photo',
-            commentcontent : elt.data().comment_content
+            user_name : this.firestoreService.getContactDetail(elt.id_user).valueChanges(),
+            commentcontent : elt.comment_content,
+            commentDate : elt.date_comment
           })
         })
       }
@@ -59,10 +64,34 @@ export class DetailEvenementPage implements OnInit {
 
   modifEvenement(evenementId, publisherId){
     this.router.navigate(['/tabs/evenements/modif/'+evenementId]);
-    console.log(evenementId);
-    console.log(publisherId);
-
   }
+
+  async presentAlertConfirm(pubId) {
+    const alert = await this.alertController.create({
+        header: 'Confirmer!',
+        message: 'Voulez vous vraiment <strong>supprimer</strong> cet évènement et ses commentaires ?',
+        buttons: [
+            {
+                text: 'Annuler',
+                role: 'cancel',
+                cssClass: 'secondary',
+                handler: (blah) => {
+                    console.log('Confirm Cancel: blah');
+                }
+            }, {
+                text: 'Supprimer',
+                handler: () => {
+                    this.firestoreService.deleteEvnt(pubId).then(() => {
+                        this.router.navigateByUrl('tabs/evenements');
+                    });
+                }
+            }
+        ]
+    });
+
+    await alert.present();
+  }
+
 
   getRemainingTime(dateEvent){
     if (dateEvent) {
@@ -86,6 +115,19 @@ export class DetailEvenementPage implements OnInit {
     let mDisplay = m > 0 ? m + (m === 1 ? ' minute, ' : ' minutes ') : '';
     // let sDisplay = s > 0 ? s + (s === 1 ? ' seconde' : ' secondes') : '';
     return dDisplay + hDisplay + mDisplay // + sDisplay;
+  }
+
+  add_comment(){
+    this.authSrv.getCurrentUserId().then(
+        res => {
+          this.firestoreService.addComment(this.new_comment, this.evntId, res.uid).then(
+              res => {
+                //this.startGettingComments(this.pubId)
+              });
+          this.new_comment = '';
+        }
+    );
+
   }
 
 }

@@ -36,6 +36,7 @@ export class AppComponent {
     private navCtrl: NavController
   ) {
     this.initializeApp();
+    
   }
 
   initializeApp() {

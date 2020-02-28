@@ -55,6 +55,9 @@ export class PublicationsPage implements OnInit {
       )
     }
 
+    checkco(){
+      this.authsrv.checkToken()
+    }
 
     ngOnInit() {
        //this.navCtrl.
