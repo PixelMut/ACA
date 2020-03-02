@@ -4,6 +4,8 @@ import { NavController } from '@ionic/angular';
 import { AuthenticationService } from '../services/authentication.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import * as firebase from 'firebase/app';
+import {Storage} from '@ionic/storage';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -30,7 +32,8 @@ export class LoginPage implements OnInit {
   constructor(public afDB: AngularFireDatabase,
               private navCtrl: NavController,
               private authService: AuthenticationService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private storage: Storage) {
 
               this.validations_form = this.formBuilder.group({
                 email : new FormControl('',Validators.compose([
@@ -48,7 +51,8 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-       this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
+        this.storage.set('uid', user.uid);
+        this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
       }
     })
   }

@@ -33,3 +33,7 @@
    width: 100%;
    text-align: center;
 }
+
+.pop-over-style .popover-content {
+   --min-width: 300px !important;
+}

@@ -18,6 +18,8 @@ import { AuthenticationService } from './services/authentication.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
+import {PopoverComponent} from "./notif-component/popover/popover.component";
+import {IonicStorageModule, Storage} from "@ionic/storage";
 
 // export const firebaseConfig = {
 //      apiKey: 'AIzaSyB9jHU1jM_t0CsW33wkbhNbeAUlcxRjCVg',
@@ -31,8 +33,8 @@ import { DateAgoPipe } from './pipes/date-ago.pipe';
 // };
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, PopoverComponent],
+  entryComponents: [PopoverComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -42,7 +44,8 @@ import { DateAgoPipe } from './pipes/date-ago.pipe';
     AngularFireAuthModule,
     AngularFireStorageModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    IonicStorageModule.forRoot()
     
 ],
   providers: [

@@ -30,12 +30,14 @@
     "@ionic/angular": "^5.0.0",
     "@ionic/lab": "^3.1.0",
     "@ionic/pwa-elements": "^1.4.2",
+    "@ionic/storage": "^2.2.0",
     "@types/google-maps": "^3.2.2",
     "@types/googlemaps": "^3.39.3",
     "angularfire2": "^5.4.2",
     "cordova-android": "8.1.0",
     "cordova-browser": "6.0.0",
     "cordova-plugin-email-composer": "^0.9.2",
+    "cordova-sqlite-storage": "^4.0.0",
     "core-js": "^2.5.4",
     "firebase": "^7.8.2",
     "firebase-admin": "^8.9.2",
@@ -87,7 +89,8 @@
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-email-composer": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "cordova-sqlite-storage": {}
     },
     "platforms": [
       "android",

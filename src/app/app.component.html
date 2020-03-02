@@ -8,16 +8,35 @@
         </ion-toolbar>
       </ion-header>
       <ion-content id="main-content">
-        <ion-menu-toggle auto-hide="true"  >
-           <ion-item  >
-             <ion-button fill="clear" class="itemBtns" (click)="logout()"><ion-icon slot="start" name="log-out"></ion-icon>
-            <ion-label>
-              Log out
-            </ion-label></ion-button>
-          </ion-item>
-          </ion-menu-toggle>
+<!--        <ion-menu-toggle auto-hide="true"  >-->
 
-        <ion-list>
+
+            <ion-item>
+                <ion-button fill="clear" class="itemBtns" (click)="goToContacts()"><ion-icon slot="start" name="people-outline"></ion-icon>
+                    <ion-label>
+                        Contacts
+                    </ion-label>
+                </ion-button>
+            </ion-item>
+
+            <ion-item>
+                <ion-button fill="clear" class="itemBtns" (click)="goToProfile()"><ion-icon slot="start" name="information-circle"></ion-icon>
+                    <ion-label>
+                        Mon Profil
+                    </ion-label>
+                </ion-button>
+            </ion-item>
+
+          <ion-item >
+              <ion-button fill="clear" class="itemBtns" (click)="logout()"><ion-icon slot="start" name="log-out"></ion-icon>
+                  <ion-label>
+                      Log out
+                  </ion-label>
+              </ion-button>
+          </ion-item>
+<!--          </ion-menu-toggle>-->
+
+        <!--<ion-list>
           <ion-menu-toggle autoHide="true" *ngFor="let p of pages">
            <ion-item  >
              <ion-button fill="clear" class="itemBtns" (click)="goToPage(p)"><ion-icon slot="start" [name]="p.icon"></ion-icon>
@@ -27,7 +46,7 @@
             
           </ion-item>
           </ion-menu-toggle>
-        </ion-list>
+        </ion-list>-->
       </ion-content>  
     </ion-menu>
 

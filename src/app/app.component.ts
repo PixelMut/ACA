@@ -13,19 +13,6 @@ import { FirestoreService } from './services/data/firestore.service';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  pages = [
-    {
-      title: 'Contact',
-      url: '/tabs/contacts',
-      icon: 'person'
-    },
-    {
-      title: 'Mon profil',
-      url: '/tabs/contacts/modif',
-      icon: 'information-circle'
-    }
-  ];
-
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -59,18 +46,18 @@ export class AppComponent {
           })
   }
 
+  goToContacts(){
+    this.navCtrl.navigateForward('/tabs/contacts')
+  }
 
-  goToPage(page) {
-    if (page.title === 'Mon profil') {
-      this.authService.getCurrentUserId().then(res => {
-        this.router.navigate([page.url + '/' + res.uid]);
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    } else {
-       this.router.navigate([page.url]);
-    }
+  goToProfile(){
+    this.authService.getCurrentUserId().then(res => {
+      //this.router.navigate([page.url + '/' + res.uid]);
+      this.navCtrl.navigateForward('/tabs/contacts/modif/'+res.uid)
+    })
+        .catch(error => {
+          console.log(error)
+        })
   }
 
   logout() {

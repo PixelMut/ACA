@@ -115,6 +115,16 @@ export class FirestoreService {
     private authsrv: AuthenticationService,
     private storage: AngularFireStorage) { }
 
+    // PARTIE NOTIFIACTIONS
+
+    isAnyNotif(idusertonotify){
+      return this.firestore.collection('notifications', ref => ref
+          .where('id_user', '==', idusertonotify )
+          .where('is_seen', '==', false)
+          .orderBy('date_publi', 'desc')).valueChanges();
+    }
+
+
   // PARTIE PUBLICATIONS
 
     // creation d'une publication, depuis new-publication page

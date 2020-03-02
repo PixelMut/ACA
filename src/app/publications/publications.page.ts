@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { AngularFirestore} from 'angularfire2/firestore';
 import { shareReplay } from 'rxjs/operators';
 import { AuthenticationService } from '../services/authentication.service';
-import { NavController } from '@ionic/angular';
-
+import {NavController, PopoverController} from '@ionic/angular';
+import {PopoverComponent} from "../notif-component/popover/popover.component";
+import {Storage} from '@ionic/storage';
 
 @Component({
   selector: 'app-publications',
@@ -16,13 +17,16 @@ export class PublicationsPage implements OnInit {
   public publicationsList;
   public testValues;
   private userList;
+  private notifList;
 
   constructor(
     private afs: AngularFirestore,
     private firestoreService: FirestoreService,
     private router: Router,
     private authsrv: AuthenticationService,
-    private navCtrl: NavController) {
+    private navCtrl: NavController,
+    public popoverController: PopoverController,
+    private storage : Storage) {
 
       // old method => Impossible to order by
       // this.publicationsList = this.afs
@@ -34,9 +38,9 @@ export class PublicationsPage implements OnInit {
       // );
 
       // new method => A bit longer
-      this.getListPublication()
-      this.getListUsers()
-      
+      this.getListPublication();
+      this.getListUsers();
+      this.getNotifs();
     }
 
     async getListPublication(){
@@ -83,6 +87,29 @@ export class PublicationsPage implements OnInit {
       setTimeout(() => {
         event.target.complete();
       }, 2000);
+    }
+
+    async seeNotif(ev:any){
+        const popover = await this.popoverController.create({
+            component: PopoverComponent,
+            event: ev,
+            translucent: true,
+            componentProps : { data : this.notifList, userList : this.userList },
+            cssClass : 'pop-over-style'
+        });
+        return await popover.present();
+    }
+
+    getNotifs(){
+        this.storage.get('uid').then((val) => {
+            console.log('get notif for '+ val)
+            this.firestoreService.isAnyNotif(val).subscribe(
+                res => {
+                    this.notifList = res;
+                    console.log(this.notifList)
+                })
+        });
+
     }
 
 }

@@ -1,0 +1,32 @@
+<div class="container">
+  <ion-list>
+    <ion-item *ngFor="let notif of notifList">
+      <ng-container *ngIf="notif.type_elt === 'publication'">
+        <div>{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</div>
+        <div>{{text1 + ' '}}</div>
+        <div [routerLink]="['tabs/publications/'+notif?.id_elt]">actualité</div>
+      </ng-container>
+
+
+      <!--<ion-label> a
+        <p *ngIf="notif.type_elt === 'publication'">publié une
+
+        </p>
+        <p *ngIf="notif.type_elt === 'evenement'">créé un
+          <ion-label [routerLink]="['tabs/evenements/'+notif?.id_elt]">evenement</ion-label>
+        </p>
+        <p *ngIf="notif.type_elt === 'com_pub'">commenté une
+          <ion-label [routerLink]="['tabs/publications/'+notif?.id_elt]">actualité</ion-label>
+        </p>
+        <p *ngIf="notif.type_elt === 'com_evnt'">commenté un
+          <ion-label [routerLink]="['tabs/evenements/'+notif?.id_elt]">evenement</ion-label>
+        </p>
+      </ion-label>-->
+
+    </ion-item>
+  </ion-list>
+</div>
+
+
+
+
