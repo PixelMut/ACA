@@ -10,7 +10,6 @@ import {FirestoreService} from "../../services/data/firestore.service";
 export class PopoverComponent implements OnInit {
   notifList = [];
   userList = [];
-  text1 = ' a publié une ';
   constructor(private navParams: NavParams,
               private firestoreService: FirestoreService) {
     //console.log(navParams.get('data'))
@@ -19,7 +18,8 @@ export class PopoverComponent implements OnInit {
   ngOnInit() {
     this.notifList = this.navParams.get('data');
     this.userList = this.navParams.get('userList');
-    console.log(this.notifList);
+    console.log('2222')
+    this.firestoreService.changeStateToSeen(this.notifList)
   }
 
   getName(iduser){

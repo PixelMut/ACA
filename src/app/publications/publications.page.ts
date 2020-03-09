@@ -18,6 +18,7 @@ export class PublicationsPage implements OnInit {
   public testValues;
   private userList;
   private notifList;
+  private newItems;
 
   constructor(
     private afs: AngularFirestore,
@@ -40,7 +41,7 @@ export class PublicationsPage implements OnInit {
       // new method => A bit longer
       this.getListPublication();
       this.getListUsers();
-      this.getNotifs();
+      //this.getNotifs();
     }
 
     async getListPublication(){
@@ -64,7 +65,7 @@ export class PublicationsPage implements OnInit {
     }
 
     ngOnInit() {
-       //this.navCtrl.
+        this.getNotifs();
     }
 
     getUserPhoto(iduser){
@@ -93,7 +94,7 @@ export class PublicationsPage implements OnInit {
         const popover = await this.popoverController.create({
             component: PopoverComponent,
             event: ev,
-            translucent: true,
+            translucent: false,
             componentProps : { data : this.notifList, userList : this.userList },
             cssClass : 'pop-over-style'
         });
@@ -101,12 +102,13 @@ export class PublicationsPage implements OnInit {
     }
 
     getNotifs(){
+      console.log('get notifs')
         this.storage.get('uid').then((val) => {
             console.log('get notif for '+ val)
             this.firestoreService.isAnyNotif(val).subscribe(
                 res => {
                     this.notifList = res;
-                    console.log(this.notifList)
+                    this.newItems =  this.notifList.filter(x => x.is_new === true);
                 })
         });
 

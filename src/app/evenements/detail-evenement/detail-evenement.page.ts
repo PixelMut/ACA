@@ -39,7 +39,8 @@ export class DetailEvenementPage implements OnInit {
     this.evntId = this.route.snapshot.paramMap.get('id');
     this.firestoreService.getEvenementDetail(this.evntId).get().subscribe(
       res => {
-        this.evenement = res.data();
+          this.firestoreService.setSeen(this.evntId,this.currentUserId)
+          this.evenement = res.data();
         this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges()
         this.startGettingComments(this.evntId)
       }

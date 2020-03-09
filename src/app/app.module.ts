@@ -20,6 +20,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import {PopoverComponent} from "./notif-component/popover/popover.component";
 import {IonicStorageModule, Storage} from "@ionic/storage";
+import {PublicationsPageModule} from "./publications/publications.module";
 
 // export const firebaseConfig = {
 //      apiKey: 'AIzaSyB9jHU1jM_t0CsW33wkbhNbeAUlcxRjCVg',
@@ -35,19 +36,20 @@ import {IonicStorageModule, Storage} from "@ionic/storage";
 @NgModule({
   declarations: [AppComponent, PopoverComponent],
   entryComponents: [PopoverComponent],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(),
-    AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireDatabaseModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    ReactiveFormsModule,
-    FormsModule,
-    IonicStorageModule.forRoot()
-    
-],
+    imports: [
+        BrowserModule,
+        IonicModule.forRoot(),
+        AppRoutingModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
+        AngularFireAuthModule,
+        AngularFireStorageModule,
+        ReactiveFormsModule,
+        FormsModule,
+        IonicStorageModule.forRoot(),
+        PublicationsPageModule
+
+    ],
   providers: [
     StatusBar,
     SplashScreen,

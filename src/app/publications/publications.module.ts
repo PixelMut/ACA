@@ -14,7 +14,10 @@ import { DateAgoPipe } from '../pipes/date-ago.pipe';
     FormsModule,
     ReactiveFormsModule,
     ExploreContainerComponentModule,
-    RouterModule.forChild([{ path: '', component: PublicationsPage }])
+    RouterModule.forChild([{path: '', component: PublicationsPage}])
+  ],
+  exports: [
+    DateAgoPipe
   ],
   declarations: [PublicationsPage, DateAgoPipe]
 })

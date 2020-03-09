@@ -41,8 +41,9 @@ export class DetailPublicationPage implements OnInit {
     this.pubId = this.route.snapshot.paramMap.get('id');
     this.firestoreService.getPublicationDetail(this.pubId).get().subscribe(
       res => {
+        this.firestoreService.setSeen(this.pubId,this.currentUserId)
         this.publication = res.data();
-        this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges()
+        this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges();
         this.startGettingComments(this.pubId)
       }
     )

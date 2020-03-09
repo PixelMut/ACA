@@ -1,4 +1,4 @@
-<div class="container">
+<!--<div class="container">
   <ion-list>
     <ion-item *ngFor="let notif of notifList">
       <ng-container *ngIf="notif.type_elt === 'publication'">
@@ -8,7 +8,7 @@
       </ng-container>
 
 
-      <!--<ion-label> a
+      &lt;!&ndash;<ion-label> a
         <p *ngIf="notif.type_elt === 'publication'">publié une
 
         </p>
@@ -21,11 +21,55 @@
         <p *ngIf="notif.type_elt === 'com_evnt'">commenté un
           <ion-label [routerLink]="['tabs/evenements/'+notif?.id_elt]">evenement</ion-label>
         </p>
-      </ion-label>-->
+      </ion-label>&ndash;&gt;
 
     </ion-item>
   </ion-list>
-</div>
+</div>-->
+
+<!--<ng-container *ngIf="notif.type_elt === 'publication'">
+  <div>{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</div>
+  <div>{{text1 + ' '}}</div>
+  <div [routerLink]="['tabs/publications/'+notif?.id_elt]">actualité</div>
+</ng-container>-->
+
+    <div id="notification-container" class="dropdown-menu" role="menu" aria-labelledby="drop3">
+      <section class="panel">
+        <header class="panel-heading">
+          <strong>Notifications</strong>
+        </header>
+        <div id="notification-list" class="list-group list-group-alt">
+          <div style="" *ngFor="let notif of notifList">
+            <div class="noty-manager-list-item noty-manager-list-item-error">
+              <div [className]="notif.is_seen===true ? 'activity-item-seen' : 'activity-item'" >
+                <i class="fa fa-shopping-cart text-success"></i>
+                <div class="activity" *ngIf="notif.type_elt === 'publication'">
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a publié une <a [routerLink]="['tabs/publications/'+notif?.id_elt]">actualité</a>
+                  <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
+                </div>
+                <div class="activity" *ngIf="notif.type_elt === 'evenement'">
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a créé un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
+                  <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
+                </div>
+                <div class="activity" *ngIf="notif.type_elt === 'com_pub'">
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> commenté une <a [routerLink]="['tabs/publications/'+notif?.id_elt]">actualité</a>
+                  <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
+                </div>
+                <div class="activity" *ngIf="notif.type_elt === 'com_evnt'">
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> commenté un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
+                  <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--<footer class="panel-footer">
+          <a href="#" class="pull-right"><i class="fa fa-cog"></i></a>
+          <a href="#notes" data-toggle="class:show animated fadeInRight">See all the notifications</a>
+        </footer>-->
+      </section>
+
+    </div>
 
 
 

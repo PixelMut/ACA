@@ -120,9 +120,38 @@ export class FirestoreService {
     isAnyNotif(idusertonotify){
       return this.firestore.collection('notifications', ref => ref
           .where('id_user', '==', idusertonotify )
-          .where('is_seen', '==', false)
+          // .where('is_new', '==', true)
           .orderBy('date_publi', 'desc')).valueChanges();
     }
+
+    // lors du clic sur "notifications", on les passe en is_new = false
+    changeStateToSeen(listeDesNotif){
+      listeDesNotif.forEach(elt=>{
+        const notifDoc = this.firestore.doc<any>('notifications/'+elt.id_notif);
+        return new Promise<any>((resolve, reject) => {
+          notifDoc.update({
+            'is_new' : false
+          });
+        })
+      });
+
+
+    }
+
+
+
+  setSeen(eltId, userId){
+    let notifDoc = this.firestore.collection('notifications', ref => ref
+        .where('id_elt', '==', eltId)
+        .where('id_user', '==', userId));
+    notifDoc.get().subscribe(items => {
+      items.forEach(doc => {
+        doc.ref.update({
+          'is_seen' : true
+        });
+      });
+    });
+  }
 
 
   // PARTIE PUBLICATIONS
