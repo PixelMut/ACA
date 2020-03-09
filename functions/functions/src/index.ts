@@ -33,14 +33,82 @@ exports.createProfile = functions.auth
         });
 
    
-    // return admin
-    //     .database()
-    //     .ref(`/users/${userRecord.uid}`)
-    //     .set({
-    //       email: userRecord.email
-    //     });
-
-
-   
   });
-  
+
+exports.createNotifFromPublication = functions.firestore
+    .document('publications/{id_publication}')
+    .onCreate(async (snapshot:any) => {
+        const datedujour = new Date();
+        //let list_users_id;// = [];
+        console.log('-----------------------users--------------------------');
+        const list_users = await admin.firestore().collection('users').get();
+
+       list_users.docs.map(async (objectDoc) => {
+           //list_users_id.push(objectDoc.data().id_user)
+           if(objectDoc.data().id_user !== snapshot.data().id_publication){
+               const id_notification = [...Array(20)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+
+               return admin.firestore().collection('notifications').doc(id_notification).set({
+                   date_publi : datedujour,
+                   id_creator : snapshot.data().id_user,
+                   id_elt : snapshot.data().id_publication,
+                   id_notif: id_notification,
+                   id_user : objectDoc.data().id_user,
+                   is_new : true,
+                   is_seen : false,
+                   type_elt : 'publication'
+               }).then(writeResult => {
+                   console.log('written');
+                   // write is complete here
+               }).catch( err => {
+                   console.log('error')
+               });
+           }
+
+        });
+        console.log('----------------------- end users--------------------------');
+
+// Wait for all promises created before returning
+       // await Promise.all(promises);
+/*        console.log('is waiting ?');
+        list_users_id.forEach(
+            user => {
+                console.log('ajout pour user '+user);
+                const id_notification = [...Array(20)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+
+                return admin.firestore().collection('notifications').doc(id_notification).set({
+                    date_publi : datedujour,
+                    id_creator : snapshot.data().id_user,
+                    id_elt : snapshot.data().id_publication,
+                    id_notif: id_notification,
+                    id_user : user,
+                    is_new : true,
+                    is_seen : false,
+                    type_elt : 'publication'
+                }).then(writeResult => {
+                    console.log('written');
+                    // write is complete here
+                }).catch( err => {
+                    console.log('error')
+                });
+            }
+        );*/
+
+
+        /*return admin.firestore().collection('notifications').doc(id_notification).set({
+            date_publi : datedujour,
+            id_creator : snapshot.data().id_user,
+            id_elt : snapshot.data().id_publication,
+            id_notif: id_notification,
+            id_user : 'VqLO9YKtm9TT5i33tvbaHwAf4cF3',
+            is_new : true,
+            is_seen : false,
+            type_elt : 'publication'
+        }).then(writeResult => {
+            console.log(writeResult);
+            // write is complete here
+        });*/
+    });
+
+
+
