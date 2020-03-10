@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Contact } from 'src/app/models/contact.interface';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import {AlertController} from "@ionic/angular";
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-detail-publication',
@@ -13,10 +14,11 @@ import {AlertController} from "@ionic/angular";
   styleUrls: ['./detail-publication.page.scss'],
 })
 export class DetailPublicationPage implements OnInit {
-  public publication //: Publication //: Observable<Publication>;
+  public publication; //: Publication //: Observable<Publication>;
   public userDetails: Observable<Contact>;
   public comments = [];
   public currentUserId;
+  public currentUserType;
   public new_comment ='';
   private pubId;
   constructor(
@@ -24,7 +26,8 @@ export class DetailPublicationPage implements OnInit {
      private route: ActivatedRoute,
      private router: Router,
      private authSrv: AuthenticationService,
-     public alertController: AlertController
+     public alertController: AlertController,
+     private storage : Storage
   ) {
       // pour afficher ou non les boutons de modif et suppression
      this.authSrv.getCurrentUserId().then(res => {
@@ -33,7 +36,11 @@ export class DetailPublicationPage implements OnInit {
       })
       .catch(error => {
         console.log(error)
-      })
+      });
+
+      this.storage.get('tu').then((val) => {
+        this.currentUserType = val
+      });
 
   }
 
@@ -41,9 +48,10 @@ export class DetailPublicationPage implements OnInit {
     this.pubId = this.route.snapshot.paramMap.get('id');
     this.firestoreService.getPublicationDetail(this.pubId).get().subscribe(
       res => {
-        this.firestoreService.setSeen(this.pubId,this.currentUserId)
-        this.publication = res.data();
-        this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges();
+        this.firestoreService.setSeen(this.pubId,this.currentUserId); // passer l'article en seen
+        this.publication = res.data(); // contenu de la publication
+        this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges(); // details de l'utilisateur ayant créé le post
+        //console.log(this.userDetails);
         this.startGettingComments(this.pubId)
       }
     )
@@ -106,7 +114,7 @@ export class DetailPublicationPage implements OnInit {
     add_comment(){
       this.authSrv.getCurrentUserId().then(
         res => {
-            this.firestoreService.addComment(this.new_comment, this.pubId, res.uid).then(
+            this.firestoreService.addComment(this.new_comment, this.pubId, res.uid, 'com_pub').then(
                 res => {
                     //this.startGettingComments(this.pubId)
                 });

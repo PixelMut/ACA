@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-fab horizontal="end" vertical="top" slot="fixed" *ngIf="publication?.id_user === currentUserId">
+    <ion-fab horizontal="end" vertical="top" slot="fixed" *ngIf="( (publication?.id_user === currentUserId) || (currentUserType === 2) || (currentUserType === 3))">
         <ion-fab-button>
             <ion-icon name="arrow-down-circle"></ion-icon>
         </ion-fab-button>
@@ -26,7 +26,7 @@
     <ion-button >Modifier la publication</ion-button>
   </div>-->
    <ion-card >
-      <ion-item>
+      <ion-item routerLink="/tabs/contacts/{{ (userDetails | async)?.id_user }}">
         <ion-avatar slot="start">
           <img [src]="(userDetails | async)?.photo_user">
         </ion-avatar>

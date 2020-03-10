@@ -18,8 +18,7 @@ export class PopoverComponent implements OnInit {
   ngOnInit() {
     this.notifList = this.navParams.get('data');
     this.userList = this.navParams.get('userList');
-    console.log('2222')
-    this.firestoreService.changeStateToSeen(this.notifList)
+    this.firestoreService.changeStateToSeen(this.notifList);
   }
 
   getName(iduser){

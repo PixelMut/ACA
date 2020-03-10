@@ -115,6 +115,12 @@ export class FirestoreService {
     private authsrv: AuthenticationService,
     private storage: AngularFireStorage) { }
 
+    // partie droits user
+    getCurrentUserType(iduser){
+      return this.firestore.collection('users', ref => ref
+          .where('id_user', '==', iduser )).valueChanges()
+    }
+
     // PARTIE NOTIFIACTIONS
 
     isAnyNotif(idusertonotify){
@@ -122,6 +128,11 @@ export class FirestoreService {
           .where('id_user', '==', idusertonotify )
           // .where('is_new', '==', true)
           .orderBy('date_publi', 'desc')).valueChanges();
+    }
+
+    isAnyEvent(){
+      return this.firestore.collection('evenements', ref => ref
+          .where('date_evnt','>=',new Date())).valueChanges();
     }
 
     // lors du clic sur "notifications", on les passe en is_new = false
@@ -297,7 +308,7 @@ export class FirestoreService {
       });
     }
 
-    addComment(comment_content, id_elt: string, id_user : string){
+    addComment(comment_content, id_elt: string, id_user : string, type_elt: string){
     console.log(id_user)
       const id_comment = this.firestore.createId();
       // const filePath = '/Image/' + 'Post_' + id_publication + '/' + imageId ;
@@ -314,7 +325,8 @@ export class FirestoreService {
           id_elt,
           id_user,
           comment_active,
-          date_comment
+          date_comment,
+          type_elt
         })
         .then(
           res => {
@@ -420,22 +432,47 @@ export class FirestoreService {
       return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'desc').where('date_evnt','<',new Date())).valueChanges();
     }
 
-    modifyEvenement(idevnt, title_evnt, desc_evnt){
+    modifyEvenement(idevnt, title_evnt, desc_evnt, locationName, locationId, dateEvnt, currentUserType ){
       const evntDoc = this.firestore.doc<any>('evenements/' + idevnt);
-      const nvDateModif = new Date()
-      return new Promise<any>((resolve, reject) => {
-        evntDoc.update({
-        title_evnt: title_evnt,
-        description_evnt: desc_evnt,
-        date_modif_evnt : nvDateModif
-        // Other info you want to add here
-      })
-        .then(
-          res => {
-            resolve(res)
-          },
-          err => reject(err))
-      });
+      const nvDateModif = new Date();
+
+      if(locationName !== '' && locationId !== ''){
+        return new Promise<any>((resolve, reject) => {
+
+          evntDoc.update({
+            title_evnt: title_evnt,
+            description_evnt: desc_evnt,
+            date_modif_evnt : nvDateModif,
+            date_evnt : new Date(dateEvnt) ,
+            'lieu_evnt': locationName,
+            'id_location_google' : locationId,
+            'is_admin_level' : (currentUserType === 1 || currentUserType === 2)
+            // Other info you want to add here
+          })
+              .then(
+                  res => {
+                    resolve(res)
+                  },
+                  err => reject(err))
+        });
+      }else{
+        return new Promise<any>((resolve, reject) => {
+
+          evntDoc.update({
+            title_evnt: title_evnt,
+            description_evnt: desc_evnt,
+            date_modif_evnt : nvDateModif,
+            date_evnt : new Date(dateEvnt) ,
+            'is_admin_level' : (currentUserType === 1 || currentUserType === 2)
+            // Other info you want to add here
+          }).then(
+               res => {
+                  resolve(res)
+               },
+                  err => reject(err))
+        });
+      }
+
 
     }
 
@@ -476,12 +513,14 @@ export class FirestoreService {
     }
 
     // creation d'une publication, depuis new-publication page
-    createEvenement(title_evnt: string, description_evnt: string,imageId, fileRaw, locationName, locationId, dateEvnt): Promise<void> {
+    createEvenement(title_evnt: string, description_evnt: string,imageId, fileRaw, locationName, locationId, dateEvnt, currentUserType): Promise<void> {
       const id_evnt = this.firestore.createId();
       const filePath = '/Image/' + 'Evnt_' + id_evnt + '/' + imageId ;
       const result = this.SaveImageRef(filePath, fileRaw);
       const ref = result.ref;
+      console.log(dateEvnt)
       const date_evnt = new Date(dateEvnt);
+      console.log(date_evnt)
       const date_publication_evnt = new Date();
       const date_modif_evnt = date_publication_evnt;
       const evnt_active = true;
@@ -505,7 +544,8 @@ export class FirestoreService {
             id_user,
             'photo_evnt':a,
             'lieu_evnt': locationName,
-            'id_location_google' : locationId
+            'id_location_google' : locationId,
+            'is_admin_level' : (currentUserType === 1 || currentUserType === 2)
           });
         })
         .catch(error => {

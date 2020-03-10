@@ -14,12 +14,12 @@ exports.createProfile = functions.auth
    console.log(context);
    return admin.firestore().collection('users').doc(userRecord.uid).set({
           id_user : userRecord.uid,
-          nom_user : '',
-          prenom_user : '',
+          nom_user : 'Nouvel',
+          prenom_user : 'Utilisateur',
           adresse_mail: userRecord.email,
           id_localisation : '',
           id_type_user : 3,
-          photo_user : '',
+          photo_user : 'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2F8cDzuC2JfFvBhg8hdzq8?alt=media&token=0a0b112f-97b8-45c2-8bf9-9bb89a1f9790',
           adresse_user_rue : '',
           adresse_user_code_postal : '',
           adresse_user_localite : '',
@@ -40,12 +40,12 @@ exports.createNotifFromPublication = functions.firestore
     .onCreate(async (snapshot:any) => {
         const datedujour = new Date();
         //let list_users_id;// = [];
-        console.log('-----------------------users--------------------------');
+        //console.log('-----------------------users--------------------------');
         const list_users = await admin.firestore().collection('users').get();
 
        list_users.docs.map(async (objectDoc) => {
            //list_users_id.push(objectDoc.data().id_user)
-           if(objectDoc.data().id_user !== snapshot.data().id_publication){
+           if(objectDoc.data().id_user !== snapshot.data().id_user){
                const id_notification = [...Array(20)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
 
                return admin.firestore().collection('notifications').doc(id_notification).set({
@@ -66,25 +66,32 @@ exports.createNotifFromPublication = functions.firestore
            }
 
         });
-        console.log('----------------------- end users--------------------------');
+        //console.log('----------------------- end users--------------------------');
 
-// Wait for all promises created before returning
-       // await Promise.all(promises);
-/*        console.log('is waiting ?');
-        list_users_id.forEach(
-            user => {
-                console.log('ajout pour user '+user);
+    });
+
+exports.createNotifFromEvnt = functions.firestore
+    .document('evenements/{id_evnt}')
+    .onCreate(async (snapshot:any) => {
+        const datedujour = new Date();
+        //let list_users_id;// = [];
+        //console.log('-----------------------users--------------------------');
+        const list_users = await admin.firestore().collection('users').get();
+
+        list_users.docs.map(async (objectDoc) => {
+            //list_users_id.push(objectDoc.data().id_user)
+            if(objectDoc.data().id_user !== snapshot.data().id_user){
                 const id_notification = [...Array(20)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
 
                 return admin.firestore().collection('notifications').doc(id_notification).set({
                     date_publi : datedujour,
                     id_creator : snapshot.data().id_user,
-                    id_elt : snapshot.data().id_publication,
+                    id_elt : snapshot.data().id_evnt,
                     id_notif: id_notification,
-                    id_user : user,
+                    id_user : objectDoc.data().id_user,
                     is_new : true,
                     is_seen : false,
-                    type_elt : 'publication'
+                    type_elt : 'evenement'
                 }).then(writeResult => {
                     console.log('written');
                     // write is complete here
@@ -92,23 +99,44 @@ exports.createNotifFromPublication = functions.firestore
                     console.log('error')
                 });
             }
-        );*/
 
+        });
+        //console.log('----------------------- end users--------------------------');
 
-        /*return admin.firestore().collection('notifications').doc(id_notification).set({
-            date_publi : datedujour,
-            id_creator : snapshot.data().id_user,
-            id_elt : snapshot.data().id_publication,
-            id_notif: id_notification,
-            id_user : 'VqLO9YKtm9TT5i33tvbaHwAf4cF3',
-            is_new : true,
-            is_seen : false,
-            type_elt : 'publication'
-        }).then(writeResult => {
-            console.log(writeResult);
-            // write is complete here
-        });*/
     });
 
 
+exports.createNotifFromComment = functions.firestore
+    .document('comments/{id_comment}')
+    .onCreate(async (snapshot:any) => {
+        const datedujour = new Date();
+        //let list_users_id;// = [];
+        //console.log('-----------------------users--------------------------');
+        const list_users = await admin.firestore().collection('users').get();
 
+        list_users.docs.map(async (objectDoc) => {
+            //list_users_id.push(objectDoc.data().id_user)
+            if(objectDoc.data().id_user !== snapshot.data().id_user){
+                const id_notification = [...Array(20)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+
+                return admin.firestore().collection('notifications').doc(id_notification).set({
+                    date_publi : datedujour,
+                    id_creator : snapshot.data().id_user,
+                    id_elt : snapshot.data().id_elt,
+                    id_notif: id_notification,
+                    id_user : objectDoc.data().id_user,
+                    is_new : true,
+                    is_seen : false,
+                    type_elt : snapshot.data().type_elt
+                }).then(writeResult => {
+                    console.log('written');
+                    // write is complete here
+                }).catch( err => {
+                    console.log('error')
+                });
+            }
+
+        });
+        //console.log('----------------------- end users--------------------------');
+
+    });

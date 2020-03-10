@@ -11,6 +11,8 @@
   <div class="card-body">
     <form class="form" [formGroup]="modifEvntForm" (submit)="modifEvenement()">
       <ion-grid>
+
+<!--        photo de l'event-->
         <ion-row>
           <ion-col>
             <ion-item >
@@ -24,7 +26,18 @@
           </ion-col>
         </ion-row>
 
+<!--        date de l'event-->
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-icon name="calendar-outline"></ion-icon>
+              <!-- <ion-label>D MMM YYYY H:mm</ion-label> -->
+              <ion-datetime [min]="date_min" [ngModel]="displayedDate" placeholder="Date" formControlName="datetime_evnt" displayFormat="D MMM YYYY H:mm"  max="2050" ></ion-datetime>
+            </ion-item>
+          </ion-col>
+        </ion-row>
 
+<!--        titre de l'event-->
         <ion-row>
           <ion-col>
             <ion-item>
@@ -33,7 +46,8 @@
             </ion-item>
           </ion-col>
         </ion-row>
-        
+
+<!--        description de l'event-->
         <ion-row>
           <ion-col>
             <ion-item>
@@ -47,6 +61,28 @@
             </ion-item>
           </ion-col>
         </ion-row>
+
+<!--        localisation de l'event-->
+        <ion-row>
+          <ion-col>
+            <ion-searchbar [ngModelOptions]="{standalone: true}" [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>
+            <ion-list [hidden]="autocompleteItems.length == 0">
+              <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+                {{ item.description }}
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              {{location?.description}}
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+
         <ion-row style="text-align: right">
           <ion-col>
             <ion-button  class="submit-btn" type="submit" [disabled]="!modifEvntForm.valid">

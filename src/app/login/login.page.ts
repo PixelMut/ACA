@@ -5,6 +5,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import * as firebase from 'firebase/app';
 import {Storage} from '@ionic/storage';
+import {FirestoreService} from "../services/data/firestore.service";
 
 @Component({
   selector: 'app-login',
@@ -29,11 +30,11 @@ export class LoginPage implements OnInit {
 
   
 
-  constructor(public afDB: AngularFireDatabase,
-              private navCtrl: NavController,
+  constructor(private navCtrl: NavController,
               private authService: AuthenticationService,
               private formBuilder: FormBuilder,
-              private storage: Storage) {
+              private storage: Storage,
+              private firestoreSrv: FirestoreService) {
 
               this.validations_form = this.formBuilder.group({
                 email : new FormControl('',Validators.compose([
@@ -41,7 +42,7 @@ export class LoginPage implements OnInit {
                   Validators.pattern('^[a-zA-Z0-9_.+-]+@acensi+.[a-zA-Z0-9-.]+$')
                 ])),
                 password: new FormControl('', Validators.compose([
-                  Validators.minLength(5),
+                  Validators.minLength(6),
                   Validators.required
                 ])),
               });
@@ -51,8 +52,13 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.storage.set('uid', user.uid);
-        this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
+        this.storage.set('uid', user.uid); // save du id user dans le storage
+        this.firestoreSrv.getCurrentUserType(user.uid).subscribe(
+            (res:any) => {
+              this.storage.set('tu', res[0] ? res[0].id_type_user : 3); // save du type user dans le storage
+              this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
+            }
+        );
       }
     })
   }
@@ -62,9 +68,14 @@ export class LoginPage implements OnInit {
   loginUser(value){
     this.authService.loginUser(value)
     .then(res => {
-      console.log(res);
-      this.errorMessage = '';
-      this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
+      this.storage.set('uid', res.user.uid); // save du id user dans le storage
+      this.firestoreSrv.getCurrentUserType( res.user.uid).subscribe(
+          (res:any) => {
+            this.errorMessage = '';
+            this.storage.set('tu', res[0].id_type_user); // save du type user dans le storage
+            this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
+          }
+      );
     }, err => {
       this.errorMessage = err.message;
     })

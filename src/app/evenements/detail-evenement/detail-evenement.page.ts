@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Contact } from 'src/app/models/contact.interface';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import {AlertController} from "@ionic/angular";
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-detail-evenement',
@@ -17,6 +18,7 @@ export class DetailEvenementPage implements OnInit {
   public userDetails: Observable<Contact>;
   public comments = [];
   public currentUserId;
+  public currentUserType;
   public new_comment ='';
   private evntId;
 
@@ -25,7 +27,8 @@ export class DetailEvenementPage implements OnInit {
      private route: ActivatedRoute,
      private router: Router,
      private authSrv: AuthenticationService,
-     public alertController: AlertController
+     public alertController: AlertController,
+     private storage : Storage
   ) {
      this.authSrv.getCurrentUserId().then(res => {
         this.currentUserId = res.uid;
@@ -33,16 +36,22 @@ export class DetailEvenementPage implements OnInit {
       .catch(error => {
         console.log(error)
       })
+
+      this.storage.get('tu').then((val) => {
+          this.currentUserType = val
+      });
   }
 
   ngOnInit() {
     this.evntId = this.route.snapshot.paramMap.get('id');
     this.firestoreService.getEvenementDetail(this.evntId).get().subscribe(
       res => {
-          this.firestoreService.setSeen(this.evntId,this.currentUserId)
-          this.evenement = res.data();
-        this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges()
-        this.startGettingComments(this.evntId)
+            this.firestoreService.setSeen(this.evntId,this.currentUserId); // passer l'article en seen
+            this.evenement = res.data(); // contenu de l'event
+            this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges(); // detail de l'utilisateur ayant créé l'event
+
+            // recuperation des commentaires
+            this.startGettingComments(this.evntId)
       }
     )
   }
@@ -121,7 +130,7 @@ export class DetailEvenementPage implements OnInit {
   add_comment(){
     this.authSrv.getCurrentUserId().then(
         res => {
-          this.firestoreService.addComment(this.new_comment, this.evntId, res.uid).then(
+          this.firestoreService.addComment(this.new_comment, this.evntId, res.uid, 'com_evnt').then(
               res => {
                 //this.startGettingComments(this.pubId)
               });

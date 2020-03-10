@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {FirestoreService} from "../services/data/firestore.service";
 
 @Component({
   selector: 'app-tabs',
@@ -6,7 +7,16 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
+  public nbEventToCome;
 
-  constructor() {}
+  constructor(private firestoreService: FirestoreService) {
+    firestoreService.isAnyEvent().subscribe(
+        res => {
+          //console.log(res)
+          this.nbEventToCome = res.length;
+        })
+
+
+  }
 
 }

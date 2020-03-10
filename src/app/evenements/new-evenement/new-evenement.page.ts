@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Image } from '../../models/image.interface'
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
+import {Storage} from "@ionic/storage";
 
 
 @Component({
@@ -18,10 +19,11 @@ export class NewEvenementPage implements OnInit {
   GoogleAutocomplete: google.maps.places.AutocompleteService;
   autocomplete: { input: string; };
   autocompleteItems: any[];
+  private currentUserType;
   location: any;
   placeid: any;
 
-
+  date_min: String = new Date().toISOString();
   public createEvntForm: FormGroup;
   loading: boolean = false;
     url: any;
@@ -29,12 +31,12 @@ export class NewEvenementPage implements OnInit {
   previewUrl;
     newImage: Image = {
       id: this.afs.createId(), image: ''
-    }
+    };
 
   constructor(
     public zone: NgZone,
     private afs: AngularFirestore,
-    private storage: AngularFireStorage,
+    private storage : Storage,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public firestoreService: FirestoreService,
@@ -49,6 +51,10 @@ export class NewEvenementPage implements OnInit {
       this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
       this.autocomplete = { input: '' };
       this.autocompleteItems = [];
+
+      this.storage.get('tu').then((val) => {
+          this.currentUserType = val
+      });
     }
 
       updateSearchResults(){
@@ -90,9 +96,9 @@ export class NewEvenementPage implements OnInit {
      const evntDesc = this.createEvntForm.value.description_evnt;
      const evntDate = this.createEvntForm.value.datetime_evnt;
 
-     console.log(evntDate)
+     //console.log(this.currentUserType)
      this.firestoreService
-    .createEvenement(evntName, evntDesc, this.newImage.id, this.fileraw,this.location.description, this.placeid, evntDate )
+    .createEvenement(evntName, evntDesc, this.newImage.id, this.fileraw,(this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType )
     .then(
       () => {
         loading.dismiss().then(() => {
@@ -120,26 +126,11 @@ export class NewEvenementPage implements OnInit {
 
         // For Uploading Image To Firebase
         this.fileraw = event.target.files[0];
-        // console.log(this.fileraw)
-        // const filePath = '/Image/'  + this.newImage.id ;
-        // const result = this.SaveImageRef(filePath, this.fileraw);
-        // const ref = result.ref;
-        // result.task.then(a => {
-        //   ref.getDownloadURL().subscribe(a => {
-        //     this.previewUrl = a;
-        //   });
-          
-        // });
+
       }
     }
   }
 
-   SaveImageRef(filePath, file) {
-    return {
-      task: this.storage.upload(filePath, file)
-      , ref: this.storage.ref(filePath)
-    };
-  }
 
 
 

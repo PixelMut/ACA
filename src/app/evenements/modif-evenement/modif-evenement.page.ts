@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Contact } from 'src/app/models/contact.interface';
@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
+import {Storage} from "@ionic/storage";
 
 export interface Image {
   id: string;
@@ -20,8 +21,15 @@ export interface Image {
   styleUrls: ['./modif-evenement.page.scss'],
 })
 export class ModifEvenementPage implements OnInit {
-  public evenement //: Publication;
-  public userDetails: Observable<Contact>;
+  // localisation
+  GoogleAutocomplete: google.maps.places.AutocompleteService;
+  autocomplete: { input: string; };
+  autocompleteItems: any[];
+  location: any;
+  placeid: any;
+
+  private currentUserType;
+  public evenement; //: Publication;
   public comments = [];
   public modifEvntForm: FormGroup;
   public evenementId;
@@ -29,31 +37,50 @@ export class ModifEvenementPage implements OnInit {
   url: any;
   newImage: Image = {
     id: this.afs.createId(), image: ''
-  }
-  constructor(private afs: AngularFirestore,
+  };
+  public displayedDate: String;
+  date_min: String = new Date().toISOString();
+  constructor(
+    public zone: NgZone,
+    private afs: AngularFirestore,
     private storage: AngularFireStorage,
+    private localstorage : Storage,
     private route: ActivatedRoute,
     private firestoreService: FirestoreService,
     private formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
-    private router: Router) { }
+    private router: Router) {
 
-  ngOnInit() {
     this.modifEvntForm = this.formBuilder.group({
       title_evnt: ['', Validators.required],
-      description_evnt: ['', Validators.required]
+      description_evnt: ['', Validators.required],
+      datetime_evnt : ['', Validators.required]
     });
 
+    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+    this.autocomplete = { input: '' };
+    this.autocompleteItems = [];
+
     this.evenementId = this.route.snapshot.paramMap.get('id');
-    console.log(this.evenementId);
+
     this.firestoreService.getEvenementDetail(this.evenementId).get().subscribe(
-      res => {
-        this.evenement = res.data()
-        console.log(this.evenement)
-        //this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges()
-      }
-    )
+        res => {
+          this.evenement = res.data();
+          this.autocomplete.input = this.evenement.lieu_evnt;
+          this.displayedDate = new Date(this.evenement.date_evnt.seconds *1000).toISOString();
+          //this.userDetails = this.firestoreService.getContactDetail(res.data().id_user).valueChanges()
+        }
+    );
+
+    this.localstorage.get('tu').then((val) => {
+      this.currentUserType = val
+    });
+
+
+  }
+
+  ngOnInit() {
 
   }
 
@@ -104,9 +131,10 @@ export class ModifEvenementPage implements OnInit {
     const loading = await this.loadingCtrl.create();
     const evenementName = this.modifEvntForm.value.title_evnt;
     const evenementDesc = this.modifEvntForm.value.description_evnt;
+    const evntDate = this.modifEvntForm.value.datetime_evnt;
 
     this.firestoreService
-    .modifyEvenement(this.evenementId, evenementName, evenementDesc)
+    .modifyEvenement(this.evenementId, evenementName, evenementDesc, (this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType )
     .then(
       () => {
         loading.dismiss().then(() => {
@@ -121,6 +149,30 @@ export class ModifEvenementPage implements OnInit {
     return await loading.present();
 }
 
+  updateSearchResults(){
+    if (this.autocomplete.input == '') {
+      this.autocompleteItems = [];
+      return;
+    }
+    this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+        (predictions, status) => {
+          if (predictions) {
+            this.autocompleteItems = [];
+            this.zone.run(() => {
+              predictions.forEach((prediction) => {
+                this.autocompleteItems.push(prediction);
+              });
+            });
+          }
 
+        });
+  }
+  selectSearchResult(item) {
+    //console.log(item)
+    this.location = item
+    this.placeid = this.location.place_id
+    //console.log('placeid'+ this.placeid)
+    this.autocompleteItems = []
+  }
 
 }

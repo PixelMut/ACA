@@ -10,12 +10,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-  <ion-item *ngFor="let evnt of evntList " routerLink="/tabs/evenements/{{evnt.id_evnt}}">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+  <ion-item *ngFor="let evnt of evntList " routerLink="/tabs/evenements/{{evnt.id_evnt}}" [className]="evnt.is_admin_level===true ? 'gold-item' : ''" >
           <ion-thumbnail slot="start" >
             <img [src]="evnt.photo_evnt">
           </ion-thumbnail>
-          <ion-label>
+          <ion-label >
             <!-- <h2>{{ evnt.date_evnt.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</h2> -->
             <h4>DANS {{ getRemainingTime(evnt.date_evnt) | uppercase }}</h4>
             <h2 class="ion-text-capitalize">{{ evnt.title_evnt }}</h2>

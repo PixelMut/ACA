@@ -69,5 +69,12 @@ export class EvenementsPage implements OnInit {
     return dDisplay + hDisplay + mDisplay // + sDisplay;
   }
 
+  doRefresh(event){
+    this.getListEvent();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
+  }
+
 
 }

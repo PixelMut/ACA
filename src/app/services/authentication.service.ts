@@ -46,7 +46,7 @@ export class AuthenticationService {
       firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
       .then(
         res => {
-          this.sendVerificationMail()
+          this.sendVerificationMail();
           resolve(res)
         },
         err => reject(err))

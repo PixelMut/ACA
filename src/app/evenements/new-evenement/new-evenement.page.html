@@ -18,6 +18,8 @@
   <div class="card-body">
     <form [formGroup]="createEvntForm" (submit)="createEvenement()">
       <ion-grid>
+
+        <!--        photo de l'event-->
         <ion-row>
           <ion-col>
             <ion-item >
@@ -30,18 +32,19 @@
             </ion-item>
           </ion-col>
         </ion-row>
-        
+
+        <!--        date de l'event-->
         <ion-row>
           <ion-col>
             <ion-item>
               <ion-icon name="calendar-outline"></ion-icon>
               <!-- <ion-label>D MMM YYYY H:mm</ion-label> -->
-              <ion-datetime placeholder="Date" formControlName="datetime_evnt" displayFormat="D MMM YYYY H:mm" min="2020" max="2050" ></ion-datetime>
+              <ion-datetime [min]="date_min" placeholder="Date" formControlName="datetime_evnt" displayFormat="D MMM YYYY H:mm"  max="2050" ></ion-datetime>
             </ion-item>
           </ion-col>
         </ion-row>
 
-
+        <!--        titre de l'event-->
         <ion-row>
           <ion-col>
               <ion-item>
@@ -55,6 +58,8 @@
             </ion-item>
           </ion-col>
         </ion-row>
+
+        <!--        description de l'event-->
         <ion-row>
           <ion-col>
             <ion-item>
@@ -68,7 +73,8 @@
             </ion-item>
           </ion-col>
         </ion-row> 
-        
+
+<!--        localisation de l'event-->
         <ion-row>
           <ion-col>
              <ion-searchbar [ngModelOptions]="{standalone: true}" [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Search for a place"></ion-searchbar>

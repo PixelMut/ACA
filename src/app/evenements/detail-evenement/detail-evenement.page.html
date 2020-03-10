@@ -10,7 +10,7 @@
 
 
 <ion-content no-padding>
-  <ion-fab horizontal="end" vertical="top" slot="fixed" *ngIf="evenement?.id_user === currentUserId">
+  <ion-fab horizontal="end" vertical="top" slot="fixed" *ngIf="((evenement?.id_user === currentUserId) || (currentUserType === 1) || (currentUserType === 2))">
     <ion-fab-button>
       <ion-icon name="arrow-down-circle"></ion-icon>
     </ion-fab-button>
