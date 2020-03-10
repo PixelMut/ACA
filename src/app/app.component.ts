@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform, MenuController, NavController } from '@ionic/angular';
+import {Platform, MenuController, NavController, ToastController} from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { AuthenticationService } from './services/authentication.service';
 import { FirestoreService } from './services/data/firestore.service';
+import {FcmService} from "./services/fcm.service";
 
 @Component({
   selector: 'app-root',
@@ -20,23 +21,47 @@ export class AppComponent {
     private menuCtrl: MenuController,
     private router: Router,
     private authService: AuthenticationService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private fcm: FcmService,
+    public toastController: ToastController
   ) {
     this.initializeApp();
     
   }
 
+  private async presentToast(message) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000
+    });
+    toast.present();
+  }
+
+  private notificationSetup() {
+    this.fcm.getToken();
+    this.fcm.onNotifications().subscribe(
+        (msg) => {
+          if (this.platform.is('ios')) {
+            this.presentToast(msg.aps.alert);
+          } else {
+            this.presentToast(msg.body);
+          }
+        });
+  }
+
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
+      //this.statusBar.styleDefault();
+      this.statusBar.styleLightContent();
       this.splashScreen.hide();
       this.isMenuDisplayed();
+      this.notificationSetup();
     });
   }
 
   isMenuDisplayed(){
     this.router.events.subscribe((event: RouterEvent) => {
-            if (  (event instanceof NavigationEnd && ( event.url === '/login' || event.url === '/register' )) || (!event.url) ) {
+            if ((event instanceof NavigationEnd && ( event.url === '/login' || event.url === '/register' )) || (!event.url) ) {
               this.menuCtrl.enable(false);
              // console.log('disable menu')
             } else {

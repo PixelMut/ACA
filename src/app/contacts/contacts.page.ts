@@ -40,18 +40,18 @@ export class ContactsPage implements OnInit {
 
   ngOnInit() {
     this.firestoreService.getContactList().subscribe(elt=>{
-      this.fullContactList =  elt
-      this.contactsList = this.fullContactList
+      this.fullContactList =  elt;
+      this.contactsList = this.fullContactList;
     })
   }
 
   onSearchTerm(event){
-    this.contactsList = this.fullContactList
+    this.contactsList = this.fullContactList;
     const val = event.detail.value;
 
     if (val && val.trim() !== '') {
       this.contactsList = this.contactsList.filter(term => {
-        return ( term.nom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 || term.prenom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 )
+        return ( term.nom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 || term.prenom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 || term.poste.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 )
       });
     }
   }

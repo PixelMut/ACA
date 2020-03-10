@@ -35,12 +35,12 @@
         <ion-card-subtitle class="ion-text-capitalize">{{ evenement?.lieu_evnt }}</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content fullscreen>
-        <ion-item lines="none">
+        <!--<ion-item lines="none">
           <ion-icon name="people-outline" slot="start" style="padding-right: 5%;"></ion-icon>
           <ion-label>
             <p>Nombre de participant : 34</p>
           </ion-label>
-        </ion-item>
+        </ion-item>-->
         <ion-item lines="none">
           <ion-icon name="radio-outline" slot="start" style="padding-right: 5%;"></ion-icon>
           <ion-label>
@@ -57,7 +57,7 @@
             <p>{{ evenement?.lieu_evnt }}</p>
           </ion-label>
         </ion-item>
-        <ion-item>
+        <ion-item style="font-size:smaller">
           {{ evenement?.description_evnt }}
         </ion-item>
       </ion-card-content>

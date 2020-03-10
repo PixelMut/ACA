@@ -52,11 +52,15 @@
                   <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
                 </div>
                 <div class="activity" *ngIf="notif.type_elt === 'com_pub'" [routerLink]="['tabs/publications/'+notif?.id_elt]">
-                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> commenté une <a [routerLink]="['tabs/publications/'+notif?.id_elt]">actualité</a>
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a commenté une <a [routerLink]="['tabs/publications/'+notif?.id_elt]">actualité</a>
                   <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
                 </div>
                 <div class="activity" *ngIf="notif.type_elt === 'com_evnt'" [routerLink]="['tabs/evenements/'+notif?.id_elt]">
-                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> commenté un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a commenté un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
+                  <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
+                </div>
+                <div class="activity" *ngIf="notif.type_elt === 'evnt_change'" [routerLink]="['tabs/evenements/'+notif?.id_elt]">
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a modifié un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
                   <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
                 </div>
               </div>

@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore , AngularFirestoreCollection,AngularFirestoreDocument } from 'angularfire2/firestore';
-import { Publication } from 'src/app/models/publications.interface';
+import { AngularFirestore ,AngularFirestoreDocument } from 'angularfire2/firestore';
 
 // test join
 import { combineLatest ,pipe, of,  defer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
-import { AngularFireModule } from '@angular/fire';
 import { Contact } from 'src/app/models/contact.interface';
 import { AuthenticationService } from '../authentication.service';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { resolve } from 'q';
-
 
 // join par document => Pas top
 // export const docJoin = (

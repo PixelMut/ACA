@@ -105,6 +105,43 @@ exports.createNotifFromEvnt = functions.firestore
 
     });
 
+exports.createNotifFromEvntChange = functions.firestore
+    .document('evenements/{id_evnt}')
+    .onUpdate(async (change:any) => {
+        const datedujour = new Date();
+        console.log('-----------------------users--------------------------');
+        const list_users = await admin.firestore().collection('users').get();
+
+        list_users.docs.map(async (objectDoc) => {
+            //list_users_id.push(objectDoc.data().id_user)
+            console.log('-----------------------change before--------------------------');
+            console.log(change.before.data());
+            console.log('-----------------------change after--------------------------');
+            console.log(change.after.data());
+            if(objectDoc.data().id_user !== change.after.data().id_user){
+                const id_notification = [...Array(20)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
+
+                return admin.firestore().collection('notifications').doc(id_notification).set({
+                    date_publi : datedujour,
+                    id_creator : change.after.data().id_user,
+                    id_elt : change.after.data().id_evnt,
+                    id_notif: id_notification,
+                    id_user : objectDoc.data().id_user,
+                    is_new : true,
+                    is_seen : false,
+                    type_elt : 'evnt_change'
+                }).then(writeResult => {
+                    console.log('written');
+                    // write is complete here
+                }).catch( err => {
+                    console.log('error')
+                });
+            }
+
+        });
+        console.log('----------------------- end users--------------------------');
+
+    });
 
 exports.createNotifFromComment = functions.firestore
     .document('comments/{id_comment}')
