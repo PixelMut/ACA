@@ -6,8 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { AuthenticationService } from './services/authentication.service';
 import { FirestoreService } from './services/data/firestore.service';
-import {FcmService} from "./services/fcm.service";
-
+import { FCM } from '@ionic-native/fcm/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -22,14 +21,45 @@ export class AppComponent {
     private router: Router,
     private authService: AuthenticationService,
     private navCtrl: NavController,
-    private fcm: FcmService,
-    public toastController: ToastController
+    public toastController: ToastController,
+    private fcm: FCM,
+    private firestoreSrv : FirestoreService,
+    private authsrv: AuthenticationService
   ) {
     this.initializeApp();
-    
+    /*this.fcm.subscribeToTopic('marketing');
+
+    this.authService.getCurrentUserId().then(
+        res => {
+          console.log(res)
+        }
+    )
+
+    this.fcm.getToken().then(token => {
+      console.log('ezfjmeofesjf');
+      this.firestoreSrv.saveToken(token, this.authService.getCurrentUserId());
+    }).catch(error => {
+      console.log(error);
+    });
+
+    this.fcm.onNotification().subscribe(data => {
+      if(data.wasTapped){
+        console.log('Received in background');
+        alert(JSON.stringify(data));
+      } else {
+        console.log('Received in foreground');
+        alert(JSON.stringify(data));
+      }
+    });
+
+    this.fcm.onTokenRefresh().subscribe(token => {
+      alert(token);
+    });
+
+    this.fcm.unsubscribeFromTopic('marketing');*/
   }
 
-  private async presentToast(message) {
+/*  private async presentToast(message) {
     const toast = await this.toastController.create({
       message,
       duration: 3000
@@ -47,7 +77,7 @@ export class AppComponent {
             this.presentToast(msg.body);
           }
         });
-  }
+  }*/
 
   initializeApp() {
     this.platform.ready().then(() => {
@@ -55,7 +85,7 @@ export class AppComponent {
       this.statusBar.styleLightContent();
       this.splashScreen.hide();
       this.isMenuDisplayed();
-      this.notificationSetup();
+      //this.notificationSetup();
     });
   }
 

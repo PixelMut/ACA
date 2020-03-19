@@ -117,7 +117,17 @@ export class FirestoreService {
           .where('id_user', '==', iduser )).valueChanges()
     }
 
-    // PARTIE NOTIFIACTIONS
+    saveToken(token, currentuser){
+      const devicesRef = this.firestore.collection('devices');
+      alert('currentuser : ' + currentuser);
+      const docData = {
+        token,
+        userId: currentuser,
+      };
+      return devicesRef.doc(token).set(docData);
+    }
+
+    // PARTIE NOTIFICATIONS
 
     isAnyNotif(idusertonotify){
       return this.firestore.collection('notifications', ref => ref

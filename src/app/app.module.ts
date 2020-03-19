@@ -18,10 +18,10 @@ import { AuthenticationService } from './services/authentication.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
-import {PopoverComponent} from "./notif-component/popover/popover.component";
-import {IonicStorageModule, Storage} from "@ionic/storage";
-import {PublicationsPageModule} from "./publications/publications.module";
-
+import {PopoverComponent} from './notif-component/popover/popover.component';
+import {IonicStorageModule, Storage} from '@ionic/storage';
+import {PublicationsPageModule} from './publications/publications.module';
+import { FCM } from '@ionic-native/fcm/ngx';
 // export const firebaseConfig = {
 //      apiKey: 'AIzaSyB9jHU1jM_t0CsW33wkbhNbeAUlcxRjCVg',
 //      authDomain: 'acensi-community-app.firebaseapp.com',
@@ -53,6 +53,7 @@ import {PublicationsPageModule} from "./publications/publications.module";
   providers: [
     StatusBar,
     SplashScreen,
+      FCM,
     AuthenticationService,
     AngularFirestore,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
