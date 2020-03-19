@@ -70,11 +70,9 @@ export class DetailPublicationPage implements OnInit {
             user_name : this.firestoreService.getContactDetail(elt.id_user).valueChanges(),
             commentcontent : elt.comment_content,
             commentDate : elt.date_comment,
-          })
+          });
         });
-
-      }
-    )
+      });
   }
 
   modifPublication(publicationId, publisherId){
@@ -126,8 +124,8 @@ export class DetailPublicationPage implements OnInit {
 
   }
 
-    deleteComment(id_comment){
-      console.log('gonna delete :'+id_comment)
+    deleteComment(id_comment:string){
+      console.log('gonna delete :' + id_comment);
         this.firestoreService.deleteComment(id_comment).then(
             res => {
                 console.log(res)
