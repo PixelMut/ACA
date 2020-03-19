@@ -65,9 +65,11 @@ export class DetailPublicationPage implements OnInit {
         res.forEach((elt:any) => {
           // this.comments.push(elt.data()) // compose la liste des commentaires
           this.comments.push({
+            id_comment : elt.id_comment,
+            comment_creator : elt.id_user,
             user_name : this.firestoreService.getContactDetail(elt.id_user).valueChanges(),
             commentcontent : elt.comment_content,
-            commentDate : elt.date_comment
+            commentDate : elt.date_comment,
           })
         });
 
@@ -123,6 +125,15 @@ export class DetailPublicationPage implements OnInit {
       );
 
   }
+
+    deleteComment(id_comment){
+      console.log('gonna delete :'+id_comment)
+        this.firestoreService.deleteComment(id_comment).then(
+            res => {
+                console.log(res)
+                //this.startGettingComments(this.pubId)
+            });
+    }
 
 
 }

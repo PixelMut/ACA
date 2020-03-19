@@ -73,10 +73,16 @@ export class DetailEvenementPage implements OnInit {
   }
 
   modifEvenement(evenementId, publisherId){
-    this.router.navigate(['/tabs/evenements/modif/'+evenementId]);
+    this.router.navigate(['/tabs/evenements/modif/'+ evenementId]);
   }
 
-  async presentAlertConfirm(pubId) {
+  activeEvent(evntId){
+      this.firestoreService.activateEvnt(evntId).then(() => {
+          this.router.navigateByUrl('tabs/evenements');
+      });
+  }
+
+  async presentAlertConfirm(evntId) {
     const alert = await this.alertController.create({
         header: 'Confirmer!',
         message: 'Voulez vous vraiment <strong>supprimer</strong> cet évènement et ses commentaires ?',
@@ -91,7 +97,7 @@ export class DetailEvenementPage implements OnInit {
             }, {
                 text: 'Supprimer',
                 handler: () => {
-                    this.firestoreService.deleteEvnt(pubId).then(() => {
+                    this.firestoreService.deleteEvnt(evntId).then(() => {
                         this.router.navigateByUrl('tabs/evenements');
                     });
                 }
@@ -101,6 +107,32 @@ export class DetailEvenementPage implements OnInit {
 
     await alert.present();
   }
+
+    async presentAlertConfirmAbort(evntId) {
+        const alert = await this.alertController.create({
+            header: 'Confirmer!',
+            message: 'Voulez vous vraiment <strong>annuler</strong> cet évènement ?',
+            buttons: [
+                {
+                    text: 'Non',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: (blah) => {
+                        console.log('Confirm Cancel: blah');
+                    }
+                }, {
+                    text: 'Oui',
+                    handler: () => {
+                        this.firestoreService.cancelEvent(evntId).then(() => {
+                            this.router.navigateByUrl('tabs/evenements');
+                        });
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
+    }
 
 
   getRemainingTime(dateEvent){

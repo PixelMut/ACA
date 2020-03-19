@@ -63,6 +63,14 @@
                   <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a modifié un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
                   <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
                 </div>
+                <div class="activity" *ngIf="notif.type_elt === 'evnt_abort'" [routerLink]="['tabs/evenements/'+notif?.id_elt]">
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a annulé un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
+                  <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
+                </div>
+                <div class="activity" *ngIf="notif.type_elt === 'evnt_activate'" [routerLink]="['tabs/evenements/'+notif?.id_elt]">
+                  <a [routerLink]="['tabs/contacts/'+notif?.id_creator]">{{ notif.id_creator ? getName(notif.id_creator)+' ' : ''}}</a> a ré-activé un <a [routerLink]="['tabs/evenements/'+notif?.id_elt]">évènement</a>
+                  <span>{{ notif.date_publi.seconds * 1000 | dateAgo }}</span>
+                </div>
               </div>
             </div>
           </div>

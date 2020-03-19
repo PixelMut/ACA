@@ -26,7 +26,9 @@ export class ModifContactPage implements OnInit {
   url: any;
   newImage: Image = {
     id: this.afs.createId(), image: ''
-  }
+  };
+
+  eltList;
 
   constructor(
     private afs: AngularFirestore,
@@ -54,7 +56,7 @@ export class ModifContactPage implements OnInit {
       adresse_user_localite : new FormControl('', Validators.compose([])),
       adresse_user_rue : new FormControl('', Validators.compose([])),
       poste : new FormControl('', Validators.compose([]))
-    })
+    });
 
     // recuperation des données user grace a son id
     this.userId = this.route.snapshot.paramMap.get('id');
@@ -62,7 +64,16 @@ export class ModifContactPage implements OnInit {
       res => {
         this.userDetails =  res.data(); // données qui remplissent le HTML
       }
-    )
+    );
+
+    this.getListPublication();
+  }
+
+  async getListPublication() {
+    this.firestoreService.getUserPublicationList(this.userId).subscribe(
+        res => {
+          this.eltList = res;
+        });
   }
 
   // lors du choix de l'image depuis le champ "upload"

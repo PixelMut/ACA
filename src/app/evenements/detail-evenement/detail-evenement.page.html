@@ -18,6 +18,12 @@
       <ion-fab-button color="secondary" (click)="modifEvenement(evenement?.id_evnt, evenement?.id_user)">
         <ion-icon name="construct-outline"></ion-icon>
       </ion-fab-button>
+      <ion-fab-button *ngIf="evenement?.evnt_active === true" color="warning" (click)="presentAlertConfirmAbort(evenement?.id_evnt)">
+        <ion-icon name="flash-off-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button *ngIf="evenement?.evnt_active === false" color="warning" (click)="activeEvent(evenement?.id_evnt)">
+        <ion-icon name="flash-outline"></ion-icon>
+      </ion-fab-button>
       <ion-fab-button color="danger" (click)="presentAlertConfirm(evenement?.id_evnt)">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
@@ -30,7 +36,8 @@
    <ion-card >
      <img [src]="evenement?.photo_evnt" alt="ion">
       <ion-card-header>
-        <h4 class="remainingTime">DANS {{ getRemainingTime(evenement?.date_evnt) | uppercase }}</h4>
+        <h4 *ngIf="evenement?.evnt_active === true" class="remainingTime">DANS {{ getRemainingTime(evenement?.date_evnt) | uppercase }}</h4>
+        <h4 *ngIf="evenement?.evnt_active === false" class="abortedEvnt">CET EVENEMENT EST ANNULE</h4>
         <ion-card-title class="title_event ion-text-capitalize">{{ evenement?.title_evnt  }}</ion-card-title>
         <ion-card-subtitle class="ion-text-capitalize">{{ evenement?.lieu_evnt }}</ion-card-subtitle>
       </ion-card-header>

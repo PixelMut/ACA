@@ -135,7 +135,7 @@ exports.createNotifFromEvntChange = functions.firestore
                     id_user : objectDoc.data().id_user,
                     is_new : true,
                     is_seen : false,
-                    type_elt : 'evnt_change'
+                    type_elt : change.before.data().evnt_active !== change.after.data().evnt_active && change.after.data().evnt_active === false ? 'evnt_abort' : (change.before.data().evnt_active !== change.after.data().evnt_active && change.after.data().evnt_active === true ? 'evnt_activate' : 'evnt_change')
                 }).then(writeResult => {
                     console.log('written');
                     // write is complete here
@@ -216,6 +216,14 @@ exports.sendFollowerPushNotification = functions.firestore
             case 'evnt_change':
                 payload.notification.title = 'Update Evenement';
                 payload.notification.body = 'Quelqu\'un a modifié un évenement..';
+                break;
+            case 'evnt_abort':
+                payload.notification.title = 'Update Evenement';
+                payload.notification.body = 'Quelqu\'un a annulé un évenement..';
+                break;
+            case 'evnt_activate':
+                payload.notification.title = 'Update Evenement';
+                payload.notification.body = 'Quelqu\'un a ré-activé un évenement..';
                 break;
             case 'com_pub':
                 payload.notification.title = 'Nouveau Commentaire';

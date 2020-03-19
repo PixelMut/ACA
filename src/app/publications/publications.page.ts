@@ -1,11 +1,10 @@
-import { Component, OnInit, Query } from '@angular/core';
-import { FirestoreService, innerJoin  } from '../services/data/firestore.service';
+import { Component, OnInit } from '@angular/core';
+import { FirestoreService  } from '../services/data/firestore.service';
 import { Router } from '@angular/router';
 import { AngularFirestore} from 'angularfire2/firestore';
-import { shareReplay } from 'rxjs/operators';
 import { AuthenticationService } from '../services/authentication.service';
 import {NavController, PopoverController} from '@ionic/angular';
-import {PopoverComponent} from "../notif-component/popover/popover.component";
+import {PopoverComponent} from '../notif-component/popover/popover.component';
 import {Storage} from '@ionic/storage';
 
 @Component({
@@ -15,7 +14,6 @@ import {Storage} from '@ionic/storage';
 })
 export class PublicationsPage implements OnInit {
   public publicationsList;
-  public testValues;
   private userList;
   private notifList;
   private newItems;
@@ -27,7 +25,7 @@ export class PublicationsPage implements OnInit {
     private authsrv: AuthenticationService,
     private navCtrl: NavController,
     public popoverController: PopoverController,
-    private storage : Storage) {
+    private storage: Storage) {
 
       // old method => Impossible to order by
       // this.publicationsList = this.afs
@@ -41,23 +39,20 @@ export class PublicationsPage implements OnInit {
       // new method => A bit longer
       this.getListPublication();
       this.getListUsers();
-      //this.getNotifs();
     }
 
-    async getListPublication(){
+    async getListPublication() {
        this.firestoreService.getPublicationList().subscribe(
         res => {
           this.publicationsList = res;
-         }
-      )
+         });
     }
 
     async getListUsers(){
       this.firestoreService.getContactList().subscribe(
-        res=>{
-          this.userList = res
-        }
-      )
+        res => {
+          this.userList = res;
+        });
     }
 
     checkco(){

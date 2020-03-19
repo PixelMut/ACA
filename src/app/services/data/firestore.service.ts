@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore ,AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore , AngularFirestoreDocument } from 'angularfire2/firestore';
 
 // test join
-import { combineLatest ,pipe, of,  defer } from 'rxjs';
+import { combineLatest , pipe, of,  defer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 import { Contact } from 'src/app/models/contact.interface';
@@ -67,27 +67,27 @@ export const innerJoin = (
         switchMap(data => {
           // clear mapping on each emmited val
 
-          //save the parent data state
+          // save the parent data state
           collectionData = data as any[];
           // console.log(collectionData) // liste des documents
           const reads$ = [];
-          for (const doc of collectionData){
+          for (const doc of collectionData) {
             // push doc read to array
             // console.log(doc) // liste des documents
-            if(doc[field]){
+            if (doc[field]) {
               // perform query on join key, with optionnal limit
               const q = ref => ref.where(field, '==' , doc[field]).limit(limit);
 
               // reads$.push(afs.collection(collection, q).valueChanges());
               reads$.push(afs.collection(collection, q).valueChanges());
-            }else{
-              reads$.push(of([]))
+            } else {
+              reads$.push(of([]));
             }
           }
           return combineLatest(reads$);
         }),
         map(joins => {
-          return collectionData.map((v,i)=>{
+          return collectionData.map((v, i) => {
             totaljoins += joins[i].length;
             return {...v, [collection]: joins[i] || null};
           });
@@ -106,18 +106,18 @@ export const innerJoin = (
   providedIn: 'root'
 })
 export class FirestoreService {
-  //savedContacts;
+  // savedContacts;
   constructor(public firestore: AngularFirestore,
-    private authsrv: AuthenticationService,
-    private storage: AngularFireStorage) { }
+              private authsrv: AuthenticationService,
+              private storage: AngularFireStorage) { }
 
     // partie droits user
-    getCurrentUserType(iduser){
+    getCurrentUserType(iduser) {
       return this.firestore.collection('users', ref => ref
-          .where('id_user', '==', iduser )).valueChanges()
+          .where('id_user', '==', iduser )).valueChanges();
     }
 
-    saveToken(token, currentuser){
+    saveToken(token, currentuser) {
       const devicesRef = this.firestore.collection('devices');
       alert('currentuser : ' + currentuser);
       const docData = {
@@ -129,27 +129,27 @@ export class FirestoreService {
 
     // PARTIE NOTIFICATIONS
 
-    isAnyNotif(idusertonotify){
+    isAnyNotif(idusertonotify) {
       return this.firestore.collection('notifications', ref => ref
           .where('id_user', '==', idusertonotify )
           // .where('is_new', '==', true)
           .orderBy('date_publi', 'desc')).valueChanges();
     }
 
-    isAnyEvent(){
+    isAnyEvent() {
       return this.firestore.collection('evenements', ref => ref
-          .where('date_evnt','>=',new Date())).valueChanges();
+          .where('date_evnt', '>=', new Date())).valueChanges();
     }
 
     // lors du clic sur "notifications", on les passe en is_new = false
-    changeStateToSeen(listeDesNotif){
-      listeDesNotif.forEach(elt=>{
-        const notifDoc = this.firestore.doc<any>('notifications/'+elt.id_notif);
+    changeStateToSeen(listeDesNotif) {
+      listeDesNotif.forEach(elt => {
+        const notifDoc = this.firestore.doc<any>('notifications/' + elt.id_notif);
         return new Promise<any>((resolve, reject) => {
           notifDoc.update({
-            'is_new' : false
+            is_new : false
           });
-        })
+        });
       });
 
 
@@ -157,14 +157,14 @@ export class FirestoreService {
 
 
 
-  setSeen(eltId, userId){
-    let notifDoc = this.firestore.collection('notifications', ref => ref
+  setSeen(eltId, userId) {
+    const notifDoc = this.firestore.collection('notifications', ref => ref
         .where('id_elt', '==', eltId)
         .where('id_user', '==', userId));
     notifDoc.get().subscribe(items => {
       items.forEach(doc => {
         doc.ref.update({
-          'is_seen' : true
+          is_seen : true
         });
       });
     });
@@ -182,7 +182,7 @@ export class FirestoreService {
       const date_publication = new Date();
       const date_modif_publication = date_publication;
       const publication_active = true;
-      
+
       return result.task.then(a => {
         ref.getDownloadURL().subscribe(a => {
           //  console.log(a)
@@ -197,32 +197,32 @@ export class FirestoreService {
               publication_active,
               description_publication,
               id_user,
-              'photo_publication':a
+              photo_publication: a
             });
 
           })
           .catch(error => {
-            console.log(error)
-          })
+            console.log(error);
+          });
         });
-      })
+      });
     }
 
-    deletePub(id_publication: string) : Promise<void> {
-      console.log('entre deletePub')
+    deletePub(id_publication: string): Promise<void> {
+      console.log('entre deletePub');
       return new Promise<any>((resolve, reject) => {
         this.getPublicationComments(id_publication).subscribe(
             res => {
-              if(res.length > 0){ // présence de commentaires
+              if (res.length > 0) { // présence de commentaires
                 this.deleteCommentaires(id_publication);
                 this.firestore.doc(`publications/${id_publication}`).delete();
-                resolve(res)
-              }else{
+                resolve(res);
+              } else {
                 this.firestore.doc(`publications/${id_publication}`).delete();
-                resolve(res)
+                resolve(res);
               }
             }
-        )
+        );
       });
 
 /*      this.getPublicationComments(id_publication).subscribe(
@@ -238,10 +238,10 @@ export class FirestoreService {
     }
 
     // fonction utilisée pour les commentaires des publications et des evenements
-    deleteCommentaires(id_elt){
-    console.log('entre deleteCommentaires')
-      let delete_comms = this.firestore.collection('comments', ref => ref.where('id_elt', '==', id_elt));
-      delete_comms.get().subscribe(delItems => {
+    deleteCommentaires(id_elt) {
+    console.log('entre deleteCommentaires');
+    const delete_comms = this.firestore.collection('comments', ref => ref.where('id_elt', '==', id_elt));
+    delete_comms.get().subscribe(delItems => {
         delItems.forEach(doc => {
           doc.ref.delete();
         });
@@ -255,9 +255,9 @@ export class FirestoreService {
     };
   }
 
-    modifyPublication(idpub, title_pub, desc_pub){
+    modifyPublication(idpub, title_pub, desc_pub) {
       const pubDoc = this.firestore.doc<any>('publications/' + idpub);
-      const nvDateModif = new Date()
+      const nvDateModif = new Date();
       return new Promise<any>((resolve, reject) => {
         pubDoc.update({
         title_publication: title_pub,
@@ -267,17 +267,17 @@ export class FirestoreService {
       })
         .then(
           res => {
-            resolve(res)
+            resolve(res);
           },
-          err => reject(err))
+          err => reject(err));
       });
 
     }
 
     // recuperer la liste des publications, depuis publications page
-    getPublicationList(){ //: AngularFirestoreCollection<Publication> {
+    getPublicationList() { // : AngularFirestoreCollection<Publication> {
      // return this.firestore.collection('publications');
-     
+
      // arrive a trier par date avec :
       return this.firestore.collection('publications', ref => ref.orderBy('date_publication', 'desc')).valueChanges();
     }
@@ -292,12 +292,12 @@ export class FirestoreService {
       return this.firestore.collection('publications').doc(pubId);
     }
 
-    getPublicationComments(pubId: string){
-      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', pubId).orderBy('date_comment','asc')).valueChanges();
+    getPublicationComments(pubId: string) {
+      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', pubId).orderBy('date_comment', 'asc')).valueChanges();
     }
 
 
-    updatePubImage(idpub, urlImage){
+    updatePubImage(idpub, urlImage) {
       console.log('url image:');
       console.log(urlImage);
       const userDoc = this.firestore.doc<any>('publications/' + idpub);
@@ -308,23 +308,23 @@ export class FirestoreService {
       })
         .then(
           res => {
-            resolve(res)
+            resolve(res);
           },
-          err => reject(err))
+          err => reject(err));
       });
     }
 
-    addComment(comment_content, id_elt: string, id_user : string, type_elt: string){
-    console.log(id_user)
-      const id_comment = this.firestore.createId();
+    addComment(comment_content, id_elt: string, id_user: string, type_elt: string) {
+    console.log(id_user);
+    const id_comment = this.firestore.createId();
       // const filePath = '/Image/' + 'Post_' + id_publication + '/' + imageId ;
       // const result = this.SaveImageRef(filePath, fileRaw);
       // const ref = result.ref;
-      const date_comment = new Date();
+    const date_comment = new Date();
       // const date_modif_publication = date_publication;
-      const comment_active = true;
-      
-      return new Promise<any>((resolve, reject) => {
+    const comment_active = true;
+
+    return new Promise<any>((resolve, reject) => {
         this.firestore.doc(`comments/${id_comment}`).set({
           id_comment,
           comment_content,
@@ -336,9 +336,9 @@ export class FirestoreService {
         })
         .then(
           res => {
-            resolve(res)
+            resolve(res);
           },
-          err => reject(err))
+          err => reject(err));
       });
 
 
@@ -357,12 +357,16 @@ export class FirestoreService {
 
 
     }
+
+  deleteComment(id_comment){
+    return this.firestore.doc(`comments/${id_comment}`).delete();
+  }
   // FIN PARTIE PUBLICATIONS
 
   // PARTIE CONTACT / USER
 
-    getContactList() { //: AngularFirestoreCollection<Publication> {
-      return this.firestore.collection('users').valueChanges()
+    getContactList() { // : AngularFirestoreCollection<Publication> {
+      return this.firestore.collection('users').valueChanges();
     }
 
     // setContacts(contacts){
@@ -374,7 +378,7 @@ export class FirestoreService {
       return this.firestore.collection('users').doc(contactId);
     }
 
-    modifyProfil(iduser, value){
+    modifyProfil(iduser, value) {
       const userDoc = this.firestore.doc<any>('users/' + iduser);
       return new Promise<any>((resolve, reject) => {
         userDoc.update({
@@ -388,14 +392,14 @@ export class FirestoreService {
       })
         .then(
           res => {
-            resolve(res)
+            resolve(res);
           },
-          err => reject(err))
+          err => reject(err));
       });
 
     }
 
-    updateUserImage(iduser, urlImage){
+    updateUserImage(iduser, urlImage) {
       console.log('url image:');
       console.log(urlImage);
       const userDoc = this.firestore.doc<any>('users/' + iduser);
@@ -406,102 +410,138 @@ export class FirestoreService {
       })
         .then(
           res => {
-            resolve(res)
+            resolve(res);
           },
-          err => reject(err))
+          err => reject(err));
       });
     }
 
-  // FIN PARTIE CONTACT / USER 
+    getUserPublicationList(iduser) {
+      return this.firestore.collection('publications', ref => ref.orderBy('date_publication', 'desc').where('id_user', '==' , iduser)).valueChanges();
+    }
+
+  // FIN PARTIE CONTACT / USER
 
 
 
   // PARTIE EVENEMENTS
-  
+
     // recuperer les details d'une publication, cette methode permet la manipulation des données depuis le ts
     getEvenementDetail(evntId: string) {
       return this.firestore.collection('evenements').doc(evntId);
     }
 
-    getEvenementComments(evntId: string){
-      console.log('entre getEvenementsComments')
-      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', evntId).orderBy('date_comment','asc')).valueChanges();
+    getEvenementComments(evntId: string) {
+      console.log('entre getEvenementsComments');
+      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', evntId).orderBy('date_comment', 'asc')).valueChanges();
     }
 
-    getEvntList(){ //: AngularFirestoreCollection<Publication> {
+    getEvntList() { // : AngularFirestoreCollection<Publication> {
     // return this.firestore.collection('publications');
     // arrive a trier par date avec :
-      return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'asc').where('date_evnt','>=',new Date())).valueChanges();
+      return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'asc').where('date_evnt', '>=', new Date())).valueChanges();
     }
 
-    getPassedEvntList(){
-      return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'desc').where('date_evnt','<',new Date())).valueChanges();
+    getPassedEvntList() {
+      return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'desc').where('date_evnt', '<', new Date())).valueChanges();
     }
 
-    modifyEvenement(idevnt, title_evnt, desc_evnt, locationName, locationId, dateEvnt, currentUserType ){
+    modifyEvenement(idevnt, title_evnt, desc_evnt, locationName, locationId, dateEvnt, currentUserType ) {
       const evntDoc = this.firestore.doc<any>('evenements/' + idevnt);
       const nvDateModif = new Date();
 
-      if(locationName !== '' && locationId !== ''){
+      if (locationName !== '' && locationId !== '') {
         return new Promise<any>((resolve, reject) => {
 
           evntDoc.update({
-            title_evnt: title_evnt,
+            title_evnt,
             description_evnt: desc_evnt,
             date_modif_evnt : nvDateModif,
             date_evnt : new Date(dateEvnt) ,
-            'lieu_evnt': locationName,
-            'id_location_google' : locationId,
-            'is_admin_level' : (currentUserType === 1 || currentUserType === 2)
+            lieu_evnt: locationName,
+            id_location_google : locationId,
+            is_admin_level : (currentUserType === 1 || currentUserType === 2)
             // Other info you want to add here
           })
               .then(
                   res => {
-                    resolve(res)
+                    resolve(res);
                   },
-                  err => reject(err))
+                  err => reject(err));
         });
-      }else{
+      } else {
         return new Promise<any>((resolve, reject) => {
 
           evntDoc.update({
-            title_evnt: title_evnt,
+            title_evnt,
             description_evnt: desc_evnt,
             date_modif_evnt : nvDateModif,
             date_evnt : new Date(dateEvnt) ,
-            'is_admin_level' : (currentUserType === 1 || currentUserType === 2)
+            is_admin_level : (currentUserType === 1 || currentUserType === 2)
             // Other info you want to add here
           }).then(
                res => {
-                  resolve(res)
+                  resolve(res);
                },
-                  err => reject(err))
+                  err => reject(err));
         });
       }
 
 
     }
 
-    deleteEvnt(id_evnt: string) : Promise<void> {
-      console.log('entre deleteEvnt')
+    deleteEvnt(id_evnt: string): Promise<void> {
+      console.log('entre deleteEvnt');
       return new Promise<any>((resolve, reject) => {
         this.getEvenementComments(id_evnt).subscribe(
             res => {
-              console.log(res)
-              if(res.length > 0){ // présence de commentaires
+              console.log(res);
+              if (res.length > 0) { // présence de commentaires
                 this.deleteCommentaires(id_evnt);
                 this.firestore.doc(`evenements/${id_evnt}`).delete();
-                resolve(res)
-              }else{
+                resolve(res);
+              } else {
                 this.firestore.doc(`evenements/${id_evnt}`).delete();
-                resolve(res)
+                resolve(res);
               }
-            })
+            });
+      });
+    }
+
+   cancelEvent(id_evnt: string): Promise<void> {
+     console.log('entre cancelEvnt');
+     const evntDoc = this.firestore.doc<any>('evenements/' + id_evnt);
+     return new Promise<any>((resolve, reject) => {
+
+       evntDoc.update({
+         evnt_active : false
+         // Other info you want to add here
+       }).then(
+           res => {
+             resolve(res);
+           },
+           err => reject(err));
+     });
+   }
+
+    activateEvnt(id_event: string): Promise<void> {
+      console.log('entre activEvnt');
+      const evntDoc = this.firestore.doc<any>('evenements/' + id_event);
+      return new Promise<any>((resolve, reject) => {
+
+        evntDoc.update({
+          evnt_active : true
+          // Other info you want to add here
+        }).then(
+            res => {
+              resolve(res);
+            },
+            err => reject(err));
       });
     }
 
 
-    updateEvntImage(idevnt, urlImage){
+    updateEvntImage(idevnt, urlImage) {
       console.log('url image:');
       console.log(urlImage);
       const userDoc = this.firestore.doc<any>('evenements/' + idevnt);
@@ -512,21 +552,21 @@ export class FirestoreService {
       })
         .then(
           res => {
-            resolve(res)
+            resolve(res);
           },
-          err => reject(err))
+          err => reject(err));
       });
     }
 
     // creation d'une publication, depuis new-publication page
-    createEvenement(title_evnt: string, description_evnt: string,imageId, fileRaw, locationName, locationId, dateEvnt, currentUserType): Promise<void> {
+    createEvenement(title_evnt: string, description_evnt: string, imageId, fileRaw, locationName, locationId, dateEvnt, currentUserType): Promise<void> {
       const id_evnt = this.firestore.createId();
       const filePath = '/Image/' + 'Evnt_' + id_evnt + '/' + imageId ;
       const result = this.SaveImageRef(filePath, fileRaw);
       const ref = result.ref;
-      console.log(dateEvnt)
+      console.log(dateEvnt);
       const date_evnt = new Date(dateEvnt);
-      console.log(date_evnt)
+      console.log(date_evnt);
       const date_publication_evnt = new Date();
       const date_modif_evnt = date_publication_evnt;
       const evnt_active = true;
@@ -548,17 +588,17 @@ export class FirestoreService {
             evnt_active,
             description_evnt,
             id_user,
-            'photo_evnt':a,
-            'lieu_evnt': locationName,
-            'id_location_google' : locationId,
-            'is_admin_level' : (currentUserType === 1 || currentUserType === 2)
+            photo_evnt: a,
+            lieu_evnt: locationName,
+            id_location_google : locationId,
+            is_admin_level : (currentUserType === 1 || currentUserType === 2)
           });
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
       });
-    })
+    });
   }
 
 

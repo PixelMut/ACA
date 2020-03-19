@@ -21,52 +21,41 @@ export class EvenementsPage implements OnInit {
     private authsrv: AuthenticationService) {
 
       this.getListEvent();
-    // this.evntList = this.afs
-    //   .collection('evenements')
-    //   .valueChanges()
-    //   .pipe(
-    //     innerJoin(afs,'id_user', 'users'),
-    //     shareReplay(1)
-    //   );
    }
 
   ngOnInit() {
   }
 
-  getListEvent(){
-    let ajd = new Date()
+  async getListEvent() {
     this.firestoreService.getEvntList().subscribe(
       res => {
-       this.evntList = res
-      }
-    )
+       this.evntList = res;
+      });
 
     this.firestoreService. getPassedEvntList().subscribe(
       res => {
-       this.outdated_evntList = res
-      }
-    )
-   
+       this.outdated_evntList = res;
+      });
   }
 
-  getRemainingTime(dateEvent){
-    let maintenant = new Date()
-    let seconds = dateEvent.seconds * 1000 - maintenant.getTime();
-    return this.secondsToDhms(seconds / 1000)
+  getRemainingTime(dateEvent) {
+    const maintenant = new Date();
+    const seconds = dateEvent.seconds * 1000 - maintenant.getTime();
+    return this.secondsToDhms(seconds / 1000);
   }
 
   secondsToDhms(seconds) {
     seconds = Number(seconds);
-    let d = Math.floor(seconds / (3600 * 24));
-    let h = Math.floor(seconds % (3600 * 24) / 3600);
-    let m = Math.floor(seconds % 3600 / 60);
-    let s = Math.floor(seconds % 60);
+    const d = Math.floor(seconds / (3600 * 24));
+    const h = Math.floor(seconds % (3600 * 24) / 3600);
+    const m = Math.floor(seconds % 3600 / 60);
+    //const s = Math.floor(seconds % 60);
 
-    let dDisplay = d > 0 ? d + (d === 1 ? ' jour, ' : ' jours, ') : '';
-    let hDisplay = h > 0 ? h + (h === 1 ? ' heure, ' : ' heures, ') : '';
-    let mDisplay = m > 0 ? m + (m === 1 ? ' minute, ' : ' minutes ') : '';
+    const dDisplay = d > 0 ? d + (d === 1 ? ' jour, ' : ' jours, ') : '';
+    const hDisplay = h > 0 ? h + (h === 1 ? ' heure, ' : ' heures, ') : '';
+    const mDisplay = m > 0 ? m + (m === 1 ? ' minute, ' : ' minutes ') : '';
     // let sDisplay = s > 0 ? s + (s === 1 ? ' seconde' : ' secondes') : '';
-    return dDisplay + hDisplay + mDisplay // + sDisplay;
+    return dDisplay + hDisplay + mDisplay; // + sDisplay;
   }
 
   doRefresh(event){

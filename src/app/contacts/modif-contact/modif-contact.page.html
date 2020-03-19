@@ -3,6 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="end" >
+      <ion-button  (click)="tryModify(change_userinfo_form.value)" [disabled]="!change_userinfo_form.valid">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -76,9 +81,26 @@
       
 
 
-      <ion-row style="text-align: right"> 
+<!--      <ion-row style="text-align: right">
         <ion-col>
           <ion-button  class="submit-btn" type="submit"  [disabled]="!change_userinfo_form.valid">Valider</ion-button>
+        </ion-col>
+      </ion-row>-->
+
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-list-header>
+              Historique des publications
+            </ion-list-header>
+            <ion-item *ngFor="let elt of eltList " routerLink="/tabs/publications/{{elt.id_publication}}">
+              <ion-label>
+                <h3>{{ elt.date_publication.seconds * 1000 | dateAgo }}</h3>
+                <h4>{{elt.title_publication}}</h4>
+                <h6>{{elt.description_publication}}</h6>
+              </ion-label>
+            </ion-item>
+          </ion-list>
         </ion-col>
       </ion-row>
       <!-- <ion-row> 
