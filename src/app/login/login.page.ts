@@ -18,6 +18,7 @@ export class LoginPage implements OnInit {
   validations_form: FormGroup;
   errorMessage: string = '';
   showForgottenPswd = false; // afficher / cacher la partie mdp oublié
+  isLoading = true; // lors du chargement de la page
   validation_messages = {
     'email': [
       { type: 'required', message: 'Adresse mail obligatoire.' },
@@ -59,20 +60,28 @@ export class LoginPage implements OnInit {
               console.log('ezfjmeofesjf');
               this.firestoreSrv.saveToken(token, user.uid);
           }).catch(error => {
+              this.isLoading = false;
               console.log(error);
           });
           this.firestoreSrv.getCurrentUserType(user.uid).subscribe(
             (res: any) => {
+              if(res[0].nom_user === 'Nouvel'){
+                  this.storage.set('needSetup', true); // va avoir besoin de set les infos user des le demarrage
+              }
               this.storage.set('tu', res[0] ? res[0].id_type_user : 3); // save du type user dans le storage
+              this.isLoading = false;
               this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});}
         );
+      }else{
+          this.isLoading = false;
       }
     });
   }
 
-
-  // Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+  // lors du clic sur "se connecter", avec les valeurs du formulaire en param
   loginUser(value){
+    this.isLoading = true;
+    console.log('is loading true')
     this.authService.loginUser(value)
     .then(res => {
         this.storage.set('uid', res.user.uid); // save du id user dans le storage
@@ -80,23 +89,29 @@ export class LoginPage implements OnInit {
             console.log('ezfjmeofesjf');
             this.firestoreSrv.saveToken(token, res.user.uid);
         }).catch(error => {
+            this.isLoading = false;
             console.log(error);
         });
         this.firestoreSrv.getCurrentUserType( res.user.uid).subscribe(
           ( res : any) => {
             this.errorMessage = '';
+            if(res[0].nom_user === 'Nouvel'){
+              this.storage.set('needSetup', true); // va avoir besoin de set les infos user des le demarrage
+            }
             this.storage.set('tu', res[0].id_type_user); // save du type user dans le storage
+            this.isLoading = false;
             this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});
           }
         );
     }, err => {
-      this.errorMessage = err.message;
-    })
+        this.isLoading = false;
+        this.errorMessage = err.message;
+
+    });
   }
 
   recover_mail(){
     this.showForgottenPswd = true;
-    
   }
 
   sendMail(elt){
@@ -124,10 +139,5 @@ export class LoginPage implements OnInit {
 //   this.firebaseAuthentication.sendPasswordResetEmail()
 // .then((res: any) => console.log(res))
 // .catch((error: any) => console.error(error));
-
-
-  
-
- 
 
 }

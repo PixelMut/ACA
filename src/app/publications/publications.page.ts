@@ -6,6 +6,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import {NavController, PopoverController} from '@ionic/angular';
 import {PopoverComponent} from '../notif-component/popover/popover.component';
 import {Storage} from '@ionic/storage';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-publications',
@@ -37,8 +38,40 @@ export class PublicationsPage implements OnInit {
       // );
 
       // new method => A bit longer
+      this.verifyUser();
       this.getListPublication();
       this.getListUsers();
+    }
+
+    async verifyUser(){
+      this.storage.get('needSetup').then(
+          res => {
+              if(res === true){
+                  this.storage.get('uid').then(res2 => {
+                      this.navCtrl.navigateForward('/tabs/contacts/modif/' + res2);
+                  });
+              }
+          });
+        /*firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                this.storage.set('uid', user.uid); // save du id user dans le storage
+                this.fcm.getToken().then(token => {
+                    console.log('ezfjmeofesjf');
+                    this.firestoreSrv.saveToken(token, user.uid);
+                }).catch(error => {
+                    this.isLoading = false;
+                    console.log(error);
+                });
+                this.firestoreSrv.getCurrentUserType(user.uid).subscribe(
+                    (res: any) => {
+                        this.storage.set('tu', res[0] ? res[0].id_type_user : 3); // save du type user dans le storage
+                        this.isLoading = false;
+                        this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});}
+                );
+            }else{
+                this.isLoading = false;
+            }
+        });*/
     }
 
     async getListPublication() {

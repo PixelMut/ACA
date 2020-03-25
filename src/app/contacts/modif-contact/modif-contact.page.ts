@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController, NavController } from '@ionic/angular';
+import {AlertController, MenuController, NavController} from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { FirestoreService } from 'src/app/services/data/firestore.service';
 import { MiscDataService } from 'src/app/services/data/misc-data.service';
@@ -7,6 +7,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Router } from '@angular/router';
+import {Storage} from '@ionic/storage';
 
 export interface Image {
   id: string;
@@ -38,13 +39,22 @@ export class ModifContactPage implements OnInit {
     private miscData: MiscDataService,
     private navCtrl: NavController,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    public alertController: AlertController,
+    private phonestorage: Storage
   ) {
     this.typesLocalisation = this.miscData.list_localisations; // Permet de connaître le type selon un id
   }
 
   // initialisation du formulaire et des details user
   ngOnInit() {
+    this.phonestorage.get('needSetup').then(
+        res => {
+          if(res === true){
+            this.presentAlert();
+          }
+        });
+
     this.change_userinfo_form = this.formBuilder.group({
       nom_user : new FormControl('', Validators.compose([
         Validators.required
@@ -55,7 +65,9 @@ export class ModifContactPage implements OnInit {
       adresse_user_code_postal : new FormControl('', Validators.compose([])),
       adresse_user_localite : new FormControl('', Validators.compose([])),
       adresse_user_rue : new FormControl('', Validators.compose([])),
-      poste : new FormControl('', Validators.compose([]))
+      poste : new FormControl('', Validators.compose([
+        Validators.required
+      ]))
     });
 
     // recuperation des données user grace a son id
@@ -67,6 +79,17 @@ export class ModifContactPage implements OnInit {
     );
 
     this.getListPublication();
+  }
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      backdropDismiss : false,
+      header: 'Première connexion',
+      message: 'Ceci est votre première connexion. Merci de saisir vos coordonnées et d\'ajouter une photo',
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
   async getListPublication() {
@@ -129,12 +152,13 @@ export class ModifContactPage implements OnInit {
   tryModify(value) {
     this.firestoreService.modifyProfil(this.userId, value)
       .then(res => {
+        this.phonestorage.set('needSetup', false);
         // console.log('saved with success')
         this.router.navigate(['tabs/publications'])
         //this.navCtrl.navigateRoot('');
       },
       err => {
-        console.log('error saving')
+        console.log('error saving');
       })
   }
 
