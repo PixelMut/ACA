@@ -33,7 +33,11 @@ const routes: Routes = [
   {
     path: 'contacts',
     loadChildren: () => import('./contacts/contacts.module').then( m => m.ContactsPageModule)
+  },  {
+    path: 'photos',
+    loadChildren: () => import('./photos/photos.module').then( m => m.PhotosPageModule)
   }
+
 ];
 @NgModule({
   imports: [

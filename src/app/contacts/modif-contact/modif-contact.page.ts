@@ -113,7 +113,7 @@ export class ModifContactPage implements OnInit {
     }else{
       img = 'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2F00RCAmXsY41bHbpQIQVn?alt=media&token=d4b87801-5b3a-4606-8628-37c60c4521f0'
     }
-    this.firestoreService.updateUserImage(this.userId, img); // save de l'url dans la table user
+    //this.firestoreService.updateUserImage(this.userId, img); // save de l'url dans la table user
     this.newImage.image = img;
     this.userDetails.photo_user = img;
     this.loading = false;

@@ -560,7 +560,7 @@ export class FirestoreService {
     }
 
     // creation d'une publication, depuis new-publication page
-    createEvenement(title_evnt: string, description_evnt: string, imageId, fileRaw, locationName, locationId, dateEvnt, currentUserType): Promise<void> {
+    createEvenement(title_evnt: string, description_evnt: string, imageId, fileRaw, locationName, locationId, dateEvnt, currentUserType,isOfficial=false): Promise<void> {
       const id_evnt = this.firestore.createId();
       const filePath = '/Image/' + 'Evnt_' + id_evnt + '/' + imageId ;
       const result = this.SaveImageRef(filePath, fileRaw);
@@ -592,8 +592,9 @@ export class FirestoreService {
             photo_evnt: a,
             lieu_evnt: locationName,
             id_location_google : locationId,
-            is_admin_level : (currentUserType === 1 || currentUserType === 2)
+            is_admin_level : isOfficial //(currentUserType === 1 || currentUserType === 2)
           });
+          // is_admin_level : (currentUserType === 1 || currentUserType === 2)
         })
         .catch(error => {
           console.log(error);

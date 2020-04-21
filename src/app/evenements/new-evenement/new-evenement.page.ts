@@ -45,7 +45,8 @@ export class NewEvenementPage implements OnInit {
       this.createEvntForm = formBuilder.group({
         title_evnt: ['', Validators.required],
         description_evnt: ['', Validators.required],
-        datetime_evnt : ['', Validators.required]
+        datetime_evnt : ['', Validators.required],
+        evnt_official : [false, Validators.required]
       });
 
       this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
@@ -54,6 +55,9 @@ export class NewEvenementPage implements OnInit {
 
       this.storage.get('tu').then((val) => {
           this.currentUserType = val
+          if(this.currentUserType === 1 || this.currentUserType === 2 ){
+            this.createEvntForm.value.evnt_official = true;
+          }
       });
     }
 
@@ -95,10 +99,10 @@ export class NewEvenementPage implements OnInit {
      const evntName = this.createEvntForm.value.title_evnt;
      const evntDesc = this.createEvntForm.value.description_evnt;
      const evntDate = this.createEvntForm.value.datetime_evnt;
-
+     const isOfficial = this.createEvntForm.value.evnt_official;
      //console.log(this.currentUserType)
      this.firestoreService
-    .createEvenement(evntName, evntDesc, this.newImage.id, this.fileraw,(this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType )
+    .createEvenement(evntName, evntDesc, this.newImage.id, this.fileraw,(this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType, isOfficial )
     .then(
       () => {
         loading.dismiss().then(() => {

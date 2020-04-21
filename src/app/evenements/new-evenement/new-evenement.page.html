@@ -74,6 +74,16 @@
           </ion-col>
         </ion-row> 
 
+        <!-- si evenement officiel ou non -->
+        <ion-row *ngIf="this.currentUserType === 1 || this.currentUserType === 2">
+          <ion-col>
+            <ion-item>
+              <ion-label>Evenement Officiel</ion-label>
+              <ion-toggle formControlName="evnt_official" slot="start" name="official" color="warning"></ion-toggle>
+            </ion-item>
+          </ion-col>
+        </ion-row> 
+
 <!--        localisation de l'event-->
         <ion-row>
           <ion-col>

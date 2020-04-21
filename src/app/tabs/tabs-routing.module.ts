@@ -79,6 +79,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'photos',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../photos/photos.module').then(m => m.PhotosPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/publications',
         pathMatch: 'full'

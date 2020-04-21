@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { NavController } from '@ionic/angular';
+import { NavController, LoadingController, ToastController } from '@ionic/angular';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -27,7 +27,9 @@ export class RegisterPage implements OnInit {
   };
   constructor(private navCtrl: NavController,
               private authService: AuthenticationService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              public loadingCtrl: LoadingController,
+              public toastController: ToastController) { }
 
   ngOnInit() {
     this.validations_form = this.formBuilder.group({
@@ -64,18 +66,35 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  tryRegister(value){
+  async tryRegister(value){
+    const loading = await this.loadingCtrl.create();
     this.authService.registerUser(value)
      .then(res => {
-       console.log(res);
+       //console.log(res);
        this.errorMessage = '';
-       this.successMessage = 'Votre compte a bien été créé.';
+       this.presentToast();
+       loading.dismiss().then(() => {
+        this.goLoginPage();
+      });
+
+       this.successMessage = '';
       
      }, err => {
        console.log(err);
        this.errorMessage = err.message;
        this.successMessage = '';
      })
+
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Votre compte a bien été créé. Vous pouvez dès à présent vous connecter pour le configurer',
+      duration: 3000,
+      color : "success",
+      position : "top"
+    });
+    toast.present();
   }
  
   goLoginPage(){
