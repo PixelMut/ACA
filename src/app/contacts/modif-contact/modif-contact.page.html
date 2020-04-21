@@ -4,9 +4,9 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end" >
-      <ion-button  (click)="tryModify(change_userinfo_form.value)" [disabled]="!change_userinfo_form.valid">
-        <ion-icon name="checkmark-circle-outline"></ion-icon>
-      </ion-button>
+       <ion-button fill="solid" color="primary" size="small" (click)="tryModify(change_userinfo_form.value)" [disabled]="!change_userinfo_form.valid">
+        Valider
+      </ion-button> 
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -46,7 +46,24 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row> 
+        <ion-row> 
+          <ion-col>
+            <ion-item>
+              <ion-label  position="floating" color="primary">Genre</ion-label>
+              <ion-select [value]="userDetails?.sexe"  formControlName="sexe" (ionChange)="changeImage($event)">
+                <ion-select-option value="H">Homme</ion-select-option>
+                <ion-select-option value="F">Femme</ion-select-option>
+                <ion-select-option value="O">Autre</ion-select-option>
+              </ion-select>
+            </ion-item>
+    
+            <!-- <ion-item>
+              <ion-label  position="floating" color="primary">Sexe</ion-label>
+              <ion-input type="text" formControlName="sexe" [ngModel]="userDetails?.sexe"></ion-input>
+            </ion-item> -->
+          </ion-col>
+        </ion-row>
+        <ion-row> 
         <ion-col>
           <ion-item>
             <ion-label  position="floating" color="primary">Adresse</ion-label>

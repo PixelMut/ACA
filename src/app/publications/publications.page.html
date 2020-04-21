@@ -1,5 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header [translucent]="true" >
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -10,7 +10,8 @@
       </ion-button>
     </ion-buttons>
     <ion-title>
-      Actualités
+      <ion-img class="brand_img" src="../../assets/images/acensi_brand_white.png"></ion-img>
+      <!-- Actualités -->
     </ion-title>
 
   </ion-toolbar>
@@ -24,18 +25,21 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  <!-- <ion-button (click)="requestPushNotificationsPermission()">
+    Enable notifications!
+  </ion-button> -->
     <ion-card *ngFor="let pub of publicationsList">
       <ion-item *ngIf="pub.id_user !== null" routerLink="/tabs/contacts/{{pub.id_user}}">
         <ion-avatar slot="start">
           <img [src]="pub.id_user ? getUserPhoto(pub.id_user) : ''">
         </ion-avatar>
         <ion-label routerLink="/tabs/contacts/{{pub.id_user}}">
-          <h3> {{ pub.id_user ? getName(pub.id_user) : '' }} {{ pub.id_user ? getLastName(pub.id_user) : '' }}</h3>
+          <h3> {{ pub.id_user ? getName(pub.id_user) : '' }} {{ (pub.id_user ? getLastName(pub.id_user) : '') | uppercase }}</h3>
           <!-- <p>{{ pub.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p> -->
           <p>{{ pub.date_publication.seconds * 1000 | dateAgo }}</p>
         </ion-label>
       </ion-item> 
-      <div routerLink="/tabs/publications/{{pub.id_publication}}">
+      <div routerLink="/tabs/publications/{{pub.id_publication}}" class="container_title_desc">
         <img [src]="pub.photo_publication" alt="ion">
         <ion-card-header >
           <ion-card-title>{{ pub.title_publication }}</ion-card-title>
@@ -44,7 +48,7 @@
           {{ pub.description_publication }}
         </ion-card-content>
       </div>
-<!--      <ion-footer>
+     <ion-footer>
         <ion-row style="text-align: center">
           <ion-col center text-center>
             <button class="footer-button-card">
@@ -58,14 +62,14 @@
               <div>4 Comments</div>
             </button>
           </ion-col>
-          <ion-col center text-center>
+          <!-- <ion-col center text-center>
             <button class="footer-button-card">
               <ion-icon name="time"></ion-icon>
                 <div>11h ago</div>
             </button>
-          </ion-col>
+          </ion-col> -->
         </ion-row>
-      </ion-footer>-->
+      </ion-footer>
     </ion-card> 
 
     

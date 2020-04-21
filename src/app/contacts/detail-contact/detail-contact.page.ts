@@ -16,6 +16,7 @@ import { EmailComposer } from '@ionic-native/email-composer/ngx';
 export class DetailContactPage implements OnInit{
   public contact: Observable<Contact>;
   public typesLocalisation: Array<any> = [];
+  public isAdmin = false;
 
   constructor(
      private firestoreService: FirestoreService,
@@ -35,6 +36,7 @@ export class DetailContactPage implements OnInit{
   ngOnInit() {
     const contactId: string = this.route.snapshot.paramMap.get('id');
     this.contact = this.firestoreService.getContactDetail(contactId).valueChanges();
+    
    // console.log(this.contact)
   }
 
@@ -64,6 +66,10 @@ export class DetailContactPage implements OnInit{
     )
 
 
+  }
+
+  getType(id_type){
+    return id_type === 1 ? 'Administrateur' : 'Utilisateur'
   }
 
 }

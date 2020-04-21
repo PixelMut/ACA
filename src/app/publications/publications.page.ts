@@ -7,6 +7,7 @@ import {NavController, PopoverController} from '@ionic/angular';
 import {PopoverComponent} from '../notif-component/popover/popover.component';
 import {Storage} from '@ionic/storage';
 import * as firebase from 'firebase';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 
 @Component({
   selector: 'app-publications',
@@ -17,7 +18,7 @@ export class PublicationsPage implements OnInit {
   public publicationsList;
   private userList;
   private notifList;
-  private newItems;
+  public newItems;
 
   constructor(
     private afs: AngularFirestore,
@@ -26,7 +27,8 @@ export class PublicationsPage implements OnInit {
     private authsrv: AuthenticationService,
     private navCtrl: NavController,
     public popoverController: PopoverController,
-    private storage: Storage) {
+    private storage: Storage,
+    private afMessaging: AngularFireMessaging) {
 
       // old method => Impossible to order by
       // this.publicationsList = this.afs
@@ -41,6 +43,31 @@ export class PublicationsPage implements OnInit {
       this.verifyUser();
       this.getListPublication();
       this.getListUsers();
+      this.requestPushNotificationsPermission();    }
+
+    requestPushNotificationsPermission() { // requesting permission
+      this.afMessaging.requestToken // getting tokens
+        .subscribe(
+          (token) => { // USER-REQUESTED-TOKEN
+            //alert(token)
+            this.storage.get('uid').then(
+              res => {
+                //alert(res)
+                console.log(res)
+                console.log('Permission granted! Save to the server!', token);
+                this.firestoreService.saveToken(token, res);
+              }).catch(
+                (error)=>{
+                  //alert('error')
+                }
+                
+              );
+
+          },
+          (error) => {
+            //alert(error);
+          }
+        );
     }
 
     async verifyUser(){
@@ -101,11 +128,11 @@ export class PublicationsPage implements OnInit {
     }
 
     getName(iduser){
-      return this.userList ? this.userList.filter( elt => elt.id_user === iduser)[0].nom_user : ''
+      return this.userList ? this.userList.filter( elt => elt.id_user === iduser)[0].prenom_user : ''
     }
 
     getLastName(iduser){
-      return this.userList ? this.userList.filter( elt => elt.id_user === iduser)[0].prenom_user : ''
+      return this.userList ? this.userList.filter( elt => elt.id_user === iduser)[0].nom_user : ''
     }
 
 

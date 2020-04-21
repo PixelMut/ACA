@@ -119,7 +119,7 @@ export class FirestoreService {
 
     saveToken(token, currentuser) {
       const devicesRef = this.firestore.collection('devices');
-      alert('currentuser : ' + currentuser);
+      //alert('currentuser : ' + currentuser);
       const docData = {
         token,
         userId: currentuser,
@@ -387,7 +387,8 @@ export class FirestoreService {
         adresse_user_code_postal : value.adresse_user_code_postal,
         adresse_user_localite : value.adresse_user_localite,
         adresse_user_rue : value.adresse_user_rue,
-        poste : value.poste
+        poste : value.poste,
+        sexe: value.sexe
         // Other info you want to add here
       })
         .then(

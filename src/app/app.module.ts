@@ -13,7 +13,6 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-import { environment } from 'src/environments/environment';
 import { AuthenticationService } from './services/authentication.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularFirestore } from 'angularfire2/firestore';
@@ -22,6 +21,10 @@ import {PopoverComponent} from './notif-component/popover/popover.component';
 import {IonicStorageModule, Storage} from '@ionic/storage';
 import {PublicationsPageModule} from './publications/publications.module';
 import { FCM } from '@ionic-native/fcm/ngx';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+
 // export const firebaseConfig = {
 //      apiKey: 'AIzaSyB9jHU1jM_t0CsW33wkbhNbeAUlcxRjCVg',
 //      authDomain: 'acensi-community-app.firebaseapp.com',
@@ -41,13 +44,15 @@ import { FCM } from '@ionic-native/fcm/ngx';
         IonicModule.forRoot(),
         AppRoutingModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireMessagingModule,
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         AngularFireStorageModule,
         ReactiveFormsModule,
         FormsModule,
         IonicStorageModule.forRoot(),
-        PublicationsPageModule
+        PublicationsPageModule,
+        ServiceWorkerModule.register('combined-sw.js', {enabled: environment.production})
 
     ],
   providers: [

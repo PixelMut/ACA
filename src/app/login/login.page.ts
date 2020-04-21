@@ -57,7 +57,6 @@ export class LoginPage implements OnInit {
       if (user) {
           this.storage.set('uid', user.uid); // save du id user dans le storage
           this.fcm.getToken().then(token => {
-              console.log('ezfjmeofesjf');
               this.firestoreSrv.saveToken(token, user.uid);
           }).catch(error => {
               this.isLoading = false;
@@ -71,11 +70,19 @@ export class LoginPage implements OnInit {
               this.storage.set('tu', res[0] ? res[0].id_type_user : 3); // save du type user dans le storage
               this.isLoading = false;
               this.navCtrl.navigateRoot('/tabs/publications', {replaceUrl: true});}
-        );
+        ),( err => {
+          //alert('error')
+        });
       }else{
+         
           this.isLoading = false;
+          
       }
     });
+    setTimeout(()=>{    
+      this.isLoading = false;
+ }, 5000);
+
   }
 
   // lors du clic sur "se connecter", avec les valeurs du formulaire en param
@@ -119,6 +126,7 @@ export class LoginPage implements OnInit {
        this.authService.recoverMail(elt)
         .then(res => {
           console.log(res);
+          alert('Un mail vous a été envoyé afin de réinitialiser votre mot de passe')
           this.showForgottenPswd = false;
 
         }, err => {

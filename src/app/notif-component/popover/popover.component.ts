@@ -22,6 +22,12 @@ export class PopoverComponent implements OnInit {
   }
 
   getName(iduser){
-    return this.userList ? this.userList.filter( elt => elt.id_user === iduser)[0].nom_user : ''
+    let prenom = this.userList.filter( elt => elt.id_user === iduser)[0]
+    if(prenom){
+      return prenom.prenom_user;
+    }else{
+      return 'Utilisateur Acensi'
+    }
+    // return this.userList ? this.userList.filter( elt => elt.id_user === iduser)[0].prenom_user : ''
   }
 }

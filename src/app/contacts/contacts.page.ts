@@ -3,6 +3,7 @@ import { FirestoreService, innerJoin } from '../services/data/firestore.service'
 import { Router } from '@angular/router';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { shareReplay } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-contacts',
@@ -17,7 +18,8 @@ export class ContactsPage implements OnInit {
   constructor(
       private afs: AngularFirestore,
       private firestoreService: FirestoreService,
-      private router: Router
+      private router: Router,
+      public toastController: ToastController
   ) {
     // this.testc = this.afs
     //   .doc('users/554cnr4Ln6WEAuYmsRk9')
@@ -54,6 +56,20 @@ export class ContactsPage implements OnInit {
         return ( term.nom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 || term.prenom_user.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 || term.poste.toLowerCase().indexOf(val.trim().toLowerCase()) > -1 )
       });
     }
+  }
+
+  showAlert(){
+      this.presentToast();
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Administrateur de l\'application',
+      duration: 2000,
+      position :"bottom",
+      color : "warning"
+    });
+    toast.present();
   }
 
 }

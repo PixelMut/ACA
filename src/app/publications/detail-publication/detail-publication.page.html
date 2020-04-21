@@ -10,7 +10,7 @@
 <ion-content padding>
     <ion-fab horizontal="end" vertical="top" slot="fixed" *ngIf="( (publication?.id_user === currentUserId) || (currentUserType === 1) || (currentUserType === 2))">
         <ion-fab-button>
-            <ion-icon name="arrow-down-circle"></ion-icon>
+            <ion-icon name="create-outline"></ion-icon>
         </ion-fab-button>
         <ion-fab-list>
             <ion-fab-button color="secondary" (click)="modifPublication(publication?.id_publication, publication?.id_user)">
@@ -31,7 +31,7 @@
           <img [src]="(userDetails | async)?.photo_user">
         </ion-avatar>
         <ion-label>
-          <h3> {{ (userDetails | async)?.nom_user }} {{ (userDetails | async)?.prenom_user }}</h3>
+          <h3> {{ (userDetails | async)?.prenom_user }} {{ (userDetails | async)?.nom_user | uppercase }}</h3>
           <p>{{ publication?.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm'  }}</p>
         </ion-label>
       </ion-item>
@@ -51,7 +51,7 @@
           <img [src]="(com.user_name | async)?.photo_user">
         </ion-avatar>
         <ion-label>
-          <h3> {{ (com.user_name | async)?.nom_user }} {{ (com.user_name | async)?.prenom_user }} </h3>
+          <h3> {{ (com.user_name | async)?.prenom_user }} {{ (com.user_name | async)?.nom_user | uppercase }} </h3>
           <p>{{ com?.commentDate.seconds * 1000 | date:'yyyy-MM-dd HH:mm' }}</p>
         </ion-label>
       </ion-item>

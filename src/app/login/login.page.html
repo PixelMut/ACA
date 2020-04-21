@@ -5,11 +5,7 @@
 </ion-header> -->
 
 <ion-content padding class="background">
-  <ng-container *ngIf="isLoading===true" >
-    <div class="loading">
-      <ion-spinner name="crescent"></ion-spinner>
-    </div>
-  </ng-container>
+ 
 
   <ng-container *ngIf="showForgottenPswd === false && isLoading===false">
     <form class="container_elt" [formGroup]="validations_form"  (ngSubmit)="loginUser(validations_form.value)">
@@ -88,7 +84,11 @@
       </div>
     </ng-container>
 
-
+    <ng-container *ngIf="isLoading===true" >
+      <div class="loading">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    </ng-container>
  
 
   

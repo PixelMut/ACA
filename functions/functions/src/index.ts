@@ -19,12 +19,13 @@ exports.createProfile = functions.auth
           adresse_mail: userRecord.email,
           id_localisation : '',
           id_type_user : 3,
-          photo_user : 'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2F8cDzuC2JfFvBhg8hdzq8?alt=media&token=0a0b112f-97b8-45c2-8bf9-9bb89a1f9790',
+          photo_user : 'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2F00RCAmXsY41bHbpQIQVn?alt=media&token=d4b87801-5b3a-4606-8628-37c60c4521f0',
           adresse_user_rue : '',
           adresse_user_code_postal : '',
           adresse_user_localite : '',
           user_actif : true,
           poste : '',
+          sexe : 'O',
           notif_user_pub : true,
           notif_user_evnt : true
         }).then(writeResult => {

@@ -17,12 +17,12 @@ export class RegisterPage implements OnInit {
 
   validation_messages = {
     'email': [
-      { type: 'required', message: 'Email is required.' },
-      { type: 'pattern', message: 'Enter a valid email.' }
+      { type: 'required', message: 'Email est obligatoire.' },
+      { type: 'pattern', message: 'Adresse E-mail Acensi requise' }
     ],
     'password': [
-      { type: 'required', message: 'Password is required.' },
-      { type: 'minlength', message: 'Password must be at least 5 characters long.' }
+      { type: 'required', message: 'Le mot de passe est obligatoire.' },
+      { type: 'minlength', message: 'Le mot de passe doit contenir au moins 6 caracteres.' }
     ]
   };
   constructor(private navCtrl: NavController,
@@ -69,7 +69,7 @@ export class RegisterPage implements OnInit {
      .then(res => {
        console.log(res);
        this.errorMessage = '';
-       this.successMessage = 'Your account has been created. Please log in.';
+       this.successMessage = 'Votre compte a bien été créé.';
       
      }, err => {
        console.log(err);
