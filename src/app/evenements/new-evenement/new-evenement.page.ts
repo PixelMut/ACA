@@ -22,7 +22,7 @@ export class NewEvenementPage implements OnInit {
   GoogleAutocomplete: google.maps.places.AutocompleteService;
   autocomplete: { input: string; };
   autocompleteItems: any[];
-  private currentUserType;
+  public currentUserType;
   location: any;
   placeid: any;
 
