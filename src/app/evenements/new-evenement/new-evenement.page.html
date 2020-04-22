@@ -20,9 +20,47 @@
       <ion-grid>
 
         <!--        photo de l'event-->
+        <ion-slides #defaultPictures style="max-height: 190px"  *ngIf="!url">
+
+          <!-- sport -->
+          <ion-slide >
+            <div class="slide"> 
+              <!-- <img src="https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Ffootball-3471402_640.jpg?alt=media&token=08459b9b-2620-4d58-ac92-358dea2a6852"/> -->
+              <img [src]="defaultImages[0]">
+
+              <!-- <h2>Welcome</h2>
+              <p>The <b>ionic conference app</b> is a practical preview of the ionic framework in action, and a demonstration of proper code use.</p> -->
+            </div>
+          </ion-slide>
+  
+          <!-- restaurant -->
+          <ion-slide>
+            <!-- <img src="https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Frestaurant-691397_640.jpg?alt=media&token=aedc3910-f120-4f12-aa0a-a085563f91c1"/> -->
+            <img [src]="defaultImages[1]">
+            <!-- <h2>What is Ionic?</h2>
+            <p><b>Ionic Framework</b> is an open source SDK that enables developers to build high quality mobile apps with web technologies like HTML, CSS, and JavaScript.</p> -->
+          </ion-slide>
+  
+          <!-- bar -->
+          <ion-slide>
+            <!-- <img src="https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Fglasses-919071_640.jpg?alt=media&token=beb81afa-205a-445c-8710-84ed5d96b7f8"/> -->
+            <img [src]="defaultImages[2]">
+            <!-- <h2>What is Ionic Appflow?</h2>
+            <p><b>Ionic Appflow</b> is a powerful set of services and features built on top of Ionic Framework that brings a totally new level of app development agility to mobile dev teams.</p> -->
+          </ion-slide>
+  
+          <!-- fiesta -->
+          <ion-slide>
+            <!-- <img src="https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Fconcert-2527495_640.jpg?alt=media&token=52cb9b8a-63f5-4726-98a1-d959410c3060"/> -->
+            <img [src]="defaultImages[3]">
+            <!-- <h2>Ready to Play?</h2>
+            <ion-button fill="clear">Continue <ion-icon slot="end" name="arrow-forward"></ion-icon></ion-button> -->
+          </ion-slide>
+  
+        </ion-slides>
         <ion-row>
           <ion-col>
-            <ion-item >
+            <ion-item *ngIf="url">
               <ion-thumbnail slot="start" class="apercu_photo">
                 <ion-img [src]="url"></ion-img>
               </ion-thumbnail>

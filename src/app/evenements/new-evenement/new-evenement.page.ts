@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { FirestoreService } from '../../services/data/firestore.service';
@@ -16,6 +16,9 @@ import {Storage} from "@ionic/storage";
 })
 export class NewEvenementPage implements OnInit {
 
+
+  @ViewChild('defaultPictures', {static: false}) defaultPicture: any;
+
   GoogleAutocomplete: google.maps.places.AutocompleteService;
   autocomplete: { input: string; };
   autocompleteItems: any[];
@@ -32,6 +35,13 @@ export class NewEvenementPage implements OnInit {
     newImage: Image = {
       id: this.afs.createId(), image: ''
     };
+
+  public defaultImages = [
+    'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Ffootball-3471402_640.jpg?alt=media&token=08459b9b-2620-4d58-ac92-358dea2a6852',
+    'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Frestaurant-691397_640.jpg?alt=media&token=aedc3910-f120-4f12-aa0a-a085563f91c1',
+    'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Fglasses-919071_640.jpg?alt=media&token=beb81afa-205a-445c-8710-84ed5d96b7f8',
+    'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Fconcert-2527495_640.jpg?alt=media&token=52cb9b8a-63f5-4726-98a1-d959410c3060'
+  ];
 
   constructor(
     public zone: NgZone,
@@ -61,7 +71,11 @@ export class NewEvenementPage implements OnInit {
       });
     }
 
-      updateSearchResults(){
+    
+  ngOnInit() {
+  }
+
+  updateSearchResults(){
     if (this.autocomplete.input == '') {
       this.autocompleteItems = [];
       return;
@@ -91,8 +105,6 @@ export class NewEvenementPage implements OnInit {
   //   return window.location.href = 'https://www.google.com/maps/place/?q=place_id:'+this.placeid;
   // }
 
-  ngOnInit() {
-  }
 
   async createEvenement() {
      const loading = await this.loadingCtrl.create();
@@ -101,20 +113,54 @@ export class NewEvenementPage implements OnInit {
      const evntDate = this.createEvntForm.value.datetime_evnt;
      const isOfficial = this.createEvntForm.value.evnt_official;
      //console.log(this.currentUserType)
-     this.firestoreService
-    .createEvenement(evntName, evntDesc, this.newImage.id, this.fileraw,(this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType, isOfficial )
-    .then(
-      () => {
-        loading.dismiss().then(() => {
-          this.router.navigateByUrl('/tabs/evenements');
-        });
-      },
-      error => {
-        console.error(error);
-      }
-    );
+     //console.log(this.newImage.id) // id generé automatiquement au chargement de la page
+     //console.log(this.url) // si une photo est selectionnée dans la biblio
+     //console.log(this.fileraw) // // si une photo est selectionnée dans la biblio
+
+     // on a choisi une image par defaut
+     if(this.url === '' || this.url === undefined){
+      // console.log('default image')
+       this.defaultPicture.getActiveIndex().then(res => {
+        const def = this.defaultImages[res]
+        console.log(def) // correspond à l'index de l'image choisie
+        this.firestoreService
+        .createEvenement(evntName, evntDesc, def, this.fileraw,(this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType, isOfficial ,true)
+        .then(
+          () => {
+            loading.dismiss().then(() => {
+              this.router.navigateByUrl('/tabs/evenements');
+            });
+          },
+          error => {
+            console.error(error);
+          }
+        );
+      })
+
+     }else{ // selection d'une image dans la biblio
+      this.firestoreService
+        .createEvenement(evntName, evntDesc, this.newImage.id, this.fileraw,(this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType, isOfficial )
+        .then(
+          () => {
+            loading.dismiss().then(() => {
+              this.router.navigateByUrl('/tabs/evenements');
+            });
+          },
+          error => {
+            console.error(error);
+          }
+        );
+     }
+
 
      return await loading.present();
+  }
+
+  test(){
+    
+    this.defaultPicture.getActiveIndex().then(res => {
+      console.log(res) // correspond à l'index de l'image choisie
+    })
   }
 
      // lors du choix de l'image depuis le champ "upload"

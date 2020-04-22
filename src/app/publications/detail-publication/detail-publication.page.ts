@@ -112,10 +112,12 @@ export class DetailPublicationPage implements OnInit {
 
 
     add_comment(){
+       // this.comments.length is the current count
       this.authSrv.getCurrentUserId().then(
         res => {
             this.firestoreService.addComment(this.new_comment, this.pubId, res.uid, 'com_pub').then(
                 res => {
+                  this.firestoreService.updateCommentCounter(this.pubId, this.comments.length)
                     //this.startGettingComments(this.pubId)
                 });
             this.new_comment = '';
@@ -129,6 +131,7 @@ export class DetailPublicationPage implements OnInit {
         this.firestoreService.deleteComment(id_comment).then(
             res => {
                 console.log(res)
+                this.firestoreService.updateCommentCounter(this.pubId, this.comments.length)
                 //this.startGettingComments(this.pubId)
             });
     }

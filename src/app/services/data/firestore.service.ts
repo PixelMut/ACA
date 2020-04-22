@@ -197,7 +197,9 @@ export class FirestoreService {
               publication_active,
               description_publication,
               id_user,
-              photo_publication: a
+              photo_publication: a,
+              nblike : 0,
+              nbcom : 0
             });
 
           })
@@ -235,6 +237,56 @@ export class FirestoreService {
             }
           }
       );*/
+    }
+
+
+
+    checkLikeStatus(idPub, idUser){
+      return this.firestore.collection('likes', ref => ref
+          .where('id_publication', '==', idPub).where('id_user', '==', idUser)).get();
+    }
+
+    deleteLike(idPub, idUser, newcount){
+      const delete_likes = this.firestore.collection('likes', ref => ref.where('id_publication', '==', idPub).where('id_user', '==', idUser));
+      delete_likes.get().subscribe(delItems => {
+        delItems.forEach(doc => {
+          doc.ref.delete();
+        });
+      });
+
+      const pubDoc = this.firestore.doc<any>('publications/' + idPub);
+      return new Promise<any>((resolve, reject) => {
+        pubDoc.update({
+        nblike : newcount
+      })
+        .then(
+          res => {
+            resolve(res);
+          },
+          err => reject(err));
+      });
+
+    }
+
+    addLike(idPub, idUser, newcount){
+      const id_like = this.firestore.createId();
+        this.firestore.doc(`likes/${id_like}`).set({
+          id_publication : idPub,
+          id_user : idUser
+        })
+
+
+      const pubDoc = this.firestore.doc<any>('publications/' + idPub);
+      return new Promise<any>((resolve, reject) => {
+        pubDoc.update({
+        nblike : newcount
+      })
+        .then(
+          res => {
+            resolve(res);
+          },
+          err => reject(err));
+      });
     }
 
     // fonction utilisée pour les commentaires des publications et des evenements
@@ -315,7 +367,6 @@ export class FirestoreService {
     }
 
     addComment(comment_content, id_elt: string, id_user: string, type_elt: string) {
-    console.log(id_user);
     const id_comment = this.firestore.createId();
       // const filePath = '/Image/' + 'Post_' + id_publication + '/' + imageId ;
       // const result = this.SaveImageRef(filePath, fileRaw);
@@ -361,9 +412,23 @@ export class FirestoreService {
   deleteComment(id_comment){
     return this.firestore.doc(`comments/${id_comment}`).delete();
   }
-  // FIN PARTIE PUBLICATIONS
 
-  // PARTIE CONTACT / USER
+  updateCommentCounter(idPub,newcount){
+    const pubDoc = this.firestore.doc<any>('publications/' + idPub);
+    return new Promise<any>((resolve, reject) => {
+      pubDoc.update({
+      nbcom : newcount
+    })
+      .then(
+        res => {
+          resolve(res);
+        },
+        err => reject(err));
+    });
+  }
+  // FIN PARTIE PUBLICATIONS - ------------------------------------------------------------------
+
+  // PARTIE CONTACT / USER ----------------------------------------------------------------------
 
     getContactList() { // : AngularFirestoreCollection<Publication> {
       return this.firestore.collection('users').valueChanges();
@@ -421,11 +486,11 @@ export class FirestoreService {
       return this.firestore.collection('publications', ref => ref.orderBy('date_publication', 'desc').where('id_user', '==' , iduser)).valueChanges();
     }
 
-  // FIN PARTIE CONTACT / USER
+  // FIN PARTIE CONTACT / USER -----------------------------------------------------------------------
 
 
 
-  // PARTIE EVENEMENTS
+  // PARTIE EVENEMENTS -------------------------------------------------------------------------
 
     // recuperer les details d'une publication, cette methode permet la manipulation des données depuis le ts
     getEvenementDetail(evntId: string) {
@@ -560,47 +625,79 @@ export class FirestoreService {
     }
 
     // creation d'une publication, depuis new-publication page
-    createEvenement(title_evnt: string, description_evnt: string, imageId, fileRaw, locationName, locationId, dateEvnt, currentUserType,isOfficial=false): Promise<void> {
+    createEvenement(title_evnt: string, description_evnt: string, imageId, fileRaw, locationName, locationId, dateEvnt, currentUserType,isOfficial=false,withDefaultImage = false): Promise<void> {
       const id_evnt = this.firestore.createId();
-      const filePath = '/Image/' + 'Evnt_' + id_evnt + '/' + imageId ;
-      const result = this.SaveImageRef(filePath, fileRaw);
-      const ref = result.ref;
-      console.log(dateEvnt);
       const date_evnt = new Date(dateEvnt);
-      console.log(date_evnt);
       const date_publication_evnt = new Date();
       const date_modif_evnt = date_publication_evnt;
       const evnt_active = true;
 
+      // image par default ou non
+      if(withDefaultImage === true){
+
+          return this.authsrv.getCurrentUserId().then(res => {
+            const id_user = res.uid;
+            return this.firestore.doc(`evenements/${id_evnt}`).set({
+              id_evnt,
+              date_evnt,
+              title_evnt,
+              date_publication_evnt,
+              date_modif_evnt,
+              evnt_active,
+              description_evnt,
+              id_user,
+              photo_evnt: imageId,
+              lieu_evnt: locationName,
+              id_location_google : locationId,
+              is_admin_level : isOfficial //(currentUserType === 1 || currentUserType === 2)
+            });
+            // is_admin_level : (currentUserType === 1 || currentUserType === 2)
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }else{
+        const filePath = '/Image/' + 'Evnt_' + id_evnt + '/' + imageId ;
+        const result = this.SaveImageRef(filePath, fileRaw);
+        const ref = result.ref;
+
+        return result.task.then(a => {
+          ref.getDownloadURL().subscribe(a => {
+            return this.authsrv.getCurrentUserId().then(res => {
+            const id_user = res.uid;
+  
+            return this.firestore.doc(`evenements/${id_evnt}`).set({
+              id_evnt,
+              date_evnt,
+              title_evnt,
+              date_publication_evnt,
+              date_modif_evnt,
+              evnt_active,
+              description_evnt,
+              id_user,
+              photo_evnt: a,
+              lieu_evnt: locationName,
+              id_location_google : locationId,
+              is_admin_level : isOfficial //(currentUserType === 1 || currentUserType === 2)
+            });
+            // is_admin_level : (currentUserType === 1 || currentUserType === 2)
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        });
+      });
+
+      }
+      
+      
+      
+
+
       // console.log(date_publication);
       // console.log(date_modif_publication);
       // console.log(publication_active);
-      return result.task.then(a => {
-        ref.getDownloadURL().subscribe(a => {
-          return this.authsrv.getCurrentUserId().then(res => {
-          const id_user = res.uid;
 
-          return this.firestore.doc(`evenements/${id_evnt}`).set({
-            id_evnt,
-            date_evnt,
-            title_evnt,
-            date_publication_evnt,
-            date_modif_evnt,
-            evnt_active,
-            description_evnt,
-            id_user,
-            photo_evnt: a,
-            lieu_evnt: locationName,
-            id_location_google : locationId,
-            is_admin_level : isOfficial //(currentUserType === 1 || currentUserType === 2)
-          });
-          // is_admin_level : (currentUserType === 1 || currentUserType === 2)
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      });
-    });
   }
 
 

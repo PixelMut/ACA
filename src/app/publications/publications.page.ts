@@ -105,7 +105,30 @@ export class PublicationsPage implements OnInit {
        this.firestoreService.getPublicationList().subscribe(
         res => {
           this.publicationsList = res;
+          // this.publicationsList.forEach(element => {
+          //   console.log(element)
+          // });
          });
+    }
+
+    handleLikeBtn(id_pub,currentCount){
+      // pour le user en cours
+      this.storage.get('uid').then((val) => {
+        this.firestoreService.checkLikeStatus(id_pub,val).subscribe(
+          (res:any) => { 
+            console.log(res)
+            console.log(res.length)
+            // cet utilisateur à deja like cet article
+            if(res.size > 0){
+                this.firestoreService.deleteLike(id_pub,val,currentCount-1)
+            }else{ // cet utilisateur n'a jamais like
+                this.firestoreService.addLike(id_pub,val,currentCount+1)
+            }
+          }
+        )
+      })
+      
+      console.log(id_pub)
     }
 
     async getListUsers(){
