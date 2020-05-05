@@ -18,23 +18,17 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { DateAgoPipe } from './pipes/date-ago.pipe';
 import {PopoverComponent} from './notif-component/popover/popover.component';
-import {IonicStorageModule, Storage} from '@ionic/storage';
+import {IonicStorageModule} from '@ionic/storage';
 import {PublicationsPageModule} from './publications/publications.module';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { Camera } from '@ionic-native/camera/ngx';
+import { LikesListModalPageModule } from './modals/likes-list-modal/likes-list-modal.module';
+import { ApplicationPipesModule } from './pipes/application-pipes.module';
 
-// export const firebaseConfig = {
-//      apiKey: 'AIzaSyB9jHU1jM_t0CsW33wkbhNbeAUlcxRjCVg',
-//      authDomain: 'acensi-community-app.firebaseapp.com',
-//      databaseURL: 'https://acensi-community-app.firebaseio.com',
-//      projectId: 'acensi-community-app',
-//      storageBucket: 'acensi-community-app.appspot.com',
-//      messagingSenderId: '534789626138',
-//      appId: '1:534789626138:web:2d1faec4a507b42163f4a3',
-//      measurementId: 'G-G90RJG21LH'
-// };
+
 
 @NgModule({
   declarations: [AppComponent, PopoverComponent],
@@ -52,7 +46,9 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
         FormsModule,
         IonicStorageModule.forRoot(),
         PublicationsPageModule,
-        ServiceWorkerModule.register('combined-sw.js', {enabled: environment.production})
+        ServiceWorkerModule.register('combined-sw.js', {enabled: environment.production}),
+        LikesListModalPageModule,
+        ApplicationPipesModule
 
     ],
   providers: [
@@ -61,7 +57,8 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
       FCM,
     AuthenticationService,
     AngularFirestore,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Camera
   ],
   bootstrap: [AppComponent]
 })

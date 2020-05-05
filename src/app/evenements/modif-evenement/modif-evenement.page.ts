@@ -28,7 +28,7 @@ export class ModifEvenementPage implements OnInit {
   location: any;
   placeid: any;
 
-  private currentUserType;
+  public currentUserType;
   public evenement; //: Publication;
   public comments = [];
   public modifEvntForm: FormGroup;
@@ -55,7 +55,8 @@ export class ModifEvenementPage implements OnInit {
     this.modifEvntForm = this.formBuilder.group({
       title_evnt: ['', Validators.required],
       description_evnt: ['', Validators.required],
-      datetime_evnt : ['', Validators.required]
+      datetime_evnt : ['', Validators.required],
+      evnt_official : [false, Validators.required]
     });
 
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
@@ -132,9 +133,10 @@ export class ModifEvenementPage implements OnInit {
     const evenementName = this.modifEvntForm.value.title_evnt;
     const evenementDesc = this.modifEvntForm.value.description_evnt;
     const evntDate = this.modifEvntForm.value.datetime_evnt;
-
+    const isOfficial = this.modifEvntForm.value.evnt_official;
+    console.log(isOfficial)
     this.firestoreService
-    .modifyEvenement(this.evenementId, evenementName, evenementDesc, (this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType )
+    .modifyEvenement(this.evenementId, evenementName, evenementDesc, (this.location ? this.location.description : ''), (this.placeid ? this.placeid : ''), evntDate, this.currentUserType ,isOfficial)
     .then(
       () => {
         loading.dismiss().then(() => {

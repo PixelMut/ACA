@@ -105,6 +105,10 @@ export class AppComponent {
     this.navCtrl.navigateForward('/tabs/contacts')
   }
 
+  goToNewsLetter(){
+    this.navCtrl.navigateForward('/tabs/newsletter')
+  }
+
   goToProfile(){
     this.authService.getCurrentUserId().then(res => {
       //this.router.navigate([page.url + '/' + res.uid]);

@@ -1,0 +1,62 @@
+
+.brand_img{
+    max-width:50%;
+  }
+
+
+  .image-container {
+    min-height: 200px;
+    background-size: cover;
+}
+
+@media (min-width: 0px) {
+    .images {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 420px) {
+    .images {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 720px) {
+    .images {
+        column-count: 4;
+    }
+}
+
+.one-image {
+    margin: 2px;
+}
+
+
+
+
+
+
+// slide
+
+ion-slide.swiper-slide {
+    left: 5%;
+}
+
+
+.slide-zoom {
+    background: #e6e6e6;
+}
+
+.thumb-img {
+    padding: 10px;
+}
+
+.image-slider{
+    max-height: 200px;
+}
+
+.oneCat{
+    padding-top:15px;
+    padding-bottom: 15px;
+    background-color: lightgray;
+}

@@ -6,6 +6,7 @@ import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { PublicationsPage } from './publications.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 import { DateAgoPipe } from '../pipes/date-ago.pipe';
+import { ApplicationPipesModule } from '../pipes/application-pipes.module';
 
 @NgModule({
   imports: [
@@ -14,11 +15,9 @@ import { DateAgoPipe } from '../pipes/date-ago.pipe';
     FormsModule,
     ReactiveFormsModule,
     ExploreContainerComponentModule,
-    RouterModule.forChild([{path: '', component: PublicationsPage}])
+    RouterModule.forChild([{path: '', component: PublicationsPage}]),
+    ApplicationPipesModule
   ],
-  exports: [
-    DateAgoPipe
-  ],
-  declarations: [PublicationsPage, DateAgoPipe]
+  declarations: [PublicationsPage]
 })
 export class PublicationsPageModule {}

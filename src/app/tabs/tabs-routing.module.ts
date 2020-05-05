@@ -89,6 +89,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'newsletter',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../newsletter/newsletter.module').then(m => m.NewsletterPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/publications',
         pathMatch: 'full'

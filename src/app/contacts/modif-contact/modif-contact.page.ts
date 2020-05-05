@@ -31,6 +31,12 @@ export class ModifContactPage implements OnInit {
 
   eltList;
 
+  avatarTab = [
+    'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2FMi7lTy8UiWe4EepZ0MlW?alt=media&token=b400f832-5240-4bc9-b898-cd044b29f7e3',
+    'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2F0EPTM1HNkzx1Hl76RyVE?alt=media&token=c2728c0b-3349-419c-b974-df1fc7cb3a80',
+    ''
+  ]
+
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
@@ -79,6 +85,7 @@ export class ModifContactPage implements OnInit {
     this.firestoreService.getContactDetail(this.userId).get().subscribe(
       res => {
         this.userDetails =  res.data(); // données qui remplissent le HTML
+        console.log(this.userDetails)
       }
     );
 
@@ -104,18 +111,25 @@ export class ModifContactPage implements OnInit {
   }
 
   changeImage(val){
+    console.log('CHANGE IMAGE')
     this.loading = true;
-    let img ='';
-    if(val.detail.value === 'H'){
-      img = 'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2FMi7lTy8UiWe4EepZ0MlW?alt=media&token=b400f832-5240-4bc9-b898-cd044b29f7e3'
-    }else if(val.detail.value === 'F'){
-      img = 'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2F0EPTM1HNkzx1Hl76RyVE?alt=media&token=c2728c0b-3349-419c-b974-df1fc7cb3a80'
-    }else{
-      img = 'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2FProfil%2F00RCAmXsY41bHbpQIQVn?alt=media&token=d4b87801-5b3a-4606-8628-37c60c4521f0'
+
+    // l'image de l'utilisateur est une image par defaut
+    if(this.avatarTab.filter(res=>res === this.userDetails.photo_user).length > 0){
+      let img ='';
+      if(val.detail.value === 'H'){
+        img = this.avatarTab[0]
+      }else if(val.detail.value === 'F'){
+        img = this.avatarTab[1]
+      }else{
+        img = this.avatarTab[2]
+      }
+      //this.firestoreService.updateUserImage(this.userId, img); // save de l'url dans la table user
+      this.newImage.image = img;
+      this.userDetails.photo_user = img;  
+    }else{ // c'est une photo perso
+      console.log('photo perso')
     }
-    //this.firestoreService.updateUserImage(this.userId, img); // save de l'url dans la table user
-    this.newImage.image = img;
-    this.userDetails.photo_user = img;
     this.loading = false;
   }
   // lors du choix de l'image depuis le champ "upload"
@@ -170,12 +184,14 @@ export class ModifContactPage implements OnInit {
 
   // validation de la modification des données
   tryModify(value) {
+    console.log('TRY MOD')
     this.firestoreService.modifyProfil(this.userId, value)
       .then(res => {
         this.presentToast();
         this.phonestorage.set('needSetup', false);
         // console.log('saved with success')
-        this.router.navigate(['tabs/publications'])
+        //this.router.navigate(['tabs/publications'])
+        this.navCtrl.navigateRoot('')
         //this.navCtrl.navigateRoot('');
       },
       err => {

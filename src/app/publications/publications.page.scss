@@ -1,6 +1,4 @@
-ion-content ion-toolbar {
-  //--background: translucent;
-}
+
 
 .back{
   background-color: #dfdfdf;
@@ -8,10 +6,20 @@ ion-content ion-toolbar {
 
 .footer-button-card{
   background-color: transparent;
+
+  & ion-icon{
+    font-size: 20px;
+    color: #134E9A;
+  }
+
+  & ion-label {
+    position: relative;
+    bottom : 4px;
+  }
 }
 
 .brand_img{
-  width:50%;
+  max-width:50%;
 }
 
 .container_title_desc{
@@ -21,3 +29,44 @@ ion-content ion-toolbar {
 ion-card-title{
   font-weight: bold;
 }
+
+.footer_likes_com{
+
+  & ion-icon{
+    background: #134E9A;
+    padding:5px;
+    border-radius: 50%;
+    color:white
+  }
+
+  & ion-label{
+    position: relative;
+    bottom: 6px;
+  }
+  
+  & .footer-comm{
+    position: relative;
+    bottom: -3px;
+    background-color: transparent;
+  }
+
+  padding-left:10px;
+ 
+}
+
+.bookmark{
+  position: relative;
+  right: -15px;
+}
+
+
+ion-card {
+  --ion-background-color: white;
+  -webkit-box-shadow: 4px 7px 10px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 4px 7px 10px -2px rgba(0,0,0,0.75);
+  box-shadow: 4px 7px 10px -2px rgba(0,0,0,0.75);
+}
+
+// .card{
+//   --ion-background-color: white;
+// }

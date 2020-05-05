@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "534789626138",
+    "firebase_url": "https://acensi-community-app.firebaseio.com",
+    "project_id": "acensi-community-app",
+    "storage_bucket": "acensi-community-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534789626138:android:268893c7fce46d7863f4a3",
+        "android_client_info": {
+          "package_name": "io.acensi.acensi_community_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534789626138-j6stg56sg332n37dcso0cmkv704nlr9d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYhiz9AgFdpfmPu_xGlU6RJes72nX9znc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534789626138-j6stg56sg332n37dcso0cmkv704nlr9d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

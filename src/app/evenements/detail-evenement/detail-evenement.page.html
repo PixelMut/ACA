@@ -35,6 +35,7 @@
   </div>-->
    <ion-card >
      <img [src]="evenement?.photo_evnt" alt="ion">
+     <div class="isOfficial" *ngIf="evenement?.is_admin_level"></div>
       <ion-card-header>
         <h4 *ngIf="evenement?.evnt_active === true" class="remainingTime">DANS {{ getRemainingTime(evenement?.date_evnt) | uppercase }}</h4>
         <h4 *ngIf="evenement?.evnt_active === false" class="abortedEvnt">CET EVENEMENT EST ANNULE</h4>

@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FirestoreService  } from '../services/data/firestore.service';
-import { Router } from '@angular/router';
-import { AngularFirestore} from 'angularfire2/firestore';
 import { AuthenticationService } from '../services/authentication.service';
-import {NavController, PopoverController} from '@ionic/angular';
+import {NavController, PopoverController, ModalController, ToastController} from '@ionic/angular';
 import {PopoverComponent} from '../notif-component/popover/popover.component';
 import {Storage} from '@ionic/storage';
-import * as firebase from 'firebase';
 import { AngularFireMessaging } from '@angular/fire/messaging';
+import { LikesListModalPage } from '../modals/likes-list-modal/likes-list-modal.page';
 
 @Component({
   selector: 'app-publications',
@@ -16,20 +14,23 @@ import { AngularFireMessaging } from '@angular/fire/messaging';
 })
 export class PublicationsPage implements OnInit {
   public publicationsList;
+  public likelist;
   private userList;
   private notifList;
   public newItems;
+  public showLikes = false;
+  public currentUserType;
 
   constructor(
-    private afs: AngularFirestore,
     private firestoreService: FirestoreService,
-    private router: Router,
     private authsrv: AuthenticationService,
     private navCtrl: NavController,
     public popoverController: PopoverController,
     private storage: Storage,
-    private afMessaging: AngularFireMessaging) {
-
+    private afMessaging: AngularFireMessaging,
+    public modalController: ModalController,
+    public toastController: ToastController) {
+ 
       // old method => Impossible to order by
       // this.publicationsList = this.afs
       // .collection('publications')
@@ -44,6 +45,13 @@ export class PublicationsPage implements OnInit {
       this.getListPublication();
       this.getListUsers();
       this.requestPushNotificationsPermission();    }
+
+      ngOnInit() {
+        this.getNotifs();
+        this.storage.get('tu').then((val) => {
+          this.currentUserType = val
+        });
+    }
 
     requestPushNotificationsPermission() { // requesting permission
       this.afMessaging.requestToken // getting tokens
@@ -68,6 +76,70 @@ export class PublicationsPage implements OnInit {
             //alert(error);
           }
         );
+    }
+
+    async presentModal(idPubl) {
+      
+      const modal = await this.modalController.create({
+        component: LikesListModalPage,
+        componentProps: {
+          "publication_id": idPubl,
+          "userList" : this.userList
+        }
+      });
+
+      modal.onDidDismiss().then((dataReturned) => {
+        if (dataReturned !== null) {
+          // console.log(dataReturned.data)
+          //alert('Modal Sent Data :'+ dataReturned);
+        }
+      });
+   
+      return await modal.present();
+
+    }
+
+    async showOrNotLikes(idPubl){
+      this.showLikes = !this.showLikes;
+      console.log(this.userList)
+      this.firestoreService.getLikesList(idPubl).subscribe(
+        res => {
+          console.log(res)
+          this.likelist = res;
+          // this.publicationsList.forEach(element => {
+          //   console.log(element)
+          // });
+         });
+    }
+
+    add_remove_newsletter(idpub,isalreadynews){
+    
+      if(isalreadynews === false){
+        this.firestoreService.add_intoNewsletter(idpub).then(
+          res=>{
+            if(res === 'ok'){
+              this.presentToast('Ajouté à la Newsletter','success')
+            }
+          }
+        )
+      }else{
+        this.firestoreService.remove_fromNewsletter(idpub).then(
+          res => {
+            if(res === 'ok'){
+              this.presentToast('Retiré de la Newsletter','warning')
+            }
+          }
+        )
+      }
+    }
+
+    async presentToast(msg,color) {
+      const toast = await this.toastController.create({
+        message: msg,
+        color: color,
+        duration: 2000
+      });
+      toast.present();
     }
 
     async verifyUser(){
@@ -142,9 +214,7 @@ export class PublicationsPage implements OnInit {
       this.authsrv.checkToken()
     }
 
-    ngOnInit() {
-        this.getNotifs();
-    }
+
 
     getUserPhoto(iduser){
       return this.userList ? this.userList.filter( elt => elt.id_user === iduser)[0].photo_user : ''
@@ -182,7 +252,8 @@ export class PublicationsPage implements OnInit {
     getNotifs(){
       console.log('get notifs')
         this.storage.get('uid').then((val) => {
-            console.log('get notif for '+ val)
+            console.log('get notif for id user:'+ val)
+
             this.firestoreService.isAnyNotif(val).subscribe(
                 res => {
                     this.notifList = res;

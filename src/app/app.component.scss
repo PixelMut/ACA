@@ -11,3 +11,75 @@ padding-right: 100%;
    width: 100%;
    text-align: center;
 }
+
+// #main-content{
+//    background-color: green;
+// }
+
+// .test{
+//    background-color: red;
+// }
+
+// ion-item .test {
+//     --ion-background-color: var(--ion-color-primary);
+//     --ion-text-color: var(--ion-color-primary-contrast);
+ 
+//    // ion-toolbar {
+//    //   --background: var(--ion-color-primary);
+//    // }
+ 
+//    ion-content {/* optional, but it needs when you use gradient as a background color.*/
+//       background: transparent;
+//     }
+
+//  }   
+ 
+//  ion-content {/* optional, but it needs when you use gradient as a background color.*/
+//    background: transparent;
+//  }
+
+ion-menu{
+     --background: var(--ion-color-primary) !important; 
+        ion-content{    
+           
+            // applique a tout le menu la couleur primaire         
+            //--background: var(--ion-color-primary) !important;
+
+            ion-list-header{ 
+                --background: var(--ion-color-primary) !important;
+                --color: #FFFFFF !important;   
+            }
+            .btn_contact{
+                --background: #F08A00 !important;
+                 --color: #FFFFFF !important;
+                 ion-icon{ padding-right: 10px !important; }
+            }
+
+            .btn_profile{
+               --background: #77A43D !important;
+               --color: #FFFFFF !important;
+               ion-icon{ padding-right: 10px !important; }
+            }
+
+            .btn_newsletter{
+               --background: #33B1E7 !important;
+               --color: #FFFFFF !important;
+               ion-icon{ padding-right: 10px !important; }
+            }
+
+            .btn_logout{
+               --background:#C70371 !important;
+               --color: rgb(0, 0, 0) !important;
+               ion-icon{ padding-right: 10px !important; }
+               //bottom: -50px;
+            }
+
+            .footer-menu{
+               
+               position: absolute;
+               bottom: 0;
+            }
+        }
+
+
+    }

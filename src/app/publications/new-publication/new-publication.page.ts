@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Image } from '../../models/image.interface'
 import { AngularFireStorage } from '@angular/fire/storage';
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-new-publication',
@@ -17,7 +18,7 @@ export class NewPublicationPage implements OnInit {
   loading: boolean = false;
   url: any;
   fileraw: any;
-
+  public currentUserType;
   newImage: Image = {
     id: this.afs.createId(), image: ''
   }
@@ -29,12 +30,20 @@ export class NewPublicationPage implements OnInit {
     public firestoreService: FirestoreService,
     public formBuilder: FormBuilder,
     private router: Router,
-    private storage: AngularFireStorage) {
+    private storage: AngularFireStorage,
+    private intstorage : Storage,) {
       this.createPubForm = formBuilder.group({
         title_publication: ['', Validators.required],
-        description_publication: ['', Validators.required]
+        description_publication: ['', Validators.required],
+        publication_newsletter: ['']
       });
 
+      this.intstorage.get('tu').then((val) => {
+        this.currentUserType = val
+        if(this.currentUserType === 1 || this.currentUserType === 2 ){
+          this.createPubForm.value.publication_newsletter = true;
+        }
+    });
       // ,
       //   artistName: ['', Validators.required],
       //   songDescription: ['', Validators.required],
@@ -49,9 +58,9 @@ export class NewPublicationPage implements OnInit {
      const loading = await this.loadingCtrl.create();
      const publicationName = this.createPubForm.value.title_publication;
      const publicationDesc = this.createPubForm.value.description_publication;
-
+     const isNewsletter = this.createPubForm.value.publication_newsletter;
      this.firestoreService
-    .createPublication(publicationName, publicationDesc, this.newImage.id, this.fileraw)
+    .createPublication(publicationName, publicationDesc, this.newImage.id, this.fileraw, isNewsletter)
     .then(
       () => {
         loading.dismiss().then(() => {

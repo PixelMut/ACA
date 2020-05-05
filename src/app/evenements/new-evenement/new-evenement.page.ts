@@ -37,6 +37,7 @@ export class NewEvenementPage implements OnInit {
     };
 
   public defaultImages = [
+    'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Fworkshop.jpg?alt=media&token=6817aa79-582d-4ccc-9e1a-942be76d9b13',
     'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Ffootball-3471402_640.jpg?alt=media&token=08459b9b-2620-4d58-ac92-358dea2a6852',
     'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Frestaurant-691397_640.jpg?alt=media&token=aedc3910-f120-4f12-aa0a-a085563f91c1',
     'https://firebasestorage.googleapis.com/v0/b/acensi-community-app.appspot.com/o/Image%2Fglasses-919071_640.jpg?alt=media&token=beb81afa-205a-445c-8710-84ed5d96b7f8',

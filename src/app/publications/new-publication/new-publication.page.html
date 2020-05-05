@@ -23,6 +23,7 @@
               </ion-item>
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col>
               <ion-item>
@@ -36,6 +37,7 @@
               </ion-item>
             </ion-col>
           </ion-row>
+
           <ion-row>
             <ion-col>
               <ion-item>
@@ -49,6 +51,16 @@
               </ion-item>
             </ion-col>
           </ion-row>
+           <!-- si publication type newsletter ou non -->
+          <ion-row *ngIf="currentUserType === 1 || currentUserType === 2">
+            <ion-col>
+              <ion-item>
+                <ion-label>Type Newsletter</ion-label>
+                <ion-toggle formControlName="publication_newsletter" slot="start" name="official" color="warning"></ion-toggle>
+              </ion-item>
+            </ion-col>
+          </ion-row> 
+
           <ion-row>
             <ion-col>
               <ion-button expand="block" type="submit" [disabled]="!createPubForm.valid">

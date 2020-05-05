@@ -174,7 +174,7 @@ export class FirestoreService {
   // PARTIE PUBLICATIONS
 
     // creation d'une publication, depuis new-publication page
-    createPublication(title_publication: string, description_publication: string, imageId, fileRaw): Promise<void> {
+    createPublication(title_publication: string, description_publication: string, imageId, fileRaw, isNewsletter = false): Promise<void> {
       const id_publication = this.firestore.createId();
       const filePath = '/Image/' + 'Post_' + id_publication + '/' + imageId ;
       const result = this.SaveImageRef(filePath, fileRaw);
@@ -199,7 +199,8 @@ export class FirestoreService {
               id_user,
               photo_publication: a,
               nblike : 0,
-              nbcom : 0
+              nbcom : 0,
+              is_newsletter : isNewsletter
             });
 
           })
@@ -334,6 +335,16 @@ export class FirestoreService {
       return this.firestore.collection('publications', ref => ref.orderBy('date_publication', 'desc')).valueChanges();
     }
 
+    // recuperer la liste des publications type newsletter, depuis page newsletter
+    getNewsletterList(){
+      return this.firestore.collection('publications', ref => ref.orderBy('date_publication', 'desc').where('is_newsletter', '==', true)).valueChanges();
+
+    }
+
+    getLikesList(idpub){
+      return this.firestore.collection('likes', ref => ref.where('id_publication', '==', idpub)).valueChanges();
+    }
+
     // // recuperer les details d'une publication
     // getPublicationDetail(pubId: string): AngularFirestoreDocument<Publication> {
     //   return this.firestore.collection('publications').doc(pubId);
@@ -365,6 +376,37 @@ export class FirestoreService {
           err => reject(err));
       });
     }
+
+    add_intoNewsletter(idpub){
+      const pubDoc = this.firestore.doc<any>('publications/' + idpub);
+      return new Promise<any>((resolve, reject) => {
+        pubDoc.update({
+        is_newsletter: true
+        // Other info you want to add here
+      })
+        .then(
+          res => {
+            resolve('ok');
+          },
+          err => reject(err));
+      });
+    }
+
+    remove_fromNewsletter(idpub){
+      const pubDoc = this.firestore.doc<any>('publications/' + idpub);
+      return new Promise<any>((resolve, reject) => {
+        pubDoc.update({
+          is_newsletter: false
+        // Other info you want to add here
+      })
+        .then(
+          res => {
+            resolve('ok');
+          },
+          err => reject(err));
+      });
+    }
+
 
     addComment(comment_content, id_elt: string, id_user: string, type_elt: string) {
     const id_comment = this.firestore.createId();
@@ -512,7 +554,7 @@ export class FirestoreService {
       return this.firestore.collection('evenements', ref => ref.orderBy('date_evnt', 'desc').where('date_evnt', '<', new Date())).valueChanges();
     }
 
-    modifyEvenement(idevnt, title_evnt, desc_evnt, locationName, locationId, dateEvnt, currentUserType ) {
+    modifyEvenement(idevnt, title_evnt, desc_evnt, locationName, locationId, dateEvnt, currentUserType, isOfficial = false ) {
       const evntDoc = this.firestore.doc<any>('evenements/' + idevnt);
       const nvDateModif = new Date();
 
@@ -526,7 +568,7 @@ export class FirestoreService {
             date_evnt : new Date(dateEvnt) ,
             lieu_evnt: locationName,
             id_location_google : locationId,
-            is_admin_level : (currentUserType === 1 || currentUserType === 2)
+            is_admin_level : isOfficial
             // Other info you want to add here
           })
               .then(
@@ -535,6 +577,8 @@ export class FirestoreService {
                   },
                   err => reject(err));
         });
+        // is_admin_level : (currentUserType === 1 || currentUserType === 2)
+
       } else {
         return new Promise<any>((resolve, reject) => {
 
@@ -543,7 +587,7 @@ export class FirestoreService {
             description_evnt: desc_evnt,
             date_modif_evnt : nvDateModif,
             date_evnt : new Date(dateEvnt) ,
-            is_admin_level : (currentUserType === 1 || currentUserType === 2)
+            is_admin_level : isOfficial
             // Other info you want to add here
           }).then(
                res => {

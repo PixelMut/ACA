@@ -36,6 +36,14 @@ const routes: Routes = [
   },  {
     path: 'photos',
     loadChildren: () => import('./photos/photos.module').then( m => m.PhotosPageModule)
+  },
+  {
+    path: 'likes-list-modal',
+    loadChildren: () => import('./modals/likes-list-modal/likes-list-modal.module').then( m => m.LikesListModalPageModule)
+  },
+  {
+    path: 'newsletter',
+    loadChildren: () => import('./newsletter/newsletter.module').then( m => m.NewsletterPageModule)
   }
 
 ];

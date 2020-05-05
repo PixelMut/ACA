@@ -29,8 +29,10 @@
     Enable notifications!
   </ion-button> -->
     <ion-card *ngFor="let pub of publicationsList">
-      <ion-item *ngIf="pub.id_user !== null" routerLink="/tabs/contacts/{{pub.id_user}}">
-        <ion-avatar slot="start">
+      
+      
+      <ion-item class="card" *ngIf="pub.id_user !== null" >
+        <ion-avatar slot="start" routerLink="/tabs/contacts/{{pub.id_user}}">
           <img [src]="pub.id_user ? getUserPhoto(pub.id_user) : ''">
         </ion-avatar>
         <ion-label routerLink="/tabs/contacts/{{pub.id_user}}">
@@ -38,7 +40,12 @@
           <!-- <p>{{ pub.date_publication.seconds * 1000 | date:'yyyy-MM-dd HH:mm:ss'  }}</p> -->
           <p>{{ pub.date_publication.seconds * 1000 | dateAgo }}</p>
         </ion-label>
+        <ion-item class="bookmark" *ngIf="currentUserType === 1 || currentUserType === 2">
+          <ion-icon (click)="add_remove_newsletter(pub.id_publication,pub.is_newsletter)" [ngStyle]="{'color':pub.is_newsletter === true ? 'gold' : '' }" name="bookmark-outline" ></ion-icon>
+        </ion-item>
       </ion-item> 
+
+
       <div routerLink="/tabs/publications/{{pub.id_publication}}" class="container_title_desc">
         <img [src]="pub.photo_publication" alt="ion">
         <ion-card-header >
@@ -47,19 +54,57 @@
         <ion-card-content>
           {{ pub.description_publication }}
         </ion-card-content>
+        
+          
+        
       </div>
+      <div class="footer_likes_com">
+        <ion-row >
+          <ion-col *ngIf="pub.nblike > 0">
+            <!-- <ion-icon name="thumbs-up-outline" (click)="showOrNotLikes(pub.id_publication)"></ion-icon> -->
+            <ion-icon name="thumbs-up-outline" (click)="presentModal(pub.id_publication)"></ion-icon>
+            
+            <ion-label> {{ pub.nblike }}</ion-label>
+            <div *ngIf="showLikes === true">
+              <ion-label *ngFor="let item of likelist">
+                {{ item.id_user ? getName(item.id_user) : '' }} {{ (item.id_user ? getLastName(item.id_user) : '') | uppercase }}
+              </ion-label>
+             
+            </div>
+            <!-- <button class="footer-button-card" (click)="handleLikeBtn(pub.id_publication,pub.nblike)">
+             <ion-icon name="thumbs-up"></ion-icon> 
+              <div>{{ pub.nblike ? pub.nblike : 0 }}</div>
+            </button> -->
+          </ion-col>
+          <ion-col style="text-align: right;" *ngIf="pub.nbcom > 0">
+            <button class="footer-comm">
+              <!-- <ion-icon name="text"></ion-icon> -->
+              <div routerLink="/tabs/publications/{{pub.id_publication}}">{{ pub.nbcom}} commentaires</div>
+            </button>
+          </ion-col>
+         </ion-row>
+      </div>
+
+
      <ion-footer>
         <ion-row style="text-align: center">
           <ion-col center text-center>
             <button class="footer-button-card" (click)="handleLikeBtn(pub.id_publication,pub.nblike)">
-              <ion-icon name="thumbs-up"></ion-icon>
-              <div>{{ pub.nblike ? pub.nblike : 0 }}</div>
+              <ion-icon name="thumbs-up-outline"> </ion-icon>
+              <ion-label>
+                J'aime
+              </ion-label>
+              <!-- <div>{{ pub.nblike ? pub.nblike : 0 }}</div> -->
             </button>
           </ion-col>
           <ion-col center text-center>
-            <button class="footer-button-card">
-              <ion-icon name="text"></ion-icon>
-              <div>{{ pub.nbcom ? pub.nbcom : 0}}</div>
+            
+            <button class="footer-button-card" routerLink="/tabs/publications/{{pub.id_publication}}">
+              <ion-icon  name="chatbubble-outline"></ion-icon>
+              <ion-label >
+                Commenter
+              </ion-label>
+              <!-- <div>{{ pub.nbcom ? pub.nbcom : 0}}</div> -->
             </button>
           </ion-col>
           <!-- <ion-col center text-center>

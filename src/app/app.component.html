@@ -11,7 +11,7 @@
 <!--        <ion-menu-toggle auto-hide="true"  >-->
 
 
-            <ion-item>
+            <ion-item class="btn_contact">
                 <ion-button fill="clear" class="itemBtns" (click)="goToContacts()"><ion-icon slot="start" name="people-outline"></ion-icon>
                     <ion-label>
                         Contacts
@@ -19,7 +19,7 @@
                 </ion-button>
             </ion-item>
 
-            <ion-item>
+            <ion-item class="btn_profile">
                 <ion-button fill="clear" class="itemBtns" (click)="goToProfile()"><ion-icon slot="start" name="information-circle"></ion-icon>
                     <ion-label>
                         Mon Profil
@@ -27,7 +27,15 @@
                 </ion-button>
             </ion-item>
 
-          <ion-item >
+            <ion-item class="btn_newsletter">
+              <ion-button fill="clear" class="itemBtns" (click)="goToNewsLetter()"><ion-icon slot="start" name="newspaper-outline"></ion-icon>
+                  <ion-label>
+                      Newsletter
+                  </ion-label>
+              </ion-button>
+          </ion-item>
+
+          <ion-item class="btn_logout" >
               <ion-button fill="clear" class="itemBtns" (click)="logout()"><ion-icon slot="start" name="log-out"></ion-icon>
                   <ion-label>
                       Log out
@@ -47,6 +55,8 @@
           </ion-item>
           </ion-menu-toggle>
         </ion-list>-->
+
+        <img class="footer-menu" src="../assets/images/footer_menu.PNG" alt="">
       </ion-content>  
     </ion-menu>
 
