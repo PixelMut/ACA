@@ -1,12 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PhotoService } from '../services/photo.service';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { NavController, AlertController } from '@ionic/angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
-
-
-
 
 @Component({
   selector: 'app-photos',

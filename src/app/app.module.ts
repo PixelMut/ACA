@@ -15,8 +15,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AuthenticationService } from './services/authentication.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { DateAgoPipe } from './pipes/date-ago.pipe';
+import { AngularFirestore, AngularFirestoreModule } from 'angularfire2/firestore';
 import {PopoverComponent} from './notif-component/popover/popover.component';
 import {IonicStorageModule} from '@ionic/storage';
 import {PublicationsPageModule} from './publications/publications.module';
@@ -26,7 +25,7 @@ import { environment } from '../environments/environment';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { Camera } from '@ionic-native/camera/ngx';
 import { LikesListModalPageModule } from './modals/likes-list-modal/likes-list-modal.module';
-import { ApplicationPipesModule } from './pipes/application-pipes.module';
+import { PipesModule } from './pipes/pipes.module';
 
 
 
@@ -42,14 +41,14 @@ import { ApplicationPipesModule } from './pipes/application-pipes.module';
         AngularFireDatabaseModule,
         AngularFireAuthModule,
         AngularFireStorageModule,
+        AngularFirestoreModule,
         ReactiveFormsModule,
         FormsModule,
         IonicStorageModule.forRoot(),
         PublicationsPageModule,
         ServiceWorkerModule.register('combined-sw.js', {enabled: environment.production}),
         LikesListModalPageModule,
-        ApplicationPipesModule
-
+        PipesModule
     ],
   providers: [
     StatusBar,

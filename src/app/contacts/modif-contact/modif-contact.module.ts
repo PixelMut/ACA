@@ -8,6 +8,7 @@ import { ModifContactPageRoutingModule } from './modif-contact-routing.module';
 
 import { ModifContactPage } from './modif-contact.page';
 import {PublicationsPageModule} from '../../publications/publications.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import {PublicationsPageModule} from '../../publications/publications.module';
         IonicModule,
         ModifContactPageRoutingModule,
         ReactiveFormsModule,
-        PublicationsPageModule
+        PublicationsPageModule,
+        PipesModule
     ],
   declarations: [ModifContactPage]
 })

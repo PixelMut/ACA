@@ -22,8 +22,6 @@ export class DetailContactPage implements OnInit{
      private firestoreService: FirestoreService,
      private route: ActivatedRoute,
      private miscData: MiscDataService,
-     private navCtrl : NavController,
-     private platform : Platform,
      private emailComposer: EmailComposer
   ) {
     this.typesLocalisation = this.miscData.list_localisations; // Permet de connaître le type selon un id

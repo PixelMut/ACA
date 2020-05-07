@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { NewsletterPageRoutingModule } from './newsletter-routing.module';
 
 import { NewsletterPage } from './newsletter.page';
-import { ApplicationPipesModule } from '../pipes/application-pipes.module';
+import { PipesModule } from '../pipes/pipes.module';
 
 
 @NgModule({
@@ -16,7 +16,7 @@ import { ApplicationPipesModule } from '../pipes/application-pipes.module';
     FormsModule,
     IonicModule,
     NewsletterPageRoutingModule,
-    ApplicationPipesModule
+    PipesModule
   ],
   declarations: [NewsletterPage]
 })

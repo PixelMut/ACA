@@ -1,14 +1,13 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { Contact } from 'src/app/models/contact.interface';
 import { FirestoreService } from 'src/app/services/data/firestore.service';
-import { Publication } from 'src/app/models/publications.interface';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import {Storage} from "@ionic/storage";
+import {google} from 'google-maps';
+
 
 export interface Image {
   id: string;

@@ -132,8 +132,8 @@ export class FirestoreService {
     isAnyNotif(idusertonotify) {
       return this.firestore.collection('notifications', ref => ref
           .where('id_user', '==', idusertonotify )
-          // .where('is_new', '==', true)
-          .orderBy('date_publi', 'desc')).valueChanges();
+          // .where('is_new', '==', true) // limitation du nombre de notif à 30
+          .orderBy('date_publi', 'desc').limit(30)).valueChanges();
     }
 
     isAnyEvent() {

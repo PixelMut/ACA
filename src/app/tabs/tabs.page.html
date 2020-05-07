@@ -22,6 +22,15 @@
       <ion-icon name="people-outline"></ion-icon>
       <ion-label>Contacts</ion-label>
     </ion-tab-button>
+
+    <ion-tab-button (click)="seeNotif($event)">
+      <!-- <ion-button > -->
+        <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge *ngIf="newItems?.length > 0" color="primary">{{newItems?.length}}</ion-badge>
+      <!-- </ion-button> -->
+    </ion-tab-button>
+    
+
   </ion-tab-bar>
 
 </ion-tabs>

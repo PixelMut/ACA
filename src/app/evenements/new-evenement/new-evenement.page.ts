@@ -7,7 +7,7 @@ import { Image } from '../../models/image.interface'
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import {Storage} from "@ionic/storage";
-
+import {google} from 'google-maps';
 
 @Component({
   selector: 'app-new-evenement',
