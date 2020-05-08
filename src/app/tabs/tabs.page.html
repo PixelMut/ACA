@@ -2,7 +2,10 @@
 <ion-tabs>
 
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="publications">
+    
+    
+
+    <ion-tab-button tab="publications" (click)="onTop()">
       <ion-icon name="newspaper-outline"></ion-icon>
       <ion-label>Actualités</ion-label>
     </ion-tab-button>
@@ -23,13 +26,13 @@
       <ion-label>Contacts</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button (click)="seeNotif($event)">
-      <!-- <ion-button > -->
-        <ion-icon name="notifications-outline"></ion-icon>
-        <ion-badge *ngIf="newItems?.length > 0" color="primary">{{newItems?.length}}</ion-badge>
-      <!-- </ion-button> -->
+    <ion-tab-button (click)="seeNotif($event)" class="notif">
+
+        <ion-icon name="notifications-outline" class="icon_notif"></ion-icon>
+        <ion-badge *ngIf="newItems?.length > 0" color="warning">{{newItems?.length}}</ion-badge>
+        <!-- <ion-badge color="warning">5</ion-badge> -->
+
     </ion-tab-button>
-    
 
   </ion-tab-bar>
 

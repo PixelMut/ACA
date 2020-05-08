@@ -3,6 +3,7 @@ import {FirestoreService} from "../services/data/firestore.service";
 import { PopoverController } from '@ionic/angular';
 import { PopoverComponent } from '../notif-component/popover/popover.component';
 import {Storage} from '@ionic/storage';
+import { MiscDataService } from '../services/data/misc-data.service';
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
@@ -15,7 +16,7 @@ export class TabsPage {
   public newItems;
   constructor(private firestoreService: FirestoreService,
     public popoverController: PopoverController,
-    private storage: Storage,) {
+    private storage: Storage,private miscDataService : MiscDataService) {
     firestoreService.isAnyEvent().subscribe(
         res => {
           //console.log(res)
@@ -58,4 +59,11 @@ getNotifs(){
     });
 
 }
+
+onTop() {
+  this.miscDataService.publishSomeData({
+      foo: 'bar'
+  });
+}
+
 }

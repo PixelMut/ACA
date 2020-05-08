@@ -5,7 +5,9 @@
     "types": ["googlemaps"]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/main.ts",
+    "src/polyfills.ts"
   ],
   "exclude": [
     "src/test.ts",

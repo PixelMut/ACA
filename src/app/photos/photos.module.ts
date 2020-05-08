@@ -9,13 +9,15 @@ import { PhotosPageRoutingModule } from './photos-routing.module';
 import { PhotosPage } from './photos.page';
 import { FileSizeFormatPipe } from '../pipes/file-size-format.pipe';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { HideOnscrollModule } from '../hide-on-scroll.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PhotosPageRoutingModule
+    PhotosPageRoutingModule,
+    HideOnscrollModule
   ],
   declarations: [PhotosPage,FileSizeFormatPipe],
   providers: [

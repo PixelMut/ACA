@@ -49,6 +49,7 @@ import { PipesModule } from './pipes/pipes.module';
         ServiceWorkerModule.register('combined-sw.js', {enabled: environment.production}),
         LikesListModalPageModule,
         PipesModule
+        
     ],
   providers: [
     StatusBar,
@@ -59,6 +60,7 @@ import { PipesModule } from './pipes/pipes.module';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Camera
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports : []
 })
 export class AppModule {}

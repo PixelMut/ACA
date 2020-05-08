@@ -18,7 +18,7 @@
 </ion-header>
 
 
-<ion-content>
+<ion-content [scrollEvents]="true" #content>
 
   <!-- ----------------------------------------- Visualisation de l'upload en cours ------------------------------------------ -->
   <ion-card text-center *ngIf="photoService.isUploading && !photoService.isUploaded">
@@ -174,7 +174,7 @@
   
    <!-- ------------------------------------------------ Ajout de l'image ----------------------------------------------- -->
    
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" [hideOnscroll]="content">
       <ion-fab-button (click)="fileInput.click()" >
         <ion-icon name="camera"></ion-icon>
       </ion-fab-button>

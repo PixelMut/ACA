@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirestoreService  } from '../services/data/firestore.service';
 import { AuthenticationService } from '../services/authentication.service';
-import {NavController, PopoverController, ModalController, ToastController} from '@ionic/angular';
+import {NavController, PopoverController, ModalController, ToastController, IonContent} from '@ionic/angular';
 import {PopoverComponent} from '../notif-component/popover/popover.component';
 import {Storage} from '@ionic/storage';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { LikesListModalPage } from '../modals/likes-list-modal/likes-list-modal.page';
+import { MiscDataService } from '../services/data/misc-data.service';
 
 @Component({
   selector: 'app-publications',
@@ -20,6 +21,7 @@ export class PublicationsPage implements OnInit {
   public newItems;
   public showLikes = false;
   public currentUserType;
+  @ViewChild(IonContent, { static: false }) private content: IonContent; 
 
   constructor(
     private firestoreService: FirestoreService,
@@ -29,7 +31,8 @@ export class PublicationsPage implements OnInit {
     private storage: Storage,
     private afMessaging: AngularFireMessaging,
     public modalController: ModalController,
-    public toastController: ToastController) {
+    public toastController: ToastController,
+    private miscDataService : MiscDataService) {
  
       // old method => Impossible to order by
       // this.publicationsList = this.afs
@@ -44,7 +47,21 @@ export class PublicationsPage implements OnInit {
       this.verifyUser();
       this.getListPublication();
       this.getListUsers();
-      this.requestPushNotificationsPermission();    }
+      this.requestPushNotificationsPermission();   
+    
+      this.miscDataService.getObservable().subscribe((data) => {
+         this.content.scrollToTop(1500);
+       
+        // let scrollToTop = window.setInterval(() => {
+        //       let pos = window.pageYOffset;
+        //       if (pos > 0) {
+        //           window.scrollTo(0, pos - 20); // how far to scroll on each step
+        //       } else {
+        //           window.clearInterval(scrollToTop);
+        //       }
+        //   }, 16);
+    });
+  }
 
       ngOnInit() {
         this.getNotifs();
