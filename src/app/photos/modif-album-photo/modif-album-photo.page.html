@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Album : {{albumId}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+
+  <!-- ----------------------------------------- Visualisation de l'upload en cours ------------------------------------------ -->
+  <ion-card text-center *ngIf="photoService.isUploading && !photoService.isUploaded">
+    <ion-card-header>
+      <ion-card-title
+        >Selected File:<b>{{ photoService.fileName }}</b></ion-card-title
+      >
+    </ion-card-header>
+ 
+    <ion-card-content>
+      <div *ngIf="photoService.percentage | async as pct">
+        Progress: {{ pct | number }}%
+        <ion-progress-bar value="{{ pct / 100 }}"></ion-progress-bar>
+      </div>
+      <div *ngIf="photoService.snapshot | async as snap">
+
+
+        
+        File Size: {{ snap.totalBytes | fileSizePipe }} Transfered:
+        {{ snap.bytesTransferred | fileSizePipe }}
+        <div *ngIf="photoService.snapshot && snap.bytesTransferred != snap.totalBytes">
+          <ion-button
+            color="warning"
+            size="small"
+            (click)="photoService.task.pause()"
+            class="button is-warning"
+            >Pause</ion-button
+          >
+          <ion-button
+            size="small"
+            (click)="photoService.task.resume()"
+            class="button is-info"
+            >Resume</ion-button
+          >
+          <ion-button
+            color="danger"
+            size="small"
+            (click)="photoService.task.cancel()"
+            class="button is-danger"
+            >Cancel</ion-button
+          >
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  
+  <ion-grid >
+    <ion-row>
+      <ion-col size=6 *ngFor="let image of photoService.filteredImages | async">
+        <!-- {{image.filepath}} -->
+        <div (click)="presentAlert(image.filepath, image)" class="image-container" [style.background-image]="'url('+ image.filepath +')'"></div>
+        <!-- <div (click)="clickonimage(image.filepath)" class="image-container" [style.background-image]="'url('+ image.filepath +')'"></div> -->
+      </ion-col>
+    </ion-row>
+  
+       
+ 
+       
+  </ion-grid> 
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" [hideOnscroll]="content" >
+    <ion-fab-button (click)="fileInput.click()" >
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
+
+    <input hidden
+      #fileInput
+        id="uploadBtn"
+        type="file"
+        class="upload"
+        (change)="photoService.uploadFile($event.target.files,albumId)"
+      />
+
+  </ion-fab>
+</ion-content>

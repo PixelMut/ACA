@@ -10,7 +10,8 @@ export interface MyData {
   name: string;
   filepath: string;
   size: number;
-  uploadDate : Date
+  uploadDate : Date,
+  id_parent : string
 }
 
 class Photo {
@@ -21,7 +22,9 @@ class Photo {
   providedIn: 'root'
 })
 export class PhotoService {
-  private imageCollection: AngularFirestoreCollection<MyData>;
+  private allImageCollection: AngularFirestoreCollection<MyData>;
+  private filteredImageCollection: AngularFirestoreCollection<MyData>;
+  private folderCollection :AngularFirestoreCollection<any>;
   public photos: Photo[] = [];
 
     // Upload Task 
@@ -32,8 +35,11 @@ export class PhotoService {
     snapshot: Observable<any>;
     // Uploaded File URL
     UploadedFileURL: Observable<string>;
-    //Uploaded Image List
+    //Uploaded Image and Folder List
     images: Observable<MyData[]>;
+    filteredImages : Observable<MyData[]>;
+    folders : Observable<any>;
+
     //File details  
     fileName:string;
     fileSize:number;
@@ -47,13 +53,45 @@ export class PhotoService {
     this.isUploaded = false;
     //Set collection where our documents/ images info will save
     // this.imageCollection = database.collection<MyData>('freakyImages');
-    this.imageCollection = database.collection<MyData>('ACA_Gallery', ref => ref.orderBy('uploadDate','desc'));
+    
+    // pour recup toutes les photos
+    this.allImageCollection = database.collection<MyData>('ACA_Gallery', ref => ref.orderBy('uploadDate','desc'));
+    this.images = this.allImageCollection.valueChanges();
 
 
-    this.images = this.imageCollection.valueChanges();
-
+    // pour recup les dossiers
+    this.folderCollection = database.collection<MyData>('ACA_Gallery_Parents');
+    this.folders = this.folderCollection.valueChanges();
   }
 
+  createFolder(fname){
+    const id_parent = fname;
+    const iddoc = this.database.createId();
+    return new Promise<any>((resolve, reject) => {
+      this.database.doc(`ACA_Gallery_Parents/${iddoc}`).set({
+        id_parent
+      })
+      .then(
+        res => {
+          resolve('ok');
+        },
+        err => reject(err));
+    });
+  }
+
+  getAlbumAll(){
+    // pour recup toutes les photos
+    this.filteredImageCollection = this.database.collection<MyData>('ACA_Gallery', ref => ref.orderBy('uploadDate','desc'));
+    this.filteredImages = this.allImageCollection.valueChanges();
+  }
+
+  getAlbumPhoto(idalbum){
+    console.log('getting photos of :'+ idalbum)
+    this.filteredImageCollection = this.database.collection<MyData>('ACA_Gallery', ref => ref.orderBy('uploadDate','desc').where('id_parent', '==' , idalbum));
+    this.filteredImages = this.filteredImageCollection.valueChanges();
+
+
+  }
   // takePicture() {
   //   const options: CameraOptions = {
   //     quality: 100,
@@ -82,8 +120,8 @@ export class PhotoService {
   //   });
   // }
 
-  uploadFile(event: FileList) {
-    
+  uploadFile(event: FileList, albumName ='all') {
+    console.log('gonna add picture : '+event+ ' / album : ' + albumName)
  
     // The File object
     const file = event.item(0)
@@ -99,7 +137,7 @@ export class PhotoService {
  
  
     this.fileName = file.name;
- 
+    console.log('filename :'+this.fileName)
     // The storage path
     const path = `ACA_Gallery/${new Date().getTime()}_${file.name}`;
  
@@ -114,20 +152,25 @@ export class PhotoService {
  
     // Get file progress percentage
     this.percentage = this.task.percentageChanges();
+    console.log('1')
     this.snapshot = this.task.snapshotChanges().pipe(
       
       finalize(() => {
+        console.log('2')
         // Get uploaded file storage path
         this.UploadedFileURL = fileRef.getDownloadURL();
-        
+        console.log('3')
         this.UploadedFileURL.subscribe(resp=>{
+          console.log('4')
           this.addImagetoDB({
             name: file.name,
             filepath: resp,
             size: this.fileSize,
-            uploadDate : new Date()
-          });
+            uploadDate : new Date(),
+            id_parent : albumName
+          },albumName);
           this.isUploading = false;
+          console.log('5')
           // this.isUploaded = true;
           this.isUploaded = false;
         },error=>{
@@ -140,16 +183,41 @@ export class PhotoService {
     )
   }
 
-  addImagetoDB(image: MyData) {
+  addImagetoDB(image: MyData, albumName ) {
+    console.log('6')
     //Create an ID for document
     const id = this.database.createId();
- 
-    //Set document id with value in database
-    this.imageCollection.doc(id).set(image).then(resp => {
-      console.log(resp);
-    }).catch(error => {
-      console.log("error " + error);
+    if(albumName === 'all'){
+      //Set document id with value in database
+      this.allImageCollection.doc(id).set(image).then(resp => {
+        console.log(resp);
+      }).catch(error => {
+        console.log("error " + error);
+      });
+    }else{
+      //Set document id with value in database
+      this.filteredImageCollection.doc(id).set(image).then(resp => {
+        console.log(resp);
+      }).catch(error => {
+        console.log("error " + error);
+      });
+    }
+   
+  }
+
+  deletePicture(elt){
+    console.log(elt)
+
+    const delete_photo = this.database.collection('ACA_Gallery', ref => ref.where('filepath', '==', elt.filepath));
+    
+    delete_photo.get().subscribe(delItems => {
+      delItems.forEach(doc => {
+        doc.ref.delete();
+        this.storage.storage.refFromURL(elt.filepath).delete();
+      });
     });
+
+
   }
 
 

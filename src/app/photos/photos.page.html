@@ -81,16 +81,25 @@
   <div [ngSwitch]="type">
     <!-- visu regular -->
 
-
-    <ion-grid *ngSwitchCase="'regular'">
-      <ion-row>
-        <ion-col size=6 *ngFor="let image of photoService.images | async">
-          <div (click)="presentAlert(image.filepath)" class="image-container" [style.background-image]="'url('+ image.filepath +')'"></div>
-          <!-- <div (click)="clickonimage(image.filepath)" class="image-container" [style.background-image]="'url('+ image.filepath +')'"></div> -->
-        </ion-col>
-      </ion-row>
-    </ion-grid> 
-<!-- 
+    <div *ngSwitchCase="'regular'">
+      <ion-grid >
+        <ion-row>
+          <ion-col size=6 *ngFor="let image of photoService.images | async">
+            <div (click)="presentAlert(image.filepath,image)" class="image-container" [style.background-image]="'url('+ image.filepath +')'"></div>
+            <!-- <div (click)="clickonimage(image.filepath)" class="image-container" [style.background-image]="'url('+ image.filepath +')'"></div> -->
+          </ion-col>
+        </ion-row>
+      
+           
+     
+           
+      </ion-grid> 
+      <!-- ------------------------------------------------ Ajout de l'image ----------------------------------------------- -->
+      <!--  -->
+      
+    </div>
+    
+    <!-- 
     <ion-grid *ngSwitchCase="'regular'">
       <ion-row>
         <ion-col size=6 *ngFor="let image of photoService.images | async">
@@ -115,21 +124,43 @@
       </ion-row>
     </ion-grid>  -->
     <div *ngSwitchCase="'pinterest'" style="padding-top: 3%;">
-      <!-- <ion-label>Tout</ion-label> -->
-      <ion-label>Tout</ion-label>
-      <div class="oneCat">
+      
+      <!-- affichage de toutes les categories repertoriées dans ACA_Gallery_Parents -->
+      <div class="oneCat" *ngFor="let folder of photoService.folders  | async">
+        <ion-label routerLink="/tabs/photos/album/{{folder.id_parent}}" >{{folder.id_parent}}</ion-label>
+        
         <ion-slides centeredSlides="true" zoom="true" class="image-slider" slidesPerView="1" >
-          <ion-slide *ngFor="let img of photoService.images | async" class="image-slider" >
+          <ion-slide *ngFor="let img of photoService.images | async | folderfilter:folder.id_parent" class="image-slider" >
+            <!-- <ion-slide *ngFor="let img of photoService.images | async" class="image-slider" > -->
             <!-- <div (click)="clickonimage(img.filepath)">
               <img [src]="img.filepath" class="thumb-img " />
             </div> -->
-            <div (click)="presentAlert(img.filepath)">
+            <div (click)="presentAlert(img.filepath, img)">
+              <img [src]="img.filepath" class="thumb-img " />
+            </div>
+          </ion-slide>
+
+
+        </ion-slides>
+      </div>
+
+      <!-- affichage de la categorie : All, qui affiche toutes les photos -->
+      <div class="oneCat" >
+        <ion-label routerLink="/tabs/photos/album/all" >All</ion-label>
+        <ion-slides centeredSlides="true" zoom="true" class="image-slider" slidesPerView="1" >
+          <ion-slide *ngFor="let img of photoService.images | async " class="image-slider" >
+            <!-- <ion-slide *ngFor="let img of photoService.images | async" class="image-slider" > -->
+            <!-- <div (click)="clickonimage(img.filepath)">
+              <img [src]="img.filepath" class="thumb-img " />
+            </div> -->
+            <div (click)="presentAlert(img.filepath,img)">
               <img [src]="img.filepath" class="thumb-img " />
             </div>
           </ion-slide>
         </ion-slides>
+
+        
       </div>
-      
 
       <!-- Evenement 2
       <ion-slides class="image-slider" loop="true" slidesPerView="2" >
@@ -153,11 +184,40 @@
       </ion-slides> -->
     </div>
     
-  
+    
   </div>
 
- 
+  <!-- depuis page regular, toutes les photos affichées. Si je clic : ajouter nouvelle photo -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" [hideOnscroll]="content" *ngIf="type === 'regular'">
+    <ion-fab-button (click)="fileInput.click()" >
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
 
+    <input hidden
+      #fileInput
+        id="uploadBtn"
+        type="file"
+        class="upload"
+        (change)="photoService.uploadFile($event.target.files)"
+      />
+
+  </ion-fab>
+
+   <!-- depuis la galerie, si je clic c'est pour créer un dossier -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" [hideOnscroll]="content" *ngIf="type === 'pinterest'">
+    <ion-fab-button (click)="presentAlertPrompt()" >
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+
+    <!-- <input hidden
+      #fileInput
+        id="uploadBtn"
+        type="file"
+        class="upload"
+        (change)="photoService.uploadFile($event.target.files)"
+      /> -->
+
+  </ion-fab>
    <!-- <ion-card color="light" text-center *ngFor="let item of photoService.images | async">
      <ion-card-header>
        <ion-card-title>
@@ -172,22 +232,7 @@
    </ion-card> -->
 
   
-   <!-- ------------------------------------------------ Ajout de l'image ----------------------------------------------- -->
-   
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" [hideOnscroll]="content">
-      <ion-fab-button (click)="fileInput.click()" >
-        <ion-icon name="camera"></ion-icon>
-      </ion-fab-button>
-  
-      <input hidden
-        #fileInput
-          id="uploadBtn"
-          type="file"
-          class="upload"
-          (change)="photoService.uploadFile($event.target.files)"
-        />
-  
-    </ion-fab>
+
    
 
    <!-- <ion-card text-center *ngIf="!photoService.isUploading && !photoService.isUploaded">

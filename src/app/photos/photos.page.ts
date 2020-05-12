@@ -23,11 +23,12 @@ export class PhotosPage implements OnInit {
   }
 
   segmentChanged(ev: any) {
-    console.log('Segment changed', ev);
+    //console.log('Segment changed', ev);
   }
 
+  // fonctionne en mode natif telephone 
   clickonimage(elt){
-    console.log(elt)
+    //console.log(elt)
     // this.photoViewer.show(elt,);
     this.photoViewer.show(elt, 'Galerie Acensi', {
       share: true, 
@@ -35,18 +36,69 @@ export class PhotosPage implements OnInit {
     });
   }
 
-  async presentAlert(mapUrl) {
+  // pour afficher l'image en PWA
+  async presentAlert(mapUrl, elt) {
     const alert = await this.alertController.create({
       message: `<img src="${mapUrl}" alt="g-maps" style="border-radius: 0px">`,
-      buttons: ['OK']
+      buttons: [
+        {
+          text: 'Supprimer',
+          cssClass: 'danger',
+          handler: (blah) => {
+           this.photoService.deletePicture(elt)
+          }
+        }, {
+          text: 'Ok',
+          handler: () => {
+            console.log('Confirm Okay');
+          }
+        }
+      ]
     });
 
     await alert.present();
   }
 
-  test(){
-     
+  createFolder(folderName){
+     console.log('fct creer dossier avec le nom :'+folderName)
+    this.photoService.createFolder(folderName).then(
+      res => {
+        console.log(res)
+      }
+    )
+
   }
+
+  async presentAlertPrompt() {
+    const alert = await this.alertController.create({
+      header: 'Créer un nouveau dossier',
+      inputs: [
+        {
+          name: 'nameD',
+          type: 'text',
+          placeholder: 'Nom du dossier'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: (alertData) => {
+            this.createFolder(alertData.nameD);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
 
 }
 
