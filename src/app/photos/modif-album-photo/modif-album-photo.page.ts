@@ -11,13 +11,13 @@ import {Storage} from "@ionic/storage";
   styleUrls: ['./modif-album-photo.page.scss'],
 })
 export class ModifAlbumPhotoPage implements OnInit {
-  private albumId;
+  public albumId;
   public images: Observable<MyData[]>;
   public currentUserType;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private photoService: PhotoService,
+              public photoService: PhotoService,
               public alertController: AlertController,
               private storage : Storage) { 
 
@@ -63,6 +63,7 @@ export class ModifAlbumPhotoPage implements OnInit {
 
 
 
+  // validation avant suppression de l'album 
   async presentAlertConfirm(idalbum) {
     const alert = await this.alertController.create({
         header: 'Confirmer!',

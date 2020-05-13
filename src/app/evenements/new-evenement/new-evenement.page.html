@@ -18,9 +18,14 @@
   <div class="card-body">
     <form [formGroup]="createEvntForm" (submit)="createEvenement()">
       <ion-grid>
-
+        <!-- <div style="position: absolute;top: 50%;left: 16px;font-size: 25px;z-index: 2;" (click)="slidePrev()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </div>
+        <div style="position: absolute;top: 50%;right: 16px;font-size: 25px;z-index: 2;" (click)="slideNext()">
+          <ion-icon name="arrow-forward"></ion-icon>
+        </div> -->
         <!--        photo de l'event-->
-        <ion-slides #defaultPictures style="max-height: 190px"  *ngIf="!url">
+        <ion-slides #defaultPictures style="max-height: 190px"  *ngIf="!url" pager=true >
 
            <!-- workshop -->
            <ion-slide >
@@ -67,7 +72,8 @@
             <!-- <h2>Ready to Play?</h2>
             <ion-button fill="clear">Continue <ion-icon slot="end" name="arrow-forward"></ion-icon></ion-button> -->
           </ion-slide>
-  
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
         </ion-slides>
         <ion-row>
           <ion-col>

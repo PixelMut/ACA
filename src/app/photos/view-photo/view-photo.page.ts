@@ -110,4 +110,36 @@ export class ViewPhotoPage implements OnInit {
    
   }
 
+  // validation avant suppression de la photo 
+  async presentAlertConfirm(photo_elt) {
+    const alert = await this.alertController.create({
+        header: 'Confirmer!',
+        message: 'Voulez vous vraiment <strong>supprimer</strong> cette photo et ses commentaires ?',
+        buttons: [
+            {
+                text: 'Annuler',
+                role: 'cancel',
+                cssClass: 'secondary',
+                handler: (blah) => {
+                    console.log('Confirm Cancel: blah');
+                }
+            }, {
+                text: 'Supprimer',
+                handler: () => {
+                    this.photoService.deletePicture(photo_elt).then((res) => {
+                        //console.log(res)
+                        this.router.navigateByUrl('tabs/photos');
+                    });
+                }
+            }
+        ]
+    });
+
+    await alert.present();
+}
+
+  deletePhoto(elt_photo){
+    this.photoService.deletePicture(elt_photo)
+  }
+
 }

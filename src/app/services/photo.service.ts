@@ -223,29 +223,22 @@ export class PhotoService {
   }
 
   deletePicture(elt){
-    console.log(elt)
+    return new Promise<any>((resolve, reject) => {
 
-    const delete_photo = this.database.collection('ACA_Gallery', ref => ref.where('filepath', '==', elt.filepath));
-    
-    delete_photo.get().subscribe(delItems => {
-      delItems.forEach(doc => {
-        doc.ref.delete();
-        this.storage.storage.refFromURL(elt.filepath).delete();
+      const delete_photo = this.database.collection('ACA_Gallery', ref => ref.where('filepath', '==', elt.filepath));
+      
+      delete_photo.get().subscribe(delItems => {
+        delItems.forEach(doc => {
+          doc.ref.delete();
+          this.storage.storage.refFromURL(elt.filepath).delete();
+          resolve('ok');
+        });
       });
     });
-
 
   }
 
   deleteAlbum(idalbum){
-    // const delete_album = this.database.collection('ACA_Gallery_Parents', ref => ref.where('id_parent', '==', idalbum));
-    
-    // delete_album.get().subscribe(delItems => {
-    //   delItems.forEach(doc => {
-    //     doc.ref.delete();
-    //   });
-    // });
-
     return new Promise<any>((resolve, reject) => {
       const delete_album = this.database.collection('ACA_Gallery_Parents', ref => ref.where('id_parent', '==', idalbum));
     

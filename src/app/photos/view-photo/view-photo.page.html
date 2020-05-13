@@ -1,12 +1,17 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start" >
+      <ion-back-button color="light"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content style="--background: black;">
+  <div class="header">
+    <ion-col >
+      <ion-icon  name="trash-outline" (click)="presentAlertConfirm(onePhoto)" >Supprimer</ion-icon>
+    </ion-col>
+  </div>
   <div class="frame">
       <ion-img [src]="onePhoto?.filepath"></ion-img>
   </div>

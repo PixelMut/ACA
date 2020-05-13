@@ -1,7 +1,7 @@
 
 
 .frame {
-    height: 85%; /* Can be anything */
+    height: 78%; /* Can be anything */
     width: 100%; /* Can be anything */
     position: relative;
     background-color: black;
@@ -59,12 +59,22 @@ ion-img {
     & ion-icon{
       font-size: 20px;
       color: #134E9A;
-      color:white;
+      //color:white;
     }
   
     & ion-label {
       color: white;
       position: relative;
       bottom : 4px;
+    }
+  }
+
+  .header{
+    text-align: right;
+
+    & ion-icon{
+      font-size: 26px;
+      // color: #134E9A;
+      color:red;
     }
   }
