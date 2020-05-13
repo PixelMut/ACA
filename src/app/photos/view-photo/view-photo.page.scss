@@ -1,0 +1,70 @@
+
+
+.frame {
+    height: 85%; /* Can be anything */
+    width: 100%; /* Can be anything */
+    position: relative;
+    background-color: black;
+}
+
+ion-img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    
+}
+
+
+.footer_likes_com{
+
+    & ion-icon{
+      background: #134E9A;
+      padding:5px;
+      border-radius: 50%;
+      color:white
+    }
+  
+    & ion-label{
+      position: relative;
+      bottom: 6px;
+      color:white;
+    }
+    
+    & .footer-comm{
+      position: relative;
+      bottom: -3px;
+      background-color: transparent;
+      color: white;
+    }
+    border: 1px solid black;
+    padding-left:10px;
+    background-color: black;
+    color:white;
+  }
+
+ ion-footer{
+    background-color: black;
+
+ } 
+
+.footer-button-card{
+    background-color: black;
+    & ion-icon{
+      font-size: 20px;
+      color: #134E9A;
+      color:white;
+    }
+  
+    & ion-label {
+      color: white;
+      position: relative;
+      bottom : 4px;
+    }
+  }

@@ -59,7 +59,7 @@ export class DetailPublicationPage implements OnInit {
   }
 
  startGettingComments(publicationId){
-    this.firestoreService.getPublicationComments(publicationId).subscribe(
+    this.firestoreService.getListComments(publicationId).subscribe(
       res => {
           this.comments = [];
         res.forEach((elt:any) => {
@@ -117,7 +117,7 @@ export class DetailPublicationPage implements OnInit {
         res => {
             this.firestoreService.addComment(this.new_comment, this.pubId, res.uid, 'com_pub').then(
                 res => {
-                  this.firestoreService.updateCommentCounter(this.pubId, this.comments.length)
+                  this.firestoreService.updateCommentCounter(this.pubId, this.comments.length,'publication')
                     //this.startGettingComments(this.pubId)
                 });
             this.new_comment = '';
@@ -131,7 +131,7 @@ export class DetailPublicationPage implements OnInit {
         this.firestoreService.deleteComment(id_comment).then(
             res => {
                 console.log(res)
-                this.firestoreService.updateCommentCounter(this.pubId, this.comments.length)
+                this.firestoreService.updateCommentCounter(this.pubId, this.comments.length,'publication')
                 //this.startGettingComments(this.pubId)
             });
     }

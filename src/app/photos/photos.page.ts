@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PhotoService } from '../services/photo.service';
 import { NavController, AlertController } from '@ionic/angular';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-photos',
@@ -11,8 +12,12 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 export class PhotosPage implements OnInit {
   galleryType : string; 
   type: string;
-  constructor(public photoService: PhotoService,public navCtrl: NavController,private photoViewer: PhotoViewer,
-    public alertController: AlertController) {
+  constructor(
+    public photoService: PhotoService,
+    public navCtrl: NavController,
+    private photoViewer: PhotoViewer,
+    public alertController: AlertController,
+    private router: Router) {
    
    }
 
@@ -40,6 +45,9 @@ export class PhotosPage implements OnInit {
   async presentAlert(mapUrl, elt) {
     const alert = await this.alertController.create({
       message: `<img src="${mapUrl}" alt="g-maps" style="border-radius: 0px">`,
+      translucent: false,
+      cssClass : 'testModal',
+      animated : true,
       buttons: [
         {
           text: 'Supprimer',
@@ -59,16 +67,9 @@ export class PhotosPage implements OnInit {
     await alert.present();
   }
 
-  createFolder(folderName){
-     console.log('fct creer dossier avec le nom :'+folderName)
-    this.photoService.createFolder(folderName).then(
-      res => {
-        console.log(res)
-      }
-    )
 
-  }
 
+  // pour creer un nouveau dossier 
   async presentAlertPrompt() {
     const alert = await this.alertController.create({
       header: 'Créer un nouveau dossier',
@@ -98,6 +99,21 @@ export class PhotosPage implements OnInit {
 
     await alert.present();
   }
+
+  createFolder(folderName){
+   // console.log('fct creer dossier avec le nom :'+folderName)
+   this.photoService.createFolder(folderName).then(
+     res => {
+       if(res === 'ok'){
+        this.router.navigate(['/tabs/photos/album/'+ folderName]);
+       }else{
+        console.log('error')
+       }
+       
+     }
+   )
+
+ }
 
 
 }

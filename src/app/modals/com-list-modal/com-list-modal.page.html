@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Commentaires</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="comment_card" *ngFor="let com of comments ">
+    <ion-item >
+      <ion-avatar slot="start" class="ion-align-items-center">
+        <img [src]="(com.user_name | async)?.photo_user">
+      </ion-avatar>
+      <ion-label>
+        <h3> {{ (com.user_name | async)?.prenom_user }} {{ (com.user_name | async)?.nom_user | uppercase }} </h3>
+        <p>{{ com?.commentDate.seconds * 1000 | date:'yyyy-MM-dd HH:mm' }}</p>
+      </ion-label>
+    </ion-item>
+      <ion-grid style="padding:0">
+          <ion-row>
+              <ion-col size="10">
+                  <ion-item  class="comment_text" lines="none">{{com?.commentcontent}}</ion-item>
+              </ion-col>
+              <ion-col size="2" >
+                  <ion-button fill="clear" (click)="deleteComment(com?.id_comment)" *ngIf="( (com?.comment_creator === currentUserId) || (currentUserType === 1) || (currentUserType === 2))">
+                      <ion-icon color="danger" name="trash-outline"></ion-icon>
+                  </ion-button>
+              </ion-col>
+          </ion-row>
+      </ion-grid>
+  </ion-card>
+
+  <ion-card class="add_comment_card" >
+    <ion-item class="add_comment_text" lines="none">
+      <ion-input placeholder="Nouveau commentaire..." [(ngModel)]="new_comment"></ion-input>
+      <ion-button *ngIf="new_comment.length > 0" (click)="add_comment()">Ajouter</ion-button>
+    </ion-item>
+  </ion-card>
+</ion-content>

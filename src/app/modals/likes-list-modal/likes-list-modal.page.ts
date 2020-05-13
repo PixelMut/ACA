@@ -14,14 +14,15 @@ export class LikesListModalPage implements OnInit {
   public likelist;
   private userList;
   constructor(private modalController: ModalController,
-    private navParams: NavParams, private firestoreService: FirestoreService) { }
+              private navParams: NavParams,
+              private firestoreService: FirestoreService) { }
 
   ngOnInit() {
-    console.log(this.navParams);
-    console.log(this.navParams.data.publication_id);
-    console.log(this.navParams.data.userList);
+    // console.log(this.navParams);
+    // console.log(this.navParams.data.elt_id);
+    // console.log(this.navParams.data.userList);
     this.userList = this.navParams.data.userList;
-    this.firestoreService.getLikesList(this.navParams.data.publication_id).subscribe(
+    this.firestoreService.getLikesList(this.navParams.data.elt_id).subscribe(
       res => {
         console.log(res)
         this.likelist = res;

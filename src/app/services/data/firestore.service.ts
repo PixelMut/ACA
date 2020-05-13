@@ -214,7 +214,7 @@ export class FirestoreService {
     deletePub(id_publication: string): Promise<void> {
       console.log('entre deletePub');
       return new Promise<any>((resolve, reject) => {
-        this.getPublicationComments(id_publication).subscribe(
+        this.getListComments(id_publication).subscribe(
             res => {
               if (res.length > 0) { // présence de commentaires
                 this.deleteCommentaires(id_publication);
@@ -241,53 +241,86 @@ export class FirestoreService {
     }
 
 
-
+    // check like status of publication AND photo
     checkLikeStatus(idPub, idUser){
       return this.firestore.collection('likes', ref => ref
-          .where('id_publication', '==', idPub).where('id_user', '==', idUser)).get();
+          .where('id_elt', '==', idPub).where('id_user', '==', idUser)).get();
     }
 
-    deleteLike(idPub, idUser, newcount){
-      const delete_likes = this.firestore.collection('likes', ref => ref.where('id_publication', '==', idPub).where('id_user', '==', idUser));
+    // delete like from publication AND photo
+    deleteLike(idelt, idUser, newcount,destination){
+      const delete_likes = this.firestore.collection('likes', ref => ref.where('id_elt', '==', idelt).where('id_user', '==', idUser));
       delete_likes.get().subscribe(delItems => {
         delItems.forEach(doc => {
           doc.ref.delete();
         });
       });
 
-      const pubDoc = this.firestore.doc<any>('publications/' + idPub);
-      return new Promise<any>((resolve, reject) => {
-        pubDoc.update({
-        nblike : newcount
-      })
-        .then(
-          res => {
-            resolve(res);
-          },
-          err => reject(err));
-      });
-
+      if(destination === 'photo'){
+        const photoDoc = this.firestore.doc<any>('ACA_Gallery/' + idelt);
+        return new Promise<any>((resolve, reject) => {
+          photoDoc.update({
+          nblike : newcount
+        })
+          .then(
+            res => {
+              resolve(res);
+            },
+            err => reject(err));
+        });
+  
+      }else{
+        const pubDoc = this.firestore.doc<any>('publications/' + idelt);
+        return new Promise<any>((resolve, reject) => {
+          pubDoc.update({
+          nblike : newcount
+        })
+          .then(
+            res => {
+              resolve(res);
+            },
+            err => reject(err));
+        });
+  
+      }
+      
     }
 
-    addLike(idPub, idUser, newcount){
+    // add like of publication 
+    addLike(idelt, idUser, newcount,destination){
       const id_like = this.firestore.createId();
         this.firestore.doc(`likes/${id_like}`).set({
-          id_publication : idPub,
+          id_elt : idelt,
           id_user : idUser
         })
 
 
-      const pubDoc = this.firestore.doc<any>('publications/' + idPub);
-      return new Promise<any>((resolve, reject) => {
-        pubDoc.update({
-        nblike : newcount
-      })
-        .then(
-          res => {
-            resolve(res);
-          },
-          err => reject(err));
-      });
+        if(destination === 'photo'){
+          const pubDoc = this.firestore.doc<any>('ACA_Gallery/' + idelt);
+          return new Promise<any>((resolve, reject) => {
+            pubDoc.update({
+            nblike : newcount
+          })
+            .then(
+              res => {
+                resolve(res);
+              },
+              err => reject(err));
+          });
+        }else{
+          const pubDoc = this.firestore.doc<any>('publications/' + idelt);
+          return new Promise<any>((resolve, reject) => {
+            pubDoc.update({
+            nblike : newcount
+          })
+            .then(
+              res => {
+                resolve(res);
+              },
+              err => reject(err));
+          });
+        }
+      
     }
 
     // fonction utilisée pour les commentaires des publications et des evenements
@@ -341,8 +374,8 @@ export class FirestoreService {
 
     }
 
-    getLikesList(idpub){
-      return this.firestore.collection('likes', ref => ref.where('id_publication', '==', idpub)).valueChanges();
+    getLikesList(idelt){
+      return this.firestore.collection('likes', ref => ref.where('id_elt', '==', idelt)).valueChanges();
     }
 
     // // recuperer les details d'une publication
@@ -355,10 +388,12 @@ export class FirestoreService {
       return this.firestore.collection('publications').doc(pubId);
     }
 
-    getPublicationComments(pubId: string) {
-      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', pubId).orderBy('date_comment', 'asc')).valueChanges();
+    // commentaires sur les publications ET photos
+    getListComments(eltId: string) {
+      return this.firestore.collection('comments', ref => ref.where('id_elt', '==', eltId).orderBy('date_comment', 'asc')).valueChanges();
     }
 
+  
 
     updatePubImage(idpub, urlImage) {
       console.log('url image:');
@@ -409,13 +444,16 @@ export class FirestoreService {
 
 
     addComment(comment_content, id_elt: string, id_user: string, type_elt: string) {
-    const id_comment = this.firestore.createId();
+      // console.log('add comment')
+      // console.log(id_elt)
+      // console.log(type_elt)
+      const id_comment = this.firestore.createId();
       // const filePath = '/Image/' + 'Post_' + id_publication + '/' + imageId ;
       // const result = this.SaveImageRef(filePath, fileRaw);
       // const ref = result.ref;
-    const date_comment = new Date();
+      const date_comment = new Date();
       // const date_modif_publication = date_publication;
-    const comment_active = true;
+      const comment_active = true;
 
     return new Promise<any>((resolve, reject) => {
         this.firestore.doc(`comments/${id_comment}`).set({
@@ -455,18 +493,35 @@ export class FirestoreService {
     return this.firestore.doc(`comments/${id_comment}`).delete();
   }
 
-  updateCommentCounter(idPub,newcount){
-    const pubDoc = this.firestore.doc<any>('publications/' + idPub);
-    return new Promise<any>((resolve, reject) => {
-      pubDoc.update({
-      nbcom : newcount
-    })
-      .then(
-        res => {
-          resolve(res);
-        },
-        err => reject(err));
-    });
+  updateCommentCounter(idelt,newcount,type){
+    console.log('update counter to :'+newcount)
+    if(type === 'photo'){
+      console.log('photooo')
+      const photoDoc = this.firestore.doc<any>('ACA_Gallery/' + idelt);
+      return new Promise<any>((resolve, reject) => {
+        photoDoc.update({
+        nbcom : newcount
+      })
+        .then(
+          res => {
+            resolve(res);
+          },
+          err => reject(err));
+      });
+    }else{
+      const pubDoc = this.firestore.doc<any>('publications/' + idelt);
+      return new Promise<any>((resolve, reject) => {
+        pubDoc.update({
+        nbcom : newcount
+      })
+        .then(
+          res => {
+            resolve(res);
+          },
+          err => reject(err));
+      });
+    }
+    
   }
   // FIN PARTIE PUBLICATIONS - ------------------------------------------------------------------
 

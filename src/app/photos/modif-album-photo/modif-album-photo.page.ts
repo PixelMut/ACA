@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PhotoService, MyData } from 'src/app/services/photo.service';
 import { Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'app-modif-album-photo',
@@ -12,9 +13,20 @@ import { AlertController } from '@ionic/angular';
 export class ModifAlbumPhotoPage implements OnInit {
   private albumId;
   public images: Observable<MyData[]>;
+  public currentUserType;
 
   constructor(private route: ActivatedRoute,
-    private router: Router,private photoService: PhotoService,public alertController: AlertController) { }
+              private router: Router,
+              private photoService: PhotoService,
+              public alertController: AlertController,
+              private storage : Storage) { 
+
+
+      this.storage.get('tu').then((val) => {
+        this.currentUserType = val
+      });
+
+    }
 
   ngOnInit() {
     this.albumId = this.route.snapshot.paramMap.get('id');
@@ -48,6 +60,35 @@ export class ModifAlbumPhotoPage implements OnInit {
 
     await alert.present();
   }
+
+
+
+  async presentAlertConfirm(idalbum) {
+    const alert = await this.alertController.create({
+        header: 'Confirmer!',
+        message: 'Voulez vous vraiment <strong>supprimer</strong> cet album, ses photos et ses commentaires ?',
+        buttons: [
+            {
+                text: 'Annuler',
+                role: 'cancel',
+                cssClass: 'secondary',
+                handler: (blah) => {
+                    console.log('Confirm Cancel: blah');
+                }
+            }, {
+                text: 'Supprimer',
+                handler: () => {
+                    this.photoService.deleteAlbum(idalbum).then((res) => {
+                        //console.log(res)
+                        this.router.navigateByUrl('tabs/photos');
+                    });
+                }
+            }
+        ]
+    });
+
+    await alert.present();
+}
 
 
 }

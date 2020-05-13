@@ -44,6 +44,10 @@ const routes: Routes = [
   {
     path: 'newsletter',
     loadChildren: () => import('./newsletter/newsletter.module').then( m => m.NewsletterPageModule)
+  },
+  {
+    path: 'com-list-modal',
+    loadChildren: () => import('./modals/com-list-modal/com-list-modal.module').then( m => m.ComListModalPageModule)
   }
 
 ];

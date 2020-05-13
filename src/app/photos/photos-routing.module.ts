@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'modif-album-photo',
     loadChildren: () => import('./modif-album-photo/modif-album-photo.module').then( m => m.ModifAlbumPhotoPageModule)
+  },
+  {
+    path: 'view-photo',
+    loadChildren: () => import('./view-photo/view-photo.module').then( m => m.ViewPhotoPageModule)
   }
 ];
 

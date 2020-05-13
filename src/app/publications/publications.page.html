@@ -58,19 +58,21 @@
           
         
       </div>
+      <!-- apercu sur le nombre de like et commentaires -->
       <div class="footer_likes_com">
         <ion-row >
+          <!-- si le nb de like est superieur à 0 -->
           <ion-col *ngIf="pub.nblike > 0">
             <!-- <ion-icon name="thumbs-up-outline" (click)="showOrNotLikes(pub.id_publication)"></ion-icon> -->
             <ion-icon name="thumbs-up-outline" (click)="presentModal(pub.id_publication)"></ion-icon>
             
             <ion-label> {{ pub.nblike }}</ion-label>
-            <div *ngIf="showLikes === true">
+            <!-- <div *ngIf="showLikes === true">
               <ion-label *ngFor="let item of likelist">
                 {{ item.id_user ? getName(item.id_user) : '' }} {{ (item.id_user ? getLastName(item.id_user) : '') | uppercase }}
               </ion-label>
              
-            </div>
+            </div> -->
             <!-- <button class="footer-button-card" (click)="handleLikeBtn(pub.id_publication,pub.nblike)">
              <ion-icon name="thumbs-up"></ion-icon> 
               <div>{{ pub.nblike ? pub.nblike : 0 }}</div>

@@ -26,6 +26,8 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { Camera } from '@ionic-native/camera/ngx';
 import { LikesListModalPageModule } from './modals/likes-list-modal/likes-list-modal.module';
 import { PipesModule } from './pipes/pipes.module';
+import { ComListModalPage } from './modals/com-list-modal/com-list-modal.page';
+import { ComListModalPageModule } from './modals/com-list-modal/com-list-modal.module';
 
 
 
@@ -48,6 +50,7 @@ import { PipesModule } from './pipes/pipes.module';
         PublicationsPageModule,
         ServiceWorkerModule.register('combined-sw.js', {enabled: environment.production}),
         LikesListModalPageModule,
+        ComListModalPageModule,
         PipesModule
         
     ],

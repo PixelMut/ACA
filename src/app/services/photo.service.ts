@@ -7,11 +7,14 @@ import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
 export interface MyData {
+  id_photo:string;
   name: string;
   filepath: string;
   size: number;
   uploadDate : Date,
-  id_parent : string
+  id_parent : string,
+  nblike: number,
+  nbcom:number
 }
 
 class Photo {
@@ -39,7 +42,8 @@ export class PhotoService {
     images: Observable<MyData[]>;
     filteredImages : Observable<MyData[]>;
     folders : Observable<any>;
-
+    oneImage : Observable<any>;
+    
     //File details  
     fileName:string;
     fileSize:number;
@@ -66,10 +70,12 @@ export class PhotoService {
 
   createFolder(fname){
     const id_parent = fname;
+    const datedujour = new Date();
     const iddoc = this.database.createId();
     return new Promise<any>((resolve, reject) => {
       this.database.doc(`ACA_Gallery_Parents/${iddoc}`).set({
-        id_parent
+        id_parent,
+        creation_date : datedujour
       })
       .then(
         res => {
@@ -89,6 +95,14 @@ export class PhotoService {
     console.log('getting photos of :'+ idalbum)
     this.filteredImageCollection = this.database.collection<MyData>('ACA_Gallery', ref => ref.orderBy('uploadDate','desc').where('id_parent', '==' , idalbum));
     this.filteredImages = this.filteredImageCollection.valueChanges();
+
+
+  }
+
+  getOnePhoto(idphoto){
+    return this.database.collection<MyData>('ACA_Gallery', ref => ref.where('id_photo', '==' , idphoto)).valueChanges();
+    // let test = this.database.collection<MyData>('ACA_Gallery', ref => ref.where('id_photo', '==' , idphoto));
+    // return test.get();
 
 
   }
@@ -156,19 +170,23 @@ export class PhotoService {
     this.snapshot = this.task.snapshotChanges().pipe(
       
       finalize(() => {
-        console.log('2')
+       
         // Get uploaded file storage path
         this.UploadedFileURL = fileRef.getDownloadURL();
-        console.log('3')
+       
         this.UploadedFileURL.subscribe(resp=>{
-          console.log('4')
+          //Create an ID for document
+          const id = this.database.createId();
           this.addImagetoDB({
+            id_photo: id,
             name: file.name,
             filepath: resp,
             size: this.fileSize,
             uploadDate : new Date(),
-            id_parent : albumName
-          },albumName);
+            id_parent : albumName,
+            nblike:0,
+            nbcom:0
+          },albumName,id);
           this.isUploading = false;
           console.log('5')
           // this.isUploaded = true;
@@ -183,20 +201,19 @@ export class PhotoService {
     )
   }
 
-  addImagetoDB(image: MyData, albumName ) {
-    console.log('6')
-    //Create an ID for document
-    const id = this.database.createId();
+  addImagetoDB(image: MyData, albumName,createdId ) {
+
+    // const id = this.database.createId();
     if(albumName === 'all'){
       //Set document id with value in database
-      this.allImageCollection.doc(id).set(image).then(resp => {
+      this.allImageCollection.doc(createdId).set(image).then(resp => {
         console.log(resp);
       }).catch(error => {
         console.log("error " + error);
       });
     }else{
       //Set document id with value in database
-      this.filteredImageCollection.doc(id).set(image).then(resp => {
+      this.filteredImageCollection.doc(createdId).set(image).then(resp => {
         console.log(resp);
       }).catch(error => {
         console.log("error " + error);
@@ -220,5 +237,24 @@ export class PhotoService {
 
   }
 
+  deleteAlbum(idalbum){
+    // const delete_album = this.database.collection('ACA_Gallery_Parents', ref => ref.where('id_parent', '==', idalbum));
+    
+    // delete_album.get().subscribe(delItems => {
+    //   delItems.forEach(doc => {
+    //     doc.ref.delete();
+    //   });
+    // });
 
+    return new Promise<any>((resolve, reject) => {
+      const delete_album = this.database.collection('ACA_Gallery_Parents', ref => ref.where('id_parent', '==', idalbum));
+    
+      delete_album.get().subscribe(delItems => {
+        delItems.forEach(doc => {
+          doc.ref.delete();
+          resolve('ok');
+        });
+      });
+    });
+  }
 }

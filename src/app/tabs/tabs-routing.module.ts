@@ -89,6 +89,10 @@ const routes: Routes = [
             path: 'album/:id',
             loadChildren: () =>
               import('../photos/modif-album-photo/modif-album-photo.module').then(m => m.ModifAlbumPhotoPageModule)
+          },{
+            path: 'photo/:id',
+            loadChildren: () =>
+              import('../photos/view-photo/view-photo.module').then(m => m.ViewPhotoPageModule)
           }
         ]
       },

@@ -158,9 +158,9 @@ export class NewsletterPage implements OnInit {
           console.log(res.length)
           // cet utilisateur à deja like cet article
           if(res.size > 0){
-              this.firestoreService.deleteLike(id_pub,val,currentCount-1)
+              this.firestoreService.deleteLike(id_pub,val,currentCount-1,'publication')
           }else{ // cet utilisateur n'a jamais like
-              this.firestoreService.addLike(id_pub,val,currentCount+1)
+              this.firestoreService.addLike(id_pub,val,currentCount+1,'publication')
           }
         }
       )
